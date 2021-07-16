@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+    db:
+        image: postgres
+        restart: on-failure
+        environment:
+            - POSTGRES_PASSWORD=sphinx
+            - POSTGRES_USER=postgres
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        ports: 
+            - 5433:5432
+    
+    tribes:
+        image: sphinxlightning/sphinx-tribes
+        restart: on-failure
+        depends_on:
+            - db
+        environment:
+            - DATABASE_URL=postgres://postgres:sphinx@localhost:5433/postgres?sslmode=disable
+        network_mode: host
+        # ports: 
+        #     - 5002:5002
+
+    auth:
+        image: sphinxlightning/sphinx-auth
+        restart: on-failure
+        depends_on:
+            - db
+        environment:
+            - JWT_KEY=19e0bb49bhyuibme
+            - HOST=localhost:9090
+        network_mode: host
+        # ports: 
+        #     - 9090:9090
+
+    mqtt:
+        image: sphinxlightning/sphinx-mqtt
+        restart: on-failure
+        depends_on:
+            - auth
+        network_mode: host
+        # ports: 
+        #     - 1883:1883
+
+    meme: 
+        image: sphinxlightning/sphinx-meme
+        restart: on-failure
+        network_mode: host
+        environment: 
+            - JWT_KEY=19e0bb49bhyuibme
+            - STORAGE_MODE=local
+            - LOCAL_DIR=files
+            - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
+            - HOST=localhost:5000
+            - DATABASE_URL=postgres://postgres:sphinx@localhost:5433/postgres?sslmode=disable
+        # ports: 
+        #     - 5000:5000
+
+    # alice:
+    #     image: sphinx-relay
+    #     entrypoint: ["node", "/relay/dist/app.js", "--config=relayconfigs/alice.json", "--db=relayconfigs/alice-db.json"]
+    #     volumes:
+    #         - ./relayconfigs:/relayconfigs
+    #     environment: 
+    #         - NODE_ENV=development
+    #         - MACAROON_LOCATION=/Users/evanfeenstra/.polar/networks/2/volumes/lnd/alice/data/chain/bitcoin/regtest/admin.macaroon
+    #         - TLS_LOCATION=/Users/JPB/.polar/networks/2/volumes/lnd/alice/tls.cert
+    #     network_mode: host
