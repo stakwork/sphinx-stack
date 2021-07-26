@@ -1,7 +1,4 @@
--- DROP TABLE media;
--- DROP TABLE tribes;
--- DROP TABLE bots;
--- DROP TABLE people;
+
 
 CREATE TABLE media (
   id TEXT NOT NULL PRIMARY KEY,
