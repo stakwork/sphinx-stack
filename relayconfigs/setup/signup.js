@@ -3,14 +3,14 @@ var fs = require("fs");
 var rsa = require("./rsa");
 var fetch = require("./fetch");
 
-const path = "/relayconfigs/_nodes.json";
-const pathToWrite = "/relayconfigs/nodes.json";
+const path = "/relayconfigs/nodes.json";
 
 const CLEAR = false;
 
 async function run_signup() {
   var nodes1 = require(path);
   await asyncForEach(nodes1, async (n) => {
+    if (n.authToken) return; // ALREADY SIGNED UP!
     const token = await signup(n);
     n.authToken = token;
     await createContactKey(n);
@@ -97,7 +97,7 @@ async function addFieldToNodeJson(pubkey, key, value) {
   if (idx < 0) return;
   nodes[idx][key] = value;
   const jsonString = JSON.stringify(nodes, null, 2);
-  fs.writeFileSync(pathToWrite, jsonString);
+  fs.writeFileSync(path, jsonString);
 }
 
 async function asyncForEach(array, callback) {

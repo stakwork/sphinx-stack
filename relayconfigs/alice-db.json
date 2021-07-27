@@ -1,6 +1,6 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "./sphinx-alice.db"
+    "storage": "./relayconfigs/db/alice.db"
   }
 }

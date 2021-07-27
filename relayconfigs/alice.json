@@ -1,8 +1,7 @@
 {
   "development": {
-    "senza_url": "http://localhost:3000/api/v2",
     "node_ip": "127.0.0.1",
-    "lnd_ip": "127.0.0.1",
+    "lnd_ip": "host.docker.internal",
     "lnd_port": "10001",
     "tls_location": "/relay/.polar/networks/1/volumes/lnd/alice/tls.cert",
     "macaroon_location": "/relay/.polar/networks/1/volumes/lnd/alice/data/chain/bitcoin/regtest/admin.macaroon",
@@ -12,8 +11,8 @@
     "hub_url": "http://lvh.me/ping",
     "hub_invite_url": "http://lvh.me/invites",
     "hub_check_invite_url": "http://lvh.me/check_invite",
-    "media_host": "localhost:5000",
-    "tribes_host": "localhost:5002",
+    "media_host": "host.docker.internal:5000",
+    "tribes_host": "host.docker.internal:5002",
     "tribes_mqtt_port": "1883",
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3001",
@@ -21,7 +20,6 @@
     "connect_ui": true
   },
   "production": {
-    "senza_url": "https://staging.senza.us/api/v2/",
     "macaroon_location": "/relay/.lnd/data/chain/bitcoin/mainnet/admin.macaroon",
     "tls_location": "/relay/.lnd/tls.cert",
     "lnd_log_location": "/relay/.lnd/logs/bitcoin/mainnet/lnd.log",
