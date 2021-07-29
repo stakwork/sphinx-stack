@@ -17,6 +17,30 @@ volumes:
 #         - subnet: "127.0.0.1/16"
 
 services:
+  bitcoind:
+    image: ruimarinho/bitcoin-core:0.21.1
+    restart: on-failure
+    container_name: bitcoin-server
+    volumes:
+      - ./bitcoind-data/.bitcoin:/home/bitcoin/.bitcoin
+    command:
+      -printtoconsole
+      -regtest=1
+      -server=1
+      -rpcbind=0.0.0.0
+      -rpcallowip=0.0.0.0/0
+      -txindex=1
+      -fallbackfee=0.0002
+      -rpcauth='foo:7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc'
+    ports:
+      - 18443:18443
+      - 18444:18444
+
+  # alice-lnd:
+  #   image: lnzap/lnd:latest
+  #   ports:
+  #     - 9735:9735
+  #     - 10009:10009
 
   db:
     image: postgres
@@ -37,7 +61,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:sphinx@host.docker.internal:5433/postgres?sslmode=disable
     ports:
-        - 5002:5002
+      - 5002:5002
 
   auth:
     image: sphinxlightning/sphinx-auth
@@ -48,7 +72,7 @@ services:
       - JWT_KEY=19e0bb49bhyuibme
       - HOST=localhost:9090
     ports:
-        - 9090:9090
+      - 9090:9090
 
   mqtt:
     image: sphinxlightning/sphinx-mqtt
@@ -56,7 +80,7 @@ services:
     depends_on:
       - auth
     ports:
-        - 1883:1883
+      - 1883:1883
 
   meme:
     image: sphinxlightning/sphinx-meme
@@ -71,7 +95,7 @@ services:
       - HOST=localhost:5000
       - DATABASE_URL=postgres://postgres:sphinx@host.docker.internal:5433/postgres?sslmode=disable
     ports:
-        - 5000:5000
+      - 5000:5000
 
   alice:
     image: sphinx-relay
@@ -94,7 +118,7 @@ services:
       - 3001:3001
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    
+
   relaysetup:
     image: node:12-buster-slim
     depends_on:

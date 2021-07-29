@@ -2,3 +2,5 @@ notes.md
 .DS_Store
 relayconfigs/db/*
 !relayconfigs/db/.gitkeep
+bitcoind-data/.bitcoin/*
+!bitcoind-data/.bitcoin/.gitkeep
