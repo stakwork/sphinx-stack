@@ -23,8 +23,7 @@ services:
     container_name: bitcoin-server
     volumes:
       - ./bitcoind-data/.bitcoin:/home/bitcoin/.bitcoin
-    command:
-      -printtoconsole
+    command: -printtoconsole
       -regtest=1
       -server=1
       -rpcbind=0.0.0.0
@@ -32,15 +31,45 @@ services:
       -txindex=1
       -fallbackfee=0.0002
       -rpcauth='foo:7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc'
+      -zmqpubhashblock=tcp://host.docker.internal:28332
+      -zmqpubhashtx=tcp://host.docker.internal:28333
     ports:
       - 18443:18443
       - 18444:18444
+      - 28332:28332
+      - 28333:28333
 
-  # alice-lnd:
-  #   image: lnzap/lnd:latest
-  #   ports:
-  #     - 9735:9735
-  #     - 10009:10009
+  alice-lnd:
+    image: lnzap/lnd:latest
+    container_name: alice-lnd
+    volumes:
+      - ./lnd-data/alice:/lnd
+    ports:
+      - 9735:9735
+      - 127.0.0.1:10009:10009
+    command: --bitcoin.active
+      --bitcoin.regtest
+      --debuglevel=info
+      --rpclisten=0.0.0.0:10009
+      --accept-keysend
+      --alias=alice-lnd
+      --bitcoin.node=bitcoind
+      --bitcoin.defaultchanconfs=2
+      --bitcoind.rpcuser=foo
+      --bitcoind.rpcpass=7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc
+      --bitcoind.zmqpubrawblock=tcp://host.docker.internal:28332
+      --bitcoind.zmqpubrawtx=tcp://host.docker.internal:28333
+
+  # lndsetup:
+  #   image: node:12-buster-slim
+  #   depends_on:
+  #     - alice-lnd
+  #   restart: "no"
+  #   working_dir: "/lndsetup/"
+  #   entrypoint: ["/lndsetup/entrypoint.sh"]
+  #   volumes:
+  #     - ./lnd-data/alice:/alice-lnd
+  #     - ./lndsetup:/lndsetup
 
   db:
     image: postgres
