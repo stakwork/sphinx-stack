@@ -2,7 +2,11 @@ notes.md
 .DS_Store
 relayconfigs/db/*
 !relayconfigs/db/.gitkeep
-bitcoind-data/.bitcoin/*
-!bitcoind-data/.bitcoin/.gitkeep
-lnd-data/*
-!lnd-data/.gitkeep
+bitcoind/*
+!bitcoind/bitcoin.conf
+lnd/*
+!lnd/.gitkeep
+zmq/*
+!zmq/index.js
+lndsetup/*.js
+!lndsetup/index.js

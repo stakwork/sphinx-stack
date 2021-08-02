@@ -1,78 +1,43 @@
 version: "3"
 
-volumes:
-  polar:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /Users/evanfeenstra/.polar/networks/1/volumes/lnd
-
-# networks:
-#   my-network:
-#     driver_opts:
-#       com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
-#     ipam:
-#       config:
-#         - subnet: "127.0.0.1/16"
-
 services:
   bitcoind:
-    image: ruimarinho/bitcoin-core:0.21.1
+    image: lncm/bitcoind:v0.21.1
     restart: on-failure
-    container_name: bitcoin-server
+    container_name: bitcoind.sphinx
     volumes:
-      - ./bitcoind-data/.bitcoin:/home/bitcoin/.bitcoin
-    command: -printtoconsole
-      -regtest=1
-      -server=1
-      -rpcbind=0.0.0.0
-      -rpcallowip=0.0.0.0/0
-      -txindex=1
-      -fallbackfee=0.0002
-      -rpcauth='foo:7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc'
-      -zmqpubhashblock=tcp://host.docker.internal:28332
-      -zmqpubhashtx=tcp://host.docker.internal:28333
+      - ./bitcoind:/data/.bitcoin
     ports:
-      - 18443:18443
-      - 18444:18444
+      - 8332:8332
+      - 8333:8333
       - 28332:28332
       - 28333:28333
 
   alice-lnd:
     image: lnzap/lnd:latest
-    container_name: alice-lnd
+    container_name: alice-lnd.sphinx
     volumes:
-      - ./lnd-data/alice:/lnd
+      - ./lnd/alice:/lnd
+      - ./lndsetup:/lndsetup
     ports:
       - 9735:9735
-      - 127.0.0.1:10009:10009
-    command: --bitcoin.active
-      --bitcoin.regtest
-      --debuglevel=info
-      --rpclisten=0.0.0.0:10009
-      --accept-keysend
-      --alias=alice-lnd
-      --bitcoin.node=bitcoind
-      --bitcoin.defaultchanconfs=2
-      --bitcoind.rpcuser=foo
-      --bitcoind.rpcpass=7d9ba5ae63c3d4dc30583ff4fe65a67e$$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc
-      --bitcoind.zmqpubrawblock=tcp://host.docker.internal:28332
-      --bitcoind.zmqpubrawtx=tcp://host.docker.internal:28333
+      - 10009:10009
+      - 8181:8181
+    command: --configfile=/lndsetup/alice.conf
 
   # lndsetup:
   #   image: node:12-buster-slim
   #   depends_on:
   #     - alice-lnd
   #   restart: "no"
-  #   working_dir: "/lndsetup/"
-  #   entrypoint: ["/lndsetup/entrypoint.sh"]
+  #   entrypoint: ["node", "/lndsetup/index.js"]
   #   volumes:
-  #     - ./lnd-data/alice:/alice-lnd
+  #     - ./lnd/alice:/alice
   #     - ./lndsetup:/lndsetup
 
   db:
     image: postgres
+    container_name: db.sphinx
     restart: on-failure
     environment:
       - POSTGRES_PASSWORD=sphinx
@@ -84,16 +49,18 @@ services:
 
   tribes:
     image: sphinxlightning/sphinx-tribes
+    container_name: tribes.sphinx
     restart: on-failure
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://postgres:sphinx@host.docker.internal:5433/postgres?sslmode=disable
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5002:5002
 
   auth:
     image: sphinxlightning/sphinx-auth
+    container_name: auth.sphinx
     restart: on-failure
     depends_on:
       - db
@@ -105,6 +72,7 @@ services:
 
   mqtt:
     image: sphinxlightning/sphinx-mqtt
+    container_name: mqtt.sphinx
     restart: on-failure
     depends_on:
       - auth
@@ -113,6 +81,7 @@ services:
 
   meme:
     image: sphinxlightning/sphinx-meme
+    container_name: meme.sphinx
     restart: on-failure
     depends_on:
       - db
@@ -122,13 +91,16 @@ services:
       - LOCAL_DIR=files
       - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
       - HOST=localhost:5000
-      - DATABASE_URL=postgres://postgres:sphinx@host.docker.internal:5433/postgres?sslmode=disable
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5000:5000
 
   alice:
-    image: sphinx-relay
+    image: sphinxlightning/sphinx-relay-test
+    container_name: alice.sphinx
     restart: on-failure
+    depends_on:
+      - alice-lnd
     entrypoint:
       [
         "node",
@@ -138,15 +110,12 @@ services:
       ]
     volumes:
       - ./relayconfigs:/relay/relayconfigs
-      - polar:/relay/.polar/networks/1/volumes/lnd
+      - ./lnd/alice:/relay/alice
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - LND_IP=host.docker.internal
     ports:
       - 3001:3001
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   relaysetup:
     image: node:12-buster-slim
