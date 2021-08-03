@@ -1,6 +1,13 @@
 # start
 
-docker-compose up -d
+docker-compose up
+
+### tribes dev
+
+To run tribes frontend locally, use these ports:
+
+- tribes: `yarn start:tribes:docker` (localhost:23000)
+- people: `yarn start:people:docker` (localhost:23007)
 
 # to clear volumes (restart from scratch)
 

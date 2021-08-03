@@ -1,7 +1,7 @@
 var signup = require("./signup");
 
 async function setup() {
-  await sleep(5000);
+  await sleep(10000);
   console.log("=========> SETUP <==========");
   await signup.run_signup();
   console.log("=========> SETUP COMPLETE! <==========");

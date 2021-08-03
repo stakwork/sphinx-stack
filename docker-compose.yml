@@ -25,15 +25,15 @@ services:
       - 8181:8181
     command: --configfile=/lndsetup/alice.conf
 
-  # lndsetup:
-  #   image: node:12-buster-slim
-  #   depends_on:
-  #     - alice-lnd
-  #   restart: "no"
-  #   entrypoint: ["node", "/lndsetup/index.js"]
-  #   volumes:
-  #     - ./lnd/alice:/alice
-  #     - ./lndsetup:/lndsetup
+  lndsetup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice-lnd
+    restart: "no"
+    entrypoint: ["node", "/lndsetup/index.js"]
+    volumes:
+      - ./lnd/alice:/alice
+      - ./lndsetup:/lndsetup
 
   db:
     image: postgres
@@ -48,7 +48,7 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes
+    image: sphinx-tribes
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
@@ -57,6 +57,8 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5002:5002
+      - 13007:5002
+      - 13000:5002
 
   auth:
     image: sphinxlightning/sphinx-auth

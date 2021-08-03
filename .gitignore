@@ -1,6 +1,7 @@
 notes.md
 .DS_Store
 relayconfigs/db/*
+relayconfigs/_nodes_full.json
 !relayconfigs/db/.gitkeep
 bitcoind/*
 !bitcoind/bitcoin.conf
@@ -8,5 +9,3 @@ lnd/*
 !lnd/.gitkeep
 zmq/*
 !zmq/index.js
-lndsetup/*.js
-!lndsetup/index.js

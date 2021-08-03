@@ -1,0 +1,8 @@
+[
+  {
+    "alias": "Alice",
+    "pubkey": "03a394d0ebf0d003124ab130c6b12b8b990a50a30a464354800a51981ba745bb07",
+    "ip": "http://alice.sphinx:3001",
+    "external_ip": "http://localhost:3001"
+  }
+]
