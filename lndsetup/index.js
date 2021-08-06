@@ -2,14 +2,15 @@ var wallet = require("./wallet");
 var nodes = require("./nodes");
 
 async function createOrUnlockWallet(node) {
-  console.log("=====> try to setup alice lnd <======");
+  console.log("[LND] setup");
   try {
     const r = await wallet.initWallet(node);
-    console.log("r", r);
+    console.log("[LND] INIT WALLET:", r);
     if (r.error) {
       // r.error === "wallet already exists"
       const r2 = await wallet.unlockWallet(node);
-      console.log("r2", r2);
+      console.log("[LND] WALLET UNLOCKED");
+      // console.log("r2", r2);
     }
   } catch (e) {
     console.log("=> err", e);
@@ -17,10 +18,11 @@ async function createOrUnlockWallet(node) {
 }
 
 async function unlockAll() {
-  await sleep(5000);
-  await asyncForEach(Object.values(nodes.nodes), async (node) => {
-    await createOrUnlockWallet(node);
-  });
+  await sleep(3500);
+  createOrUnlockWallet(nodes.nodes.alice);
+  // await asyncForEach(Object.values(nodes.nodes), async (node) => {
+  //   await createOrUnlockWallet(node);
+  // });
 }
 
 unlockAll();

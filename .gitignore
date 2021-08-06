@@ -9,3 +9,5 @@ lnd/*
 !lnd/.gitkeep
 zmq/*
 !zmq/index.js
+memes/*
+!memes/.gitkeep

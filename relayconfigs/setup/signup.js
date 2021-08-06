@@ -3,27 +3,29 @@ var fs = require("fs");
 var rsa = require("./rsa");
 var fetch = require("./fetch");
 var JSCryptor = require("./rncryptor");
-
-const path = "/relayconfigs/_nodes_partial.json";
-const pathToWrite = "/relayconfigs/_nodes_full.json";
+var paths = require("./paths");
 
 const CLEAR = false;
 
 async function run_signup() {
-  var nodes1 = require(path);
-  var finalNodes = require(pathToWrite);
-  await asyncForEach(nodes1, async (n, i) => {
-    if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
-    const token = await signup(n);
-    n.authToken = token;
-    await createContactKey(n);
-  });
+  try {
+    var nodes1 = require(paths.path);
+    var finalNodes = require(paths.pathToWrite);
+    await asyncForEach(nodes1, async (n, i) => {
+      if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
+      const token = await signup(n);
+      n.authToken = token;
+      await createContactKey(n);
+    });
 
-  if (!CLEAR) return;
-  var nodesAgain = require(path);
-  await asyncForEach(nodesAgain, async (n) => {
-    await clearNode(n);
-  });
+    if (!CLEAR) return;
+    var nodesAgain = require(paths.path);
+    await asyncForEach(nodesAgain, async (n) => {
+      await clearNode(n);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function headers(token) {
@@ -55,42 +57,53 @@ async function signup(n) {
 }
 
 async function getOwner(n) {
-  const r = await fetch(n.ip + "/contacts", {
-    method: "GET",
-    headers: headers(n.authToken),
-  });
-  const j = await r.json();
+  try {
+    const r = await fetch(n.ip + "/contacts", {
+      method: "GET",
+      headers: headers(n.authToken),
+    });
+    const j = await r.json();
 
-  const owner = j.response.contacts.find((c) => c.is_owner);
-  // const id = owner.id;
-  return owner;
+    const owner = j.response.contacts.find((c) => c.is_owner);
+    // const id = owner.id;
+    return owner;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }
 
 async function createContactKey(n) {
-  // console.log("NODE",n)
+  try {
+    // console.log("NODE",n)
 
-  const owner = await getOwner(n);
-  const id = owner.id;
+    const owner = await getOwner(n);
+    const id = owner.id;
 
-  const { public, private } = await rsa.genKeys();
-  addFieldToNodeJson(n.pubkey, "contact_key", public);
-  addFieldToNodeJson(n.pubkey, "privkey", private);
+    const { public, private } = await rsa.genKeys();
+    addFieldToNodeJson(n.pubkey, "contact_key", public);
+    addFieldToNodeJson(n.pubkey, "privkey", private);
 
-  const r = await fetch(n.ip + "/contacts/" + id, {
-    method: "PUT",
-    headers: headers(n.authToken),
-    body: JSON.stringify({
-      contact_key: public,
-    }),
-  });
-  const j = await r.json();
-  const owner2 = await getOwner(n);
+    const r = await fetch(n.ip + "/contacts/" + id, {
+      method: "PUT",
+      headers: headers(n.authToken),
+      body: JSON.stringify({
+        contact_key: public,
+        alias: n.alias,
+      }),
+    });
+    const j = await r.json();
+    const owner2 = await getOwner(n);
 
-  const str = `${private}::${public}::${n.external_ip}::${n.authToken}`;
-  const pin = "111111";
-  const enc = JSCryptor.JSCryptor.Encrypt(str, pin);
-  const final = Buffer.from(`keys::${enc}`).toString("base64");
-  addFieldToNodeJson(n.pubkey, "exported_keys", final);
+    const str = `${private}::${public}::${n.external_ip}::${n.authToken}`;
+    const pin = "111111";
+    const enc = JSCryptor.JSCryptor.Encrypt(str, pin);
+    const final = Buffer.from(`keys::${enc}`).toString("base64");
+    addFieldToNodeJson(n.pubkey, "exported_keys", final);
+    addFieldToNodeJson(n.pubkey, "pin", pin);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function clearNode(n) {
@@ -101,12 +114,12 @@ async function clearNode(n) {
 }
 
 async function addFieldToNodeJson(pubkey, key, value) {
-  var nodes = require(path);
+  var nodes = require(paths.path);
   const idx = nodes.findIndex((n) => n.pubkey === pubkey);
   if (idx < 0) return;
   nodes[idx][key] = value;
   const jsonString = JSON.stringify(nodes, null, 2);
-  fs.writeFileSync(pathToWrite, jsonString);
+  fs.writeFileSync(paths.pathToWrite, jsonString);
 }
 
 async function asyncForEach(array, callback) {
