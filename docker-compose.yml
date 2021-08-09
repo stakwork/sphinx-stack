@@ -13,6 +13,7 @@ services:
       - 8333:8333
       - 28332:28332
       - 28333:28333
+      - 18443:18443
 
   alice-lnd:
     image: lnzap/lnd:latest
@@ -23,7 +24,7 @@ services:
     ports:
       - 9735:9735
       - 10009:10009
-      - 8181:8181
+      - 38881:38881
     command: --configfile=/lndsetup/alice.conf
 
   lndsetup:

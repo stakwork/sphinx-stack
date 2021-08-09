@@ -1,7 +1,11 @@
+const macpath = ".lnd/data/chain/bitcoin/regtest/admin.macaroon";
+
 const nodes = {
   alice: {
+    alias: "alice",
     hostname: "alice-lnd.sphinx:38881",
     password: "alice12345",
+    macaroon: "/alice/" + macpath,
     mnemonic: [
       "above",
       "hair",
@@ -30,8 +34,10 @@ const nodes = {
     ],
   },
   bob: {
+    alias: "bob",
     hostname: "bob-lnd.sphinx:38882",
     password: "bob12345",
+    macaroon: "/bob/" + macpath,
     mnemonic: [
       "monster",
       "above",
@@ -60,8 +66,10 @@ const nodes = {
     ],
   },
   carol: {
+    alias: "carol",
     hostname: "carol-lnd.sphinx:38883",
     password: "carol12345",
+    macaroon: "/carol/" + macpath,
     mnemonic: [
       "record",
       "monster",
@@ -90,8 +98,10 @@ const nodes = {
     ],
   },
   dave: {
+    alias: "dave",
     hostname: "dave-lnd.sphinx:38884",
     password: "dave12345",
+    macaroon: "/dave/" + macpath,
     mnemonic: [
       "gossip",
       "record",

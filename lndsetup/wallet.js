@@ -8,6 +8,7 @@ const httpsAgent = new https.Agent({
 async function initWallet(node) {
   var root = `https://${node.hostname}/v1/`;
   var pass = Buffer.from(node.password).toString("base64");
+  console.log("WALLET URL", root + "initwallet");
   const r = await fetch(root + "initwallet", {
     method: "POST",
     body: JSON.stringify({
