@@ -25,11 +25,22 @@ async function listChannels(node) {
   return await doRequest(node, "v1/channels");
 }
 
-async function openChannel(node) {
+async function listPeers(node) {
+  return await doRequest(node, "v1/peers");
+}
+
+// addr = pubkey@host format
+async function addPeer(node, addr) {
+  return await doRequest(node, "v1/peers", {
+    addr,
+  });
+}
+
+async function openChannel(node, chan) {
   return await doRequest(node, "v1/channels", {
-    node_pubkey: "",
-    local_funding_amount: "0",
-    push_sat: "0",
+    node_pubkey: Buffer.from(chan.pubkey, "hex").toString("base64"),
+    local_funding_amount: chan.amount,
+    push_sat: chan.push_amount,
   });
 }
 
@@ -39,6 +50,8 @@ module.exports = {
   getInfo,
   getBalance,
   openChannel,
+  listPeers,
+  addPeer,
 };
 
 async function doRequest(node, theurl, body) {

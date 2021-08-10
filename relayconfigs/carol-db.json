@@ -1,0 +1,6 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "./relayconfigs/db/carol.db"
+  }
+}

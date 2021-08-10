@@ -3,6 +3,8 @@ var nodes = require("./nodes");
 var lightning = require("./lightning");
 var bitcoind = require("./bitcoind");
 
+const CENTRAL = "alice";
+
 async function createOrUnlockWallet(node) {
   console.log("[LND] setup");
   try {
@@ -16,7 +18,13 @@ async function createOrUnlockWallet(node) {
       console.log("[LND] WALLET UNLOCKED");
       // console.log("r2", r2);
     }
-    await sleep(2000);
+  } catch (e) {
+    console.log("=> err", e);
+  }
+}
+
+async function coinsAndChannels(node) {
+  try {
     const coins_success = await coins(node);
     if (coins_success) {
       await channels(node);
@@ -46,20 +54,47 @@ async function coins(node) {
 
 async function channels(node) {
   try {
+    const ps = await lightning.listPeers(node);
+    const peers = ps.peers;
+    const peersToMake = node.channels
+      ? node.channels.filter((ch) => {
+          const exists = peers.find((p) => p.pub_key === ch.pubkey);
+          return exists ? false : true;
+        })
+      : [];
+    await asyncForEach(peersToMake, async (p) => {
+      await lightning.addPeer(node, p);
+    });
+
     const chans = await lightning.listChannels(node);
     const channels = chans.channels || [];
     if (!channels.length) {
       // open channels here
+      await asyncForEach(peersToMake, async (p) => {
+        await lightning.openChannel(node, {
+          pubkey: p.pubkey,
+          amount: 2000000,
+          push_amount: 1000000,
+        });
+      });
+      await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
     }
-  } catch (e) {}
+    await sleep(4000);
+    const chans2 = await lightning.listChannels(node);
+    console.log("FINAL CHANS", chans2.channels);
+  } catch (e) {
+    console.log("=> err:", e);
+  }
 }
 
 async function unlockAll() {
   await sleep(3500);
-  createOrUnlockWallet(nodes.nodes.alice);
-  // await asyncForEach(Object.values(nodes.nodes), async (node) => {
-  //   await createOrUnlockWallet(node);
-  // });
+  // createOrUnlockWallet(nodes.nodes.alice);
+  await asyncForEach(Object.values(nodes.nodes), async (node) => {
+    await createOrUnlockWallet(node);
+  });
+  await sleep(2000);
+  await coinsAndChannels(nodes.nodes.alice);
 }
 
 unlockAll();

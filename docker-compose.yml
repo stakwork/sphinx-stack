@@ -26,6 +26,30 @@ services:
       - 38881:38881
     command: --configfile=/lndsetup/alice.conf
 
+  bob-lnd:
+    image: lnzap/lnd:latest
+    container_name: bob-lnd.sphinx
+    volumes:
+      - ./lnd/bob:/lnd
+      - ./lndsetup:/lndsetup
+    ports:
+      - 9736:9735
+      - 10010:10010
+      - 38882:38882
+    command: --configfile=/lndsetup/bob.conf
+
+  carol-lnd:
+    image: lnzap/lnd:latest
+    container_name: carol-lnd.sphinx
+    volumes:
+      - ./lnd/carol:/lnd
+      - ./lndsetup:/lndsetup
+    ports:
+      - 9737:9735
+      - 10011:10011
+      - 38883:38883
+    command: --configfile=/lndsetup/carol.conf
+
   lndsetup:
     image: node:12-buster-slim
     depends_on:
@@ -45,7 +69,7 @@ services:
       - POSTGRES_USER=postgres
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - 5433:5432
 
@@ -123,6 +147,50 @@ services:
       - PORT=3001
     ports:
       - 3001:3001
+
+  bob:
+    image: sphinxlightning/sphinx-relay-test
+    container_name: bob.sphinx
+    restart: on-failure
+    depends_on:
+      - bob-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/relayconfigs/bob.json",
+        "--db=/relay/relayconfigs/bob-db.json",
+      ]
+    volumes:
+      - ./relayconfigs:/relay/relayconfigs
+      - ./lnd/bob:/relay/bob
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+    ports:
+      - 3002:3002
+
+  carol:
+    image: sphinxlightning/sphinx-relay-test
+    container_name: carol.sphinx
+    restart: on-failure
+    depends_on:
+      - carol-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/relayconfigs/carol.json",
+        "--db=/relay/relayconfigs/carol-db.json",
+      ]
+    volumes:
+      - ./relayconfigs:/relay/relayconfigs
+      - ./lnd/carol:/relay/carol
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+    ports:
+      - 3003:3003
 
   relaysetup:
     image: node:12-buster-slim
