@@ -9,11 +9,10 @@ services:
     volumes:
       - ./bitcoind:/data/.bitcoin
     ports:
-      - 8332:8332
+      - 18443:18443
       - 8333:8333
       - 28332:28332
       - 28333:28333
-      - 18443:18443
 
   alice-lnd:
     image: lnzap/lnd:latest
@@ -46,6 +45,7 @@ services:
       - POSTGRES_USER=postgres
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 5433:5432
 

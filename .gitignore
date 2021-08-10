@@ -11,3 +11,5 @@ zmq/*
 !zmq/index.js
 memes/*
 !memes/.gitkeep
+postgres-data/*
+!postgres-data/.gitkeep

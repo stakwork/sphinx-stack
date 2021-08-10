@@ -18,11 +18,19 @@ async function getBalance(node) {
 }
 
 async function newAddress(node) {
-  return await doRequest(node, "v1/newaddress?type=0&account=" + node.alias);
+  return await doRequest(node, "v1/newaddress?type=1&account=" + node.alias);
 }
 
 async function listChannels(node) {
-  return await doRequest(node, "v1/listchannels");
+  return await doRequest(node, "v1/channels");
+}
+
+async function openChannel(node) {
+  return await doRequest(node, "v1/channels", {
+    node_pubkey: "",
+    local_funding_amount: "0",
+    push_sat: "0",
+  });
 }
 
 module.exports = {
@@ -30,6 +38,7 @@ module.exports = {
   newAddress,
   getInfo,
   getBalance,
+  openChannel,
 };
 
 async function doRequest(node, theurl, body) {
@@ -53,8 +62,10 @@ async function doRequest(node, theurl, body) {
       theParams.body = JSON.stringify(body || {});
     }
     const url = `https://${node.hostname}/${theurl}`;
-    console.log("URL", url);
     const r = await fetch(url, theParams);
+    if (!r.ok) {
+      console.log("=> Request Failed:", r.status, r.statusText);
+    }
     const j = await r.json();
     return j;
   } catch (e) {

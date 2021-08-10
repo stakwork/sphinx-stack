@@ -18,4 +18,4 @@ rm -rf ./relayconfigs/db/carol.db
 
 rm -rf ./relayconfigs/db/dave.db
 
-rm -rf ./relayconfigs/_nodes_full.json
+rm -rf ./relayconfigs/NODES.json
