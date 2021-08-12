@@ -122,7 +122,7 @@ services:
       - PORT=5555
       - JWT_KEY=19e0bb49bhyuibme
       - STORAGE_MODE=local
-      - LOCAL_DIR=files
+      - LOCAL_DIR=app/files
       - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
       - HOST=localhost:5555
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
