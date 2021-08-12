@@ -20,8 +20,15 @@ async function preSetup() {
   try {
     const exists = fs.existsSync(paths.pathToWrite);
     if (!exists) {
+      console.log(
+        "=>",
+        paths.pathToWrite,
+        "does not exist, creating now",
+        exists
+      );
       fs.copyFileSync(paths.path, paths.pathToWrite);
     } else {
+      console.log("=>", paths.pathToWrite, "exists");
       // check ready to go! All fields there
       let clearAll = false;
       var nodes = require(paths.pathToWrite);
