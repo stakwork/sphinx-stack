@@ -28,4 +28,4 @@ You can also run with `Docker Desktop` and just use the "play" and "stop" button
 
 ### troubleshooting
 
-There's lots of moving pieces! On a slower computer, do `export COMPOSE_HTTP_TIMEOUT=120` first
+There's lots of moving pieces! On a slower computer (or an M1 mac), do `export COMPOSE_HTTP_TIMEOUT=120` first
