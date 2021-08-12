@@ -5,9 +5,13 @@ var fetch = require("./fetch");
 
 async function setup() {
   preSetup();
-  await pollReady();
-  console.log("=========> SETUP <==========");
-  await signup.run_signup();
+  var nodes = require(paths.path);
+  await asyncForEach(nodes, async function (n, i) {
+    await pollReady(n, i);
+    await sleep(1000);
+    console.log("=========> SETUP <==========");
+    await signup.run_signup(n, i);
+  });
   console.log("======================================");
   console.log("==                                  ==");
   console.log("==      =>  SETUP COMPLETE!  <=     ==");
@@ -52,22 +56,17 @@ async function preSetup() {
   }
 }
 
-function pollReady() {
+function pollReady(n, i) {
   return new Promise(async function (resolve, reject) {
-    var nodes = require(paths.path);
-    let oks = nodes.length;
-    while (oks > 0) {
-      await asyncForEach(nodes, async function (n) {
-        try {
-          await sleep(1000);
-          const r = await fetch(n.ip + "/is_setup");
-          // const txt = await r.json();
-          if (r.ok) oks = oks - 1;
-        } catch (e) {}
-      });
-      await sleep(1000);
+    let ok = false;
+    while (!ok) {
+      try {
+        await sleep(1000);
+        const r = await fetch(n.ip + "/is_setup");
+        // const txt = await r.json();
+        if (r.ok) ok = true;
+      } catch (e) {}
     }
-    // oks==0, all nodes up
     resolve();
   });
 }

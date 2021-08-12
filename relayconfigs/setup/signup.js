@@ -5,24 +5,13 @@ var fetch = require("./fetch");
 var JSCryptor = require("./rncryptor");
 var paths = require("./paths");
 
-const CLEAR = false;
-
-async function run_signup() {
+async function run_signup(n, i) {
   try {
-    var nodes1 = require(paths.path);
     var finalNodes = require(paths.pathToWrite);
-    await asyncForEach(nodes1, async (n, i) => {
-      if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
-      const token = await signup(n);
-      n.authToken = token;
-      await createContactKey(n);
-    });
-
-    if (!CLEAR) return;
-    var nodesAgain = require(paths.path);
-    await asyncForEach(nodesAgain, async (n) => {
-      await clearNode(n);
-    });
+    if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
+    const token = await signup(n);
+    n.authToken = token;
+    await createContactKey(n);
   } catch (e) {
     console.log(e);
   }
@@ -120,12 +109,6 @@ async function addFieldToNodeJson(pubkey, key, value) {
   nodes[idx][key] = value;
   const jsonString = JSON.stringify(nodes, null, 2);
   fs.writeFileSync(paths.pathToWrite, jsonString);
-}
-
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
 }
 
 module.exports = { run_signup };
