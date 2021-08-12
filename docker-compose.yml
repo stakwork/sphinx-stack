@@ -86,8 +86,8 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5002:5002
-      - 13007:5002
-      - 13000:13000
+      - 5002:13007
+      - 5002:13000
 
   auth:
     image: sphinxlightning/sphinx-auth
