@@ -54,6 +54,8 @@ services:
     image: node:12-buster-slim
     depends_on:
       - alice-lnd
+      - bob-lnd
+      - carol-lnd
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
@@ -197,6 +199,8 @@ services:
     image: node:12-buster-slim
     depends_on:
       - alice
+      - bob
+      - carol
     restart: "no"
     entrypoint: ["node", "/relayconfigs/setup/index.js"]
     volumes:
