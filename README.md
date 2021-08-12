@@ -12,6 +12,8 @@ Full stack Sphinx cluster, including:
 
 ### run
 
+`docker-compose pull`
+
 `docker-compose up -d`
 
 ### stop

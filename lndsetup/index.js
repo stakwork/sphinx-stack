@@ -38,12 +38,13 @@ async function coins(node) {
   try {
     const balres = await lightning.getBalance(node);
     const confirmed = parseInt(balres.confirmed_balance);
-    console.log("=> confirmed balance:", confirmed);
+    console.log("=> ALICE confirmed balance:", confirmed);
     if (!confirmed) {
       const ares = await lightning.newAddress(node);
       const addy = ares.address;
-      console.log("=> address", addy);
+      console.log("=> ALICE address", addy);
       await bitcoind.mine(101, addy);
+      console.log("=> 101 blocks mined to alice!", addy);
       await sleep(5000);
     }
     return true;
@@ -69,6 +70,7 @@ async function channels(node) {
     const chans = await lightning.listChannels(node);
     const channels = chans.channels || [];
     if (!channels.length) {
+      console.log("=> alice opening channels...");
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         await lightning.openChannel(node, {
@@ -78,6 +80,7 @@ async function channels(node) {
         });
       });
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
+      console.log("=> 6 blocked mined to Alice!");
     }
     await sleep(4000);
     const chans2 = await lightning.listChannels(node);
