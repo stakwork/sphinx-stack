@@ -40,7 +40,9 @@ async function preSetup() {
         fs.unlinkSync("/relayconfigs/db/dave.db");
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log("=> preSetup error", e);
+  }
 }
 
 function pollReady() {
@@ -50,6 +52,7 @@ function pollReady() {
     while (oks > 0) {
       await asyncForEach(nodes, async function (n) {
         try {
+          await sleep(1000);
           const r = await fetch(n.ip + "/is_setup");
           // const txt = await r.json();
           if (r.ok) oks = oks - 1;
