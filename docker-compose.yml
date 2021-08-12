@@ -76,7 +76,7 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes
+    image: sphinxlightning/sphinx-tribes:latest
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
@@ -90,7 +90,7 @@ services:
       - 5002:13000
 
   auth:
-    image: sphinxlightning/sphinx-auth
+    image: sphinxlightning/sphinx-auth:latest
     container_name: auth.sphinx
     restart: on-failure
     depends_on:
@@ -102,7 +102,7 @@ services:
       - 9090:9090
 
   mqtt:
-    image: sphinxlightning/sphinx-mqtt
+    image: sphinxlightning/sphinx-mqtt:latest
     container_name: mqtt.sphinx
     restart: on-failure
     depends_on:
@@ -111,7 +111,7 @@ services:
       - 1883:1883
 
   meme:
-    image: sphinxlightning/sphinx-meme
+    image: sphinxlightning/sphinx-meme:latest
     container_name: meme.sphinx
     restart: on-failure
     depends_on:
@@ -130,7 +130,7 @@ services:
       - 5555:5555
 
   alice:
-    image: sphinxlightning/sphinx-relay-test
+    image: sphinxlightning/sphinx-relay-test:latest
     container_name: alice.sphinx
     restart: on-failure
     depends_on:
@@ -152,7 +152,7 @@ services:
       - 3001:3001
 
   bob:
-    image: sphinxlightning/sphinx-relay-test
+    image: sphinxlightning/sphinx-relay-test:latest
     container_name: bob.sphinx
     restart: on-failure
     depends_on:
@@ -174,7 +174,7 @@ services:
       - 3002:3002
 
   carol:
-    image: sphinxlightning/sphinx-relay-test
+    image: sphinxlightning/sphinx-relay-test:latest
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
