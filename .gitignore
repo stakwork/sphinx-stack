@@ -1,12 +1,12 @@
 notes.md
 .DS_Store
-relayconfigs/db/*
-relayconfigs/NODES.json
-!relayconfigs/db/.gitkeep
+relay/db/*
+relay/NODES.json
+!relay/db/.gitkeep
 bitcoind/*
 !bitcoind/bitcoin.conf
 lnd/*
-!lnd/.gitkeep
+!lnd/setup
 zmq/*
 !zmq/index.js
 memes/*

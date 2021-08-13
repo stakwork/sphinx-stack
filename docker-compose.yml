@@ -19,7 +19,7 @@ services:
     container_name: alice-lnd.sphinx
     volumes:
       - ./lnd/alice:/lnd
-      - ./lndsetup:/lndsetup
+      - ./lnd/setup:/lndsetup
     ports:
       - 9735:9735
       - 10009:10009
@@ -31,7 +31,7 @@ services:
     container_name: bob-lnd.sphinx
     volumes:
       - ./lnd/bob:/lnd
-      - ./lndsetup:/lndsetup
+      - ./lnd/setup:/lndsetup
     ports:
       - 9736:9735
       - 10010:10010
@@ -43,7 +43,7 @@ services:
     container_name: carol-lnd.sphinx
     volumes:
       - ./lnd/carol:/lnd
-      - ./lndsetup:/lndsetup
+      - ./lnd/setup:/lndsetup
     ports:
       - 9737:9735
       - 10011:10011
@@ -60,7 +60,7 @@ services:
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice:/alice
-      - ./lndsetup:/lndsetup
+      - ./lnd/setup:/lndsetup
 
   db:
     image: postgres
@@ -139,11 +139,11 @@ services:
       [
         "node",
         "/relay/dist/app.js",
-        "--config=/relay/relayconfigs/alice.json",
-        "--db=/relay/relayconfigs/alice-db.json",
+        "--config=/relay/configs/alice.json",
+        "--db=/relay/configs/alice-db.json",
       ]
     volumes:
-      - ./relayconfigs:/relay/relayconfigs
+      - ./relay:/relay/configs
       - ./lnd/alice:/relay/alice
     environment:
       - NODE_ENV=development
@@ -161,11 +161,11 @@ services:
       [
         "node",
         "/relay/dist/app.js",
-        "--config=/relay/relayconfigs/bob.json",
-        "--db=/relay/relayconfigs/bob-db.json",
+        "--config=/relay/configs/bob.json",
+        "--db=/relay/configs/bob-db.json",
       ]
     volumes:
-      - ./relayconfigs:/relay/relayconfigs
+      - ./relay:/relay/configs
       - ./lnd/bob:/relay/bob
     environment:
       - NODE_ENV=development
@@ -183,11 +183,11 @@ services:
       [
         "node",
         "/relay/dist/app.js",
-        "--config=/relay/relayconfigs/carol.json",
-        "--db=/relay/relayconfigs/carol-db.json",
+        "--config=/relay/configs/carol.json",
+        "--db=/relay/configs/carol-db.json",
       ]
     volumes:
-      - ./relayconfigs:/relay/relayconfigs
+      - ./relay:/relay/configs
       - ./lnd/carol:/relay/carol
     environment:
       - NODE_ENV=development
@@ -202,6 +202,6 @@ services:
       - bob
       - carol
     restart: "no"
-    entrypoint: ["node", "/relayconfigs/setup/index.js"]
+    entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
-      - ./relayconfigs:/relayconfigs
+      - ./relay:/relay

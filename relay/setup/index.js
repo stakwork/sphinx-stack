@@ -45,10 +45,10 @@ async function preSetup() {
       if (clearAll) {
         // delete the database files
         fs.unlinkSync(paths.pathToWrite);
-        fs.unlinkSync("/relayconfigs/db/alice.db");
-        fs.unlinkSync("/relayconfigs/db/bob.db");
-        fs.unlinkSync("/relayconfigs/db/carol.db");
-        fs.unlinkSync("/relayconfigs/db/dave.db");
+        fs.unlinkSync("/relay/db/alice.db");
+        fs.unlinkSync("/relay/db/bob.db");
+        fs.unlinkSync("/relay/db/carol.db");
+        fs.unlinkSync("/relay/db/dave.db");
       }
     }
   } catch (e) {
