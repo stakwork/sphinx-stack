@@ -26,7 +26,8 @@ You can also run with `Docker Desktop` and just use the "play" and "stop" button
 
 ### develop
 
-- Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relayconfigs/NODES.json`
+- Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json`
+- the easiest client to get up and running is (Sphinx Desktop)[https://github.com/stakwork/sphinx-win-linux-desktop]
 
 ### troubleshooting
 
