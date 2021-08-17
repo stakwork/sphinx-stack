@@ -10,9 +10,13 @@ Run one of the Sphinx frontends. The easiest one to get up and running is [sphin
 
 Once you have the Desktop App running, open the `NODES.json` file in `sphinx-stack/relay`. You will see an `exported_keys` string under "alice"... enter that string into the Desktop App, then enter the PIN (111111). Now you are connected to the local Docker cluster!
 
+![startup](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/startup.png)
+
+Create a Bot using the button in the upper right. Name it `example` and set the webhook to `http://host.docker.internal:3333`.
+
 ![NewBot](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/newbot.png)
 
-Create a Bot using the button in the upper right. Name it `example` and set the webhook to `http://host.docker.internal:3333`. You will then see a `token`
+You will then see a `token`, that you can use to build and test a local Sphinx bot.
 
 ![Bots](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/bots.png)
 
