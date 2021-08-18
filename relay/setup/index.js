@@ -6,6 +6,9 @@ var fetch = require("./fetch");
 async function setup() {
   preSetup();
   var nodes = require(paths.path);
+  if (process.env.ALICE_IP) {
+    nodes[0].ip = process.env.ALICE_IP;
+  }
   await asyncForEach(nodes, async function (n, i) {
     await pollReady(n, i);
     await sleep(1000);

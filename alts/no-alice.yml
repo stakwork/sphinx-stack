@@ -129,28 +129,27 @@ services:
     ports:
       - 5555:5555
 
-  alice:
-    image: sphinxlightning/sphinx-relay-test:latest
-    # image: sphinx-relay
-    container_name: alice.sphinx
-    restart: on-failure
-    depends_on:
-      - alice-lnd
-    entrypoint:
-      [
-        "node",
-        "/relay/dist/app.js",
-        "--config=/relay/configs/alice.json",
-        "--db=/relay/configs/alice-db.json",
-      ]
-    volumes:
-      - ./relay:/relay/configs
-      - ./lnd/alice:/relay/alice
-    environment:
-      - NODE_ENV=development
-      - PORT=3001
-    ports:
-      - 3001:3001
+  # alice:
+  #   image: sphinx-relay
+  #   container_name: alice.sphinx
+  #   restart: on-failure
+  #   depends_on:
+  #     - alice-lnd
+  #   entrypoint:
+  #     [
+  #       "node",
+  #       "/relay/dist/app.js",
+  #       "--config=/relay/configs/alice.json",
+  #       "--db=/relay/configs/alice-db.json",
+  #     ]
+  #   volumes:
+  #     - ./relay:/relay/configs
+  #     - ./lnd/alice:/relay/alice
+  #   environment:
+  #     - NODE_ENV=development
+  #     - PORT=3001
+  #   ports:
+  #     - 3001:3001
 
   bob:
     image: sphinxlightning/sphinx-relay-test:latest
@@ -199,10 +198,11 @@ services:
   relaysetup:
     image: node:12-buster-slim
     depends_on:
-      - alice
       - bob
       - carol
     restart: "no"
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
+    environment:
+      - ALICE_IP=http://localhost:3001
