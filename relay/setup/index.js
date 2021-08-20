@@ -65,6 +65,7 @@ function pollReady(n, i) {
     while (!ok) {
       try {
         await sleep(1000);
+        console.log("=> try ", n.ip + "/is_setup");
         const r = await fetch(n.ip + "/is_setup");
         // const txt = await r.json();
         if (r.ok) ok = true;

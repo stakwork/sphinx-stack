@@ -12,6 +12,8 @@ Full stack Sphinx cluster, including:
 
 ### run
 
+Open a terminal inside the root directory of this repository. Then:
+
 `docker-compose pull`
 
 `docker-compose up -d`
@@ -26,7 +28,7 @@ You can also run with `Docker Desktop` and just use the "play" and "stop" button
 
 ### develop
 
-- Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json`
+- Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json` (make sure to copy the trailing `=` equal signs if there are any!)
 - the easiest client to get up and running is (Sphinx Desktop)[https://github.com/stakwork/sphinx-win-linux-desktop]
 
 ### troubleshooting

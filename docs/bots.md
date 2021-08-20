@@ -8,7 +8,7 @@ Setup and run the `sphinx-stack` cluster.
 
 Run one of the Sphinx frontends. The easiest one to get up and running is [sphinx-desktop](https://github.com/stakwork/sphinx-win-linux-desktop). This repository is for the Windows/Linux desktop app, but it runs fine on Mac as well.
 
-Once you have the Desktop App running, open the `NODES.json` file in `sphinx-stack/relay`. You will see an `exported_keys` string under "alice"... enter that string into the Desktop App, then enter the PIN (111111). Now you are connected to the local Docker cluster!
+Once you have the Desktop App running, open the `NODES.json` file in `sphinx-stack/relay`. You will see an `exported_keys` string under "alice"... copy that string (make sure to include the trailing equals sign if it exists!). Enter the string into the Desktop App, then enter the PIN (111111). Now you are connected to the local Docker cluster!
 
 ![startup](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/startup.png)
 
