@@ -7,8 +7,6 @@
     "macaroon_location": "/relay/carol/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
     "node_http_protocol": "http",
     "node_http_port": "3003",
-    "media_host": "meme.sphinx:5555",
-    "tribes_host": "host.docker.internal:13000",
     "tribes_mqtt_port": "1883",
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3003",

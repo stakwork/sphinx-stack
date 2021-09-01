@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   bitcoind:
     image: lncm/bitcoind:v0.21.1
     restart: on-failure
@@ -149,6 +148,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3001
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3001:3001
 
@@ -171,6 +172,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3002
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3002:3002
 
@@ -193,6 +196,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3003
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3003:3003
 

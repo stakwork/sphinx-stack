@@ -75,20 +75,6 @@ services:
     ports:
       - 5433:5432
 
-  tribes:
-    image: sphinxlightning/sphinx-tribes:latest
-    container_name: tribes.sphinx
-    restart: on-failure
-    depends_on:
-      - db
-    environment:
-      - PORT=13000
-      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
-    ports:
-      - 5002:5002
-      - 13007:13007
-      - 13000:13000
-
   auth:
     image: sphinxlightning/sphinx-auth:latest
     container_name: auth.sphinx
@@ -129,6 +115,32 @@ services:
     ports:
       - 5555:5555
 
+  alice:
+    image: sphinxlightning/sphinx-relay-test:latest
+    # image: sphinx-relay
+    container_name: alice.sphinx
+    restart: on-failure
+    depends_on:
+      - alice-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/alice.json",
+        "--db=/relay/configs/alice-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/alice:/relay/alice
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - TRIBES_HOST=localhost:5002
+      - MQTT_HOST=host.docker.internal
+      - MEDIA_HOST=meme.sphinx:5555
+    ports:
+      - 3001:3001
+
   bob:
     image: sphinxlightning/sphinx-relay-test:latest
     container_name: bob.sphinx
@@ -148,7 +160,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3002
-      - TRIBES_HOST=host.docker.internal:13000
+      - TRIBES_HOST=localhost:5002
+      - MQTT_HOST=host.docker.internal
       - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3002:3002
@@ -172,7 +185,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3003
-      - TRIBES_HOST=host.docker.internal:13000
+      - TRIBES_HOST=localhost:5002
+      - MQTT_HOST=host.docker.internal
       - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3003:3003
