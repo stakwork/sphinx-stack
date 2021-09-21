@@ -237,6 +237,41 @@ services:
     ports:
       - 3004:3004
 
+  proxy:
+    image: sphinx-proxy
+    container_name: proxy.sphinx
+    restart: on-failure
+    depends_on:
+      - dave-lnd
+    volumes:
+      - ./lnd/dave:/lnd
+      - ./proxy:/proxy
+    entrypoint:
+      [
+        "/app/sphinx-proxy",
+        "--rpclisten=0.0.0.0:11111",
+        "--tlscertpath=/proxy/cert/tls.cert",
+        "--tlskeypath=/proxy/cert/tls.key",
+        "--bitcoin.simnet=1",
+        "--bitcoin.active=1",
+        "--bitcoin.basefee=0",
+        "--store-key=4967BC847DDEFF47C4BC890038F5A495",
+        "--unlock-pwd=hi123456",
+        "--server-macaroons-dir=/proxy/macaroons",
+        "--channels-start=421",
+        "--admin-token=r46bnf8ibrhbb424heba",
+        "--admin-port=5555",
+        "--admin-pubkey=021d7e8cab0bcdd33da98651ae6cae2977c83860fcd09df115259a58396bd022f5",
+        "--initial-msat=5000000",
+        "--macaroon-location=/lnd/data/chain/bitcoin/regtest/admin.macaroon",
+        "--tls-location=/lnd/tls.cert",
+        "--lnd-ip=127.0.0.1",
+        "--lnd-port=10004",
+      ]
+    ports:
+      - 10004:10004
+      - 5555:5555
+
   relaysetup:
     image: node:12-buster-slim
     depends_on:
