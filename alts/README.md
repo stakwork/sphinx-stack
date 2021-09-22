@@ -16,3 +16,7 @@ docker-compose -f ./alts/no-tribes.yml --project-directory . up -d
 
 sphinx-proxy:
 docker build --no-cache -t sphinx-proxy .
+
+docker-compose -f ./alts/proxy.yml --project-directory . up -d
+
+`docker rm -f proxy.sphinx` if its unresponsive
