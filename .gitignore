@@ -12,3 +12,5 @@ zmq/*
 memes/*
 !memes/.gitkeep
 pgdata
+proxy/*/*
+!proxy/*/.gitkeep
