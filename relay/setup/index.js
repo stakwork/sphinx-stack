@@ -17,8 +17,20 @@ async function setup() {
     await signup.run_signup(n, i);
   });
 
-  var finalNodes = require(paths.pathToWrite);
-  await createBotKey(finalNodes[0]);
+  /*Bot creation is being done here
+  we want to generate new bot env vars
+  if we do not have any generated yet
+  this comes in handy when a person fresh
+  installs the sphinx-stack*/
+  botEnvVars = require(paths.botEnvVars);
+  botConfig = require(paths.botConfig);
+  if (botEnvVars.length == 0) {
+    var finalNodes = require(paths.pathToWrite);
+    await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
+      await createBotKey(botConfigValues, botIndex, finalNodes[0]);
+    });
+  }
+
   console.log("======================================");
   console.log("==                                  ==");
   console.log("==      =>  SETUP COMPLETE!  <=     ==");
@@ -27,35 +39,41 @@ async function setup() {
 }
 setup();
 
-async function createBotKey(n) {
+async function createBotKey(botConfigValues, botIndex, n) {
+  const { name, webhook } = botConfigValues;
+
+  console.log(botConfigValues);
   try {
-    /*
-		const r = await fetch(n.ip + "/bot/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-user-token": n.authToken,
-			},
-			body: JSON.stringify({
-				name: "example",
-				webhook: "http://example-bot-sphinx:3333/",
-			}),
-		});
-		const botResponse = await r.json();
-		const botResponseBody = botResponse.response;
-		
-		console.log(
-			Buffer.from(botResponseBody.id).toString("base64") +
-				"." +
-				Buffer.from(botResponseBody.secret).toString(
-					"base64"
-				) +
-				"." +
-				Buffer.from("http://alice.sphinx:3001/action").toString(
-				"base64"
-				)
-		);
-		*/
+    const r = await fetch(n.ip + "/bot/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-token": n.authToken,
+      },
+      body: JSON.stringify({
+        name,
+        webhook,
+      }),
+    });
+
+    const botResponse = await r.json();
+    const botResponseBody = botResponse.response;
+
+    const botEnvVarsJsonString = require(paths.botEnvVars);
+    botEnvVarsJsonString[botIndex] = {
+      SPHINX_TOKEN:
+        Buffer.from(botResponseBody.id).toString("base64") +
+        "." +
+        Buffer.from(botResponseBody.secret).toString("base64") +
+        "." +
+        Buffer.from("http://alice.sphinx:3001/action").toString("base64"),
+      PORT: botConfig[botIndex].port,
+    };
+
+    fs.writeFileSync(
+      paths.botEnvVars,
+      JSON.stringify(botEnvVarsJsonString, null, 2)
+    );
   } catch (e) {
     console.log(e);
   }

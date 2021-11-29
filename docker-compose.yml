@@ -129,7 +129,7 @@ services:
       - 5555:5555
 
   alice:
-    image: sphinxlightning/sphinx-relay-test:latest
+    image: kevkevinpal/sphinx-relay-test:latest
     # image: sphinx-relay
     container_name: alice.sphinx
     restart: on-failure
@@ -149,7 +149,7 @@ services:
       - NODE_ENV=development
       - PORT=3001
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=meme.sphinx:5555
+      - MEDIA_HOST=localhost:5555
     ports:
       - 3001:3001
 
@@ -173,12 +173,12 @@ services:
       - NODE_ENV=development
       - PORT=3002
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=meme.sphinx:5555
+      - MEDIA_HOST=localhost:5555
     ports:
       - 3002:3002
 
   carol:
-    image: sphinxlightning/sphinx-relay-test:latest
+    image: kevkevinpal/sphinx-relay-test:latest
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
@@ -197,9 +197,22 @@ services:
       - NODE_ENV=development
       - PORT=3003
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=meme.sphinx:5555
+      - MEDIA_HOST=localhost:5555
     ports:
       - 3003:3003
+
+  exampleBot:
+    image: kevkevinpal/sphinx-bot-example:latest
+    container_name: example-bot-sphinx
+    restart: on-failure
+    depends_on:
+      - relaysetup  
+    volumes:
+      - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
+    environment:
+      - IS_SPHINX_STACK=true
+    ports:
+      - 3333:3333  
 
   relaysetup:
     image: node:12-buster-slim
