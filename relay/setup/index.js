@@ -51,15 +51,18 @@ async function createBotKey(botConfigValues, botIndex, n) {
         "x-user-token": n.authToken,
       },
       body: JSON.stringify({
-        name,
-        webhook,
+        name: name,
+        webhook: webhook,
       }),
     });
 
+    if (r.status == 401) {
+      process.abort();
+    }
     const botResponse = await r.json();
     const botResponseBody = botResponse.response;
 
-    const botEnvVarsJsonString = require(paths.botEnvVars);
+    const botEnvVarsJsonString = [];
     botEnvVarsJsonString[botIndex] = {
       SPHINX_TOKEN:
         Buffer.from(botResponseBody.id).toString("base64") +
