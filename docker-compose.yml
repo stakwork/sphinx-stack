@@ -207,10 +207,18 @@ services:
     restart: on-failure
     depends_on:
       - relaysetup  
+    command:
+      - /bin/sh
+      - -c
+      - |
+              node ./isEnvAvailible.js && nodemon --legacy-watch --watch index.js --exec 'npm run build && npm run start'
     volumes:
       - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
+      - ./botSandBox/sphinx-example-bot/index.js:/example_bot/index.js
+      - ./botSandBox/isEnvAvailible.js:/example_bot/isEnvAvailible.js
     environment:
       - IS_SPHINX_STACK=true
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - 3333:3333  
 
