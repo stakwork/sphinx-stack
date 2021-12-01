@@ -21,3 +21,5 @@ rm -rf ./relay/db/dave.db
 rm -rf ./relay/NODES.json
 
 rm -rf ./pgdata
+
+rm -rf ./redisData
