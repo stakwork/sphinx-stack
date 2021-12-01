@@ -24,11 +24,23 @@ async function setup() {
   installs the sphinx-stack*/
   botEnvVars = require(paths.botEnvVars);
   botConfig = require(paths.botConfig);
-  if (botEnvVars.length == 0) {
+  if (botEnvVars.length != botConfig.length) {
     var finalNodes = require(paths.pathToWrite);
+    let newBotEnvVars = [];
     await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
-      await createBotKey(botConfigValues, botIndex, finalNodes[0]);
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      const nextKeyPortPair = await createBotKey(
+        botConfigValues,
+        botIndex,
+        finalNodes[0]
+      );
+      await sleep(20000);
+      console.log("RELAY SETUP: ", botConfigValues, nextKeyPortPair);
+      newBotEnvVars[botIndex] = nextKeyPortPair;
     });
+    fs.writeFileSync(paths.botEnvVars, JSON.stringify(newBotEnvVars, null, 2));
   }
 
   console.log("======================================");
@@ -42,7 +54,6 @@ setup();
 async function createBotKey(botConfigValues, botIndex, n) {
   const { name, webhook } = botConfigValues;
 
-  console.log(botConfigValues);
   try {
     const r = await fetch(n.ip + "/bot/", {
       method: "POST",
@@ -62,8 +73,14 @@ async function createBotKey(botConfigValues, botIndex, n) {
     const botResponse = await r.json();
     const botResponseBody = botResponse.response;
 
-    const botEnvVarsJsonString = [];
-    botEnvVarsJsonString[botIndex] = {
+    /*
+    const currentEnvVars = require(paths.botEnvVars);
+    const botEnvVarsJsonString =
+      currentEnvVars.length != 0 ? currentEnvVars : [];
+    console.log(currentEnvVars);
+		*/
+
+    return {
       SPHINX_TOKEN:
         Buffer.from(botResponseBody.id).toString("base64") +
         "." +
@@ -73,10 +90,10 @@ async function createBotKey(botConfigValues, botIndex, n) {
       PORT: botConfig[botIndex].port,
     };
 
-    fs.writeFileSync(
+    /*fs.writeFileSync(
       paths.botEnvVars,
       JSON.stringify(botEnvVarsJsonString, null, 2)
-    );
+		);*/
   } catch (e) {
     console.log(e);
   }
