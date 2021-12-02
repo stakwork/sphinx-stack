@@ -24,22 +24,28 @@ async function setup() {
   installs the sphinx-stack*/
   botEnvVars = require(paths.botEnvVars);
   botConfig = require(paths.botConfig);
+
   if (botEnvVars.length != botConfig.length) {
     var finalNodes = require(paths.pathToWrite);
+
     let newBotEnvVars = [];
+
     await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
+
       const nextKeyPortPair = await createBotKey(
         botConfigValues,
         botIndex,
         finalNodes[0]
       );
+
       await sleep(20000);
-      console.log("RELAY SETUP: ", botConfigValues, nextKeyPortPair);
+
       newBotEnvVars[botIndex] = nextKeyPortPair;
     });
+
     fs.writeFileSync(paths.botEnvVars, JSON.stringify(newBotEnvVars, null, 2));
   }
 
@@ -67,18 +73,13 @@ async function createBotKey(botConfigValues, botIndex, n) {
       }),
     });
 
+    //We're aborting if the relay service isn't availible yet
     if (r.status == 401) {
       process.abort();
     }
+
     const botResponse = await r.json();
     const botResponseBody = botResponse.response;
-
-    /*
-    const currentEnvVars = require(paths.botEnvVars);
-    const botEnvVarsJsonString =
-      currentEnvVars.length != 0 ? currentEnvVars : [];
-    console.log(currentEnvVars);
-		*/
 
     return {
       SPHINX_TOKEN:
@@ -89,11 +90,6 @@ async function createBotKey(botConfigValues, botIndex, n) {
         Buffer.from("http://alice.sphinx:3001/action").toString("base64"),
       PORT: botConfig[botIndex].port,
     };
-
-    /*fs.writeFileSync(
-      paths.botEnvVars,
-      JSON.stringify(botEnvVarsJsonString, null, 2)
-		);*/
   } catch (e) {
     console.log(e);
   }

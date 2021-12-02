@@ -22,4 +22,5 @@ rm -rf ./relay/NODES.json
 
 rm -rf ./pgdata
 
+#Redis data is for the sphinx-betting-bot
 rm -rf ./redisData
