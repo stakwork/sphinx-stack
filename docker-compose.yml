@@ -141,7 +141,7 @@ services:
       - 5555:5555
 
   alice:
-    image: kevkevinpal/sphinx-relay-test:latest
+    image: sphinxlightning/sphinx-relay-test:latest
     # image: sphinx-relay
     container_name: alice.sphinx
     restart: on-failure
@@ -190,7 +190,7 @@ services:
       - 3002:3002
 
   carol:
-    image: kevkevinpal/sphinx-relay-test:latest
+    image: sphinxlightning/sphinx-relay-test:latest
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
@@ -214,9 +214,10 @@ services:
       - 3003:3003
 
   exampleBot:
-    image: kevkevinpal/sphinx-bot-example:latest
+    image: node:12-buster-slim 
     container_name: example-bot-sphinx
     restart: on-failure
+    working_dir: "/example_bot"
     depends_on:
       - relaysetup  
       - tribes
@@ -225,6 +226,7 @@ services:
       - -c
       - |
               npm install
+              npm install -g nodemon
               node ./isEnvAvailible.js && nodemon --legacy-watch --watch index.js --exec 'npm run build && npm run start'
     volumes:
       - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
@@ -238,9 +240,10 @@ services:
       - 3333:3333  
 
   betBot:
-    image: kevkevinpal/sphinx-bot-example:latest
+    image: node:12-buster-slim 
     container_name: bet-bot-sphinx
     restart: on-failure
+    working_dir: "/example_bot"
     depends_on:
       - relaysetup  
       - tribes  
@@ -249,6 +252,7 @@ services:
       - -c
       - |
               npm install
+              npm install -g nodemon
               node ./isEnvAvailible.js && nodemon --legacy-watch --watch "src/**" --ext "ts,json,js" --exec 'npm run build && npm run start'
     volumes:
       - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
