@@ -14,3 +14,4 @@ memes/*
 pgdata
 proxy/*/*
 !proxy/*/.gitkeep
+relay/botEnvVars.json
