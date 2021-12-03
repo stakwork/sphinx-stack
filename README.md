@@ -14,6 +14,8 @@ Full stack Sphinx cluster, including:
 
 Open a terminal inside the root directory of this repository. Then:
 
+`git submodule update --recursive`
+
 `docker-compose pull`
 
 `docker-compose up -d`
