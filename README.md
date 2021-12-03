@@ -9,6 +9,8 @@ Full stack Sphinx cluster, including:
 - sphinx-memes
 - sphinx-auth
 - sphinx-mqtt
+- sphinx-example=bot
+- sphinx-betting-bot
 
 ### run
 
