@@ -98,6 +98,17 @@ async function createBotKey(botConfigValues, botIndex, n) {
 async function preSetup() {
   try {
     const exists = fs.existsSync(paths.pathToWrite);
+    const botKeysExist = fs.existsSync(paths.botEnvVars);
+
+    if (!botKeysExist) {
+      console.log(
+        "=>",
+        paths.botEnvVars,
+        "does not exist, creating now",
+        botKeysExist
+      );
+      fs.writeFileSync(paths.botEnvVars, JSON.stringify([]));
+    }
     if (!exists) {
       console.log(
         "=>",
@@ -117,6 +128,7 @@ async function preSetup() {
         if (!n.privkey) clearAll = true;
         if (!n.exported_keys) clearAll = true;
       });
+
       if (clearAll) {
         // delete the database files
         fs.unlinkSync(paths.pathToWrite);
