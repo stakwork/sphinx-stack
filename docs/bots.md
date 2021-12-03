@@ -12,28 +12,9 @@ Once you have the Desktop App running, open the `NODES.json` file in `sphinx-sta
 
 ![startup](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/startup.png)
 
-Create a Bot using the button in the upper right. Name it `example` and set the webhook to `http://host.docker.internal:3333`.
+Now our example bot is already running when we create the spinx-stack after running `docker-compose up -d`.
 
-![NewBot](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/newbot.png)
-
-You will then see a `token`, that you can use to build and test a local Sphinx bot.
-
-![Bots](https://github.com/stakwork/sphinx-stack/raw/master/docs/img/bots.png)
-
-### build your bot
-
-Clone the example repo: [sphinx-example-bot](https://github.com/stakwork/sphinx-example-bot). Create a file in the repo called `.env` : (replace **\*** with the token generated in the Desktop App)
-
-```
-SPHINX_TOKEN=*****
-PORT=3333
-```
-
-- `npm install`
-- `npm run build`
-- `npm run start`
-
-Check out the `index.js` file to see how to build new bot commands! You can integrate any node.js package or external service in your bot
+The sphinx-example-bot is located under `./sphinx-stack/botSandBox/sphinx-example-bot`
 
 ### use the bot!
 
@@ -42,3 +23,8 @@ Back in the Desktop App, create a new tribe using the main menu. In tribes that 
 - `/bot search example`: will return your newly created example bot
 - `/bot install example`: will install the bot in your new tribe!
 - `/example test`: will run the "test" command in your bot!
+
+### make a change to the bo†
+
+Open the file under `./sphinx-stack/botSandBox/sphinx-example-bot/index.js` and edit the response under `case 'test'`
+now try calling that command again.... CONGRATS!! You are offically a bot developer!
