@@ -9,14 +9,10 @@ Full stack Sphinx cluster, including:
 - sphinx-memes
 - sphinx-auth
 - sphinx-mqtt
-- sphinx-example=bot
-- sphinx-betting-bot
 
 ### run
 
 Open a terminal inside the root directory of this repository. Then:
-
-`git submodule update --recursive`
 
 `docker-compose pull`
 
