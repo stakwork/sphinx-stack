@@ -207,7 +207,9 @@ services:
       - alice
       - bob
       - carol
-    restart: "no"
+      - lndsetup
+      - tribes
+    restart: on-failure
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay

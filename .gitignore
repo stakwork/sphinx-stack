@@ -2,6 +2,7 @@ notes.md
 .DS_Store
 relay/db/*
 relay/NODES.json
+relay/botEnvVars.json
 !relay/db/.gitkeep
 bitcoind/*
 !bitcoind/bitcoin.conf
@@ -14,3 +15,4 @@ memes/*
 pgdata
 proxy/*/*
 !proxy/*/.gitkeep
+redisData
