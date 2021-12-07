@@ -1,0 +1,6 @@
+[submodule "botSandBox/sphinx-example-bot"]
+	path = botSandBox/sphinx-example-bot
+	url = https://github.com/stakwork/sphinx-example-bot.git
+[submodule "botSandBox/sphinx-betting-bot"]
+	path = botSandBox/sphinx-betting-bot
+	url = https://github.com/stakwork/sphinx-betting-bot.git

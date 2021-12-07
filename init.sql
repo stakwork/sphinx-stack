@@ -103,7 +103,8 @@ CREATE TABLE people (
   unique_name TEXT,
   price_to_meet BIGINT,
   extras JSONB,
-  twitter_confirmed BOOLEAN
+  twitter_confirmed BOOLEAN,
+  github_issues JSONB
 );
 
 ALTER TABLE people ADD COLUMN tsv tsvector;

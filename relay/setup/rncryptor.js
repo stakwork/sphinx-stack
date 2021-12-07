@@ -112,6 +112,13 @@ JSCryptor.Encrypt = function (plaintext_in, password) {
   const b64 = sjcl.codec.base64.fromBits(enc);
   return b64;
 };
+// takes base64, returns unicode
+JSCryptor.Decrypt = function (pwd, msg) {
+  const msgbits = sjcl.codec.base64.toBits(msg);
+  var dec = RNCryptor.Decrypt(pwd, msgbits);
+  const plaintext = sjcl.codec.utf8String.fromBits(dec);
+  return plaintext;
+};
 
 module.exports = {
   JSCryptor,

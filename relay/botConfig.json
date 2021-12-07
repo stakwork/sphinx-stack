@@ -1,0 +1,12 @@
+[
+  {
+    "name": "example",
+    "webhook": "http://example-bot-sphinx:3333",
+    "port": 3333
+  },
+  {
+    "name": "bet",
+    "webhook": "http://bet-bot-sphinx:3334",
+    "port": 3334
+  }
+]
