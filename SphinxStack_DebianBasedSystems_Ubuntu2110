@@ -1,0 +1,73 @@
+# Setting up Sphinx-Stack and Desktop-Dev-App for Debian based distributions
+# tested on Ubuntu 21.10 GNOME Version 40.4.0 Windowing System X11
+# Make sure your system is up to date!
+
+Desktop-dev-app
+-----------------------------------------------------------------------------
+# Install dependencies
+sudo apt-get install -y libsecret-1-dev
+sudo apt install npm
+
+# Versions used: npm 7.5.2 / node 12.22.5
+npm -v
+node -v
+
+# Download and extract sphinx-win-linux-desktop-master
+# Inside sphinx-win-linux-desktop-master run (ignore vulnerabilities):
+npm install --legacy-peer-deps
+npm install electron-rebuild
+./node_modules/.bin/electron-rebuild
+
+# If you hit an error saying electron-deeplink: unable to lock instance, you can comment out the deeplink stuff in public/electronjs/main.js lines 35-45
+
+# First run web than electron
+npm run web
+npm run electron
+
+Sphinx-Stack
+-----------------------------------------------------------------------------
+# Install Docker-compose
+sudo apt install docker-compose (repeat until there are no errors)
+sudo docker-compose pull
+sudo docker-compose up -d
+
+# Ceck status; wait until lnd and relay-setup have the exited status and generated the keys in the relay folder
+sudo docker-compose ps
+
+# Setup communication between Docker and Electron
+sudo vi /etc/hosts
+repeat ‘j’ until last line
+press ‘o’ to add new line
+on last line type ‘172.17.0.1 host.docker.internal’
+press ‘:wq’ to write and quit
+
+Your first bot
+-----------------------------------------------------------------------------
+# Download example bot and extract, inside the folder run
+npm install
+
+# Import key pairs, inside Stack/relay/botConfig.json
+"name": "example",
+"webhook": "http://host.docker.internal:3333",
+"port": 3333
+
+# Restart docker-Stack (this also deletes your generated keypairs for Alice/Bob/Carol)
+sudo docker-compose Down
+# Clear db
+sudo ./clearall.sh
+# Restart and wait for lnd/relay
+sudo docker-compose up -d
+
+# Copy line 3 and 4 from botEnvVars.json to an empty file inside of the bot folder called '.env'
+touch .env
+nano .env
+# Paste and change formatting to equal
+SPHINX_TOKEN=NkYwQ0I1QzUwN0Y3RkJDRjk0NUQ3MEND.NDk3NjAyRUFDMjJDRDg4Qjk2QzBCNkM0O>
+PORT=3333
+
+# start the bot
+npm run build
+npm run start
+
+# Inside of Stack/relay/setup/index.js replace line 90 with: 
+Buffer.from("http://localhost:3001/action").toString("base64"),
