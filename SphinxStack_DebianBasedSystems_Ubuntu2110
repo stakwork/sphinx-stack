@@ -31,7 +31,7 @@ sudo apt install docker-compose (repeat until there are no errors)
 sudo docker-compose pull
 sudo docker-compose up -d
 
-# Ceck status; wait until lnd and relay-setup have the exited status and generated the keys in the relay folder
+# Check status; wait until lnd and relay-setup have the exited status and generated the keys in the relay folder
 sudo docker-compose ps
 
 # Setup communication between Docker and Electron
