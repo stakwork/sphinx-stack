@@ -1,5 +1,5 @@
 var fs = require("fs");
 
-while (!fs.existSync("/stack/NODES.json")) {}
+while (!fs.existsSync("/stack/NODES.json")) {}
 
 process.exit();
