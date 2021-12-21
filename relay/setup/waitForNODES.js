@@ -1,5 +1,7 @@
 var fs = require("fs");
 
-while (!fs.existsSync("/stack/NODES.json")) {}
+while (!fs.existsSync("./relay/NODES.json")) {
+  console.log("Still in here");
+}
 
 process.exit();
