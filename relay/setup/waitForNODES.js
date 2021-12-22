@@ -7,6 +7,7 @@ while (!fs.existsSync("./relay/NODES.json")) {
 
 do {
   var nodes = require("../NODES.json");
+  console.log(nodes);
 } while (!nodes[0].authToken);
 
 process.exit();
