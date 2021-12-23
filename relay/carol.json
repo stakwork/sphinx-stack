@@ -1,5 +1,5 @@
 {
-  "docker_development": {
+  "development": {
     "node_ip": "127.0.0.1",
     "lnd_ip": "carol-lnd.sphinx",
     "lnd_port": "10011",
