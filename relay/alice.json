@@ -11,5 +11,6 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3001",
     "connect_ui": true
-  }
+  },
+  "logging": "NETWORK"
 }
