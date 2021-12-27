@@ -1,6 +1,6 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": ":memory"
+    "storage": ":memory:"
   }
 }
