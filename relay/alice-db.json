@@ -1,6 +1,6 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "./configs/db/alice.db"
+    "storage": "/relay/configs/db/alice.db"
   }
 }
