@@ -1,6 +1,6 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "./configs/db/alicerandomds.db"
+    "storage": "./configs/db/alice.db"
   }
 }
