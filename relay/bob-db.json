@@ -1,6 +1,5 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "./configs/db/bob.db"
+    "dialect": "sqlite"
   }
 }
