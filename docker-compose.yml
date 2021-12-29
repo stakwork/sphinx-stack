@@ -130,7 +130,7 @@ services:
       - 5555:5555
 
   alice:
-    image: kevkevinpal/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay:latest
     # image: sphinx-relay
     container_name: alice.sphinx
     restart: on-failure
@@ -155,7 +155,7 @@ services:
       - 3001:3001
 
   bob:
-    image: kevkevinpal/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay:latest
     container_name: bob.sphinx
     restart: on-failure
     depends_on:
@@ -179,7 +179,7 @@ services:
       - 3002:3002
 
   carol:
-    image: kevkevinpal/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay:latest
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
