@@ -9,10 +9,7 @@
     "node_http_port": "3001",
     "tribes_mqtt_port": "1883",
     "tribes_insecure": true,
-    "public_url": "127.0.0.1:3001",
-    "connect_ui": true,
-    "logging": "DB",
-    "sql_log": true
+    "public_url": "127.0.0.1:3001"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
