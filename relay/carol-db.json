@@ -3,7 +3,7 @@
     "dialect": "sqlite",
     "storage": "./configs/db/carol.db"
   },
-  "gitAction_env": {
+  "gitactionenv": {
     "dialect": "sqlite"
   }
 }

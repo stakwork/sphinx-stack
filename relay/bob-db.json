@@ -3,7 +3,7 @@
     "dialect": "sqlite",
     "storage": "./configs/db/bob.db"
   },
-  "gitAction_env": {
+  "gitactionenv": {
     "dialect": "sqlite"
   }
 }
