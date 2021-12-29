@@ -147,7 +147,7 @@ services:
       - ./relay:/relay/configs
       - ./lnd/alice:/relay/alice
     environment:
-            - NODE_ENV=${GITACTION_ENV:development}
+      - NODE_ENV=${GITACTION_ENV:development}
       - PORT=3001
       - TRIBES_HOST=host.docker.internal:13000
       - MEDIA_HOST=localhost:5555
