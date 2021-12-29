@@ -11,6 +11,20 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3002",
     "connect_ui": true,
-    "logging": "NETWORK"
+    "logging": "LIGHTNING"
+  },
+  "gitAction_env": {
+    "node_ip": "127.0.0.1",
+    "lnd_ip": "alice-lnd.sphinx",
+    "lnd_port": "10009",
+    "tls_location": "/relay/alice/.lnd/tls.cert",
+    "macaroon_location": "/relay/alice/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
+    "node_http_protocol": "http",
+    "node_http_port": "3001",
+    "tribes_mqtt_port": "1883",
+    "tribes_insecure": true,
+    "public_url": "127.0.0.1:3001",
+    "connect_ui": true,
+    "sql_log": true
   }
 }

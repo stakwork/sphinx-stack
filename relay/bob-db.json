@@ -1,5 +1,9 @@
 {
   "development": {
+    "dialect": "sqlite",
+    "storage": "./configs/db/bob.db"
+  },
+  "gitAction_env": {
     "dialect": "sqlite"
   }
 }
