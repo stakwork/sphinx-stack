@@ -11,5 +11,18 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3002",
     "connect_ui": true
+  },
+  "gitactionenv": {
+    "node_ip": "127.0.0.1",
+    "lnd_ip": "bob-lnd.sphinx",
+    "lnd_port": "10010",
+    "tls_location": "/relay/bob/.lnd/tls.cert",
+    "macaroon_location": "/relay/bob/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
+    "node_http_protocol": "http",
+    "node_http_port": "3002",
+    "tribes_mqtt_port": "1883",
+    "tribes_insecure": true,
+    "public_url": "127.0.0.1:3002",
+    "connect_ui": true
   }
 }
