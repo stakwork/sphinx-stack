@@ -25,29 +25,33 @@ async function setup() {
   botEnvVars = require(paths.botEnvVars);
   botConfig = require(paths.botConfig);
 
+  console.log("===> setting up botEnvVars");
   if (botEnvVars.length != botConfig.length) {
     var finalNodes = require(paths.pathToWrite);
 
     let newBotEnvVars = [];
 
+    console.log("===> before await each");
     await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
+      await sleep(20000);
+      console.log("===> before createBotKey");
       const nextKeyPortPair = await createBotKey(
         botConfigValues,
         botIndex,
         finalNodes[0]
       );
 
-      await sleep(20000);
-
+      console.log("===> before newBotEnvVars");
       newBotEnvVars[botIndex] = nextKeyPortPair;
     });
 
     fs.writeFileSync(paths.botEnvVars, JSON.stringify(newBotEnvVars, null, 2));
   }
+  console.log("===> finished setting up botEnvVars");
 
   console.log("======================================");
   console.log("==                                  ==");
@@ -60,6 +64,7 @@ setup();
 async function createBotKey(botConfigValues, botIndex, n) {
   const { name, webhook } = botConfigValues;
 
+  console.log(n.authToken);
   try {
     const r = await fetch(n.ip + "/bot/", {
       method: "POST",
@@ -74,6 +79,9 @@ async function createBotKey(botConfigValues, botIndex, n) {
     });
 
     //We're aborting if the relay service isn't availible yet
+    console.log("What is the status", r.status);
+    const NODES = require(paths.pathToWrite);
+    console.log(NODES);
     if (r.status == 401) {
       process.abort();
     }
@@ -116,6 +124,7 @@ async function preSetup() {
         "does not exist, creating now",
         exists
       );
+      await writeVirtualNodes();
       fs.copyFileSync(paths.path, paths.pathToWrite);
     } else {
       console.log("=>", paths.pathToWrite, "exists");
@@ -141,6 +150,50 @@ async function preSetup() {
   } catch (e) {
     console.log("=> preSetup error", e);
   }
+}
+
+async function writeVirtualNodes() {
+  //const virtualNodes = await fetch("http://proxy.sphinx:5050/list", {"x-admin-token": "r46bnf8ibrhbb424heba"})
+
+  return new Promise(async function(resolve, reject) {
+    let ok = false;
+    while (!ok) {
+      try {
+        await sleep(2000);
+        const r = await fetch("http://proxy.sphinx:5050/list", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": "r46bnf8ibrhbb424heba",
+          },
+        });
+        const json = await r.json();
+        if (json.length > 0) {
+          console.log("THIS IS THE RESPONSE OF LIST FROM PROXY: ", json);
+          var nodesPartial = require(paths.path);
+          json.forEach((privateChannel, index) => {
+            console.log(privateChannel);
+            const pushValue = {
+              pubkey: privateChannel.pubkey,
+              route_hint: privateChannel.channel,
+              alias: `virtualNode${index}`,
+              ip: "http://dave.sphinx:3004",
+              external_ip: "http://localhost:3004",
+            };
+            nodesPartial.push(pushValue);
+          });
+          const jsonString = JSON.stringify(nodesPartial, null, 2);
+          console.log(nodesPartial);
+
+          fs.writeFileSync(paths.path, jsonString);
+        }
+        if (r.ok && json.length > 0) ok = true;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    resolve();
+  });
 }
 
 function pollReady(n, i) {

@@ -10,7 +10,9 @@ async function run_signup(n, i) {
     var finalNodes = require(paths.pathToWrite);
     if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
     const token = await signup(n);
+    n = require(paths.pathToWrite)[i];
     n.authToken = token;
+
     await createContactKey(n);
   } catch (e) {
     console.log(e);
@@ -22,10 +24,50 @@ function headers(token) {
   if (token) h["x-user-token"] = token;
   return h;
 }
+function proxyHeaders(token) {
+  const h = { "Content-Type": "application/json" };
+  if (token) h["x-admin-token"] = token;
+  return h;
+}
 
 async function signup(n) {
   try {
-    const token = Crypto.randomBytes(20).toString("base64").slice(0, 20);
+    /*if (n.is_proxy && !n.is_lite_node) {
+      let ok = false;
+      console.log("about ot enter while loop");
+      while (!ok) {
+        try {
+          await sleep(1000);
+          const proxyGenerateUserResponse = await fetch(
+            "http://proxy.sphinx:5050/generate",
+            {
+              method: "POST",
+              headers: proxyHeaders("r46bnf8ibrhbb424heba"),
+            }
+          );
+          const proxyGenerateUserResponseJson = await proxyGenerateUserResponse.json();
+          addFieldToNodeJson(
+            n.pubkey,
+            "pubkey",
+            proxyGenerateUserResponseJson.pubkey
+          );
+          addFieldToNodeJson(
+            proxyGenerateUserResponseJson.pubkey,
+            "is_proxy",
+            "false"
+          );
+
+          n.pubkey = proxyGenerateUserResponseJson.pubkey;
+          if (proxyGenerateUserResponse.ok) ok = true;
+        } catch (e) {
+          console.log(e);
+        }
+      }
+		}*/
+
+    const token = Crypto.randomBytes(20)
+      .toString("base64")
+      .slice(0, 20);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
       headers: headers(),
@@ -68,8 +110,11 @@ async function createContactKey(n) {
 
     const owner = await getOwner(n);
     const id = owner.id;
-
+    console.log("==> Generating keys");
     const { public, private } = await rsa.genKeys();
+    console.log("==> Finished Generating keys");
+
+    console.log("THIS IS THE PUB KEY: ", n.pubkey);
     addFieldToNodeJson(n.pubkey, "contact_key", public);
     addFieldToNodeJson(n.pubkey, "privkey", private);
 
@@ -81,6 +126,7 @@ async function createContactKey(n) {
         alias: n.alias,
       }),
     });
+    console.log("===> contacts call finished");
     const j = await r.json();
     const owner2 = await getOwner(n);
 
@@ -88,8 +134,11 @@ async function createContactKey(n) {
     const pin = "111111";
     const enc = JSCryptor.JSCryptor.Encrypt(str, pin);
     const final = Buffer.from(`keys::${enc}`).toString("base64");
+    console.log("FINAL: ", final);
     addFieldToNodeJson(n.pubkey, "exported_keys", final);
+
     addFieldToNodeJson(n.pubkey, "pin", pin);
+    console.log("===> contacts exchange key call finished");
   } catch (e) {
     console.log(e);
   }
@@ -109,6 +158,10 @@ async function addFieldToNodeJson(pubkey, key, value) {
   nodes[idx][key] = value;
   const jsonString = JSON.stringify(nodes, null, 2);
   fs.writeFileSync(paths.pathToWrite, jsonString);
+}
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 module.exports = { run_signup };

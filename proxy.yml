@@ -1,0 +1,290 @@
+version: "3"
+
+services:
+  bitcoind:
+    image: lncm/bitcoind:v0.21.1
+    restart: on-failure
+    container_name: bitcoind.sphinx
+    volumes:
+      - ./bitcoind:/data/.bitcoin
+    ports:
+      - 18443:18443
+      - 8333:8333
+      - 28332:28332
+      - 28333:28333
+
+  alice-lnd:
+    image: lnzap/lnd:latest
+    container_name: alice-lnd.sphinx
+    volumes:
+      - ./lnd/alice:/lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9735:9735
+      - 10009:10009
+      - 38881:38881
+    command: --configfile=/lndsetup/alice.conf
+
+  bob-lnd:
+    image: lnzap/lnd:latest
+    container_name: bob-lnd.sphinx
+    volumes:
+      - ./lnd/bob:/lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9736:9735
+      - 10010:10010
+      - 38882:38882
+    command: --configfile=/lndsetup/bob.conf
+
+  carol-lnd:
+    image: lnzap/lnd:latest
+    container_name: carol-lnd.sphinx
+    volumes:
+      - ./lnd/carol:/lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9737:9735
+      - 10011:10011
+      - 38883:38883
+    command: --configfile=/lndsetup/carol.conf
+
+  dave-lnd:
+    image: lnzap/lnd:latest
+    container_name: dave-lnd.sphinx
+    volumes:
+      - ./lnd/dave:/lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9738:9735
+      - 10012:10012
+      - 10013:10013
+      - 38884:38884
+    command: --configfile=/lndsetup/dave.conf
+
+  lndsetup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice-lnd
+      - bob-lnd
+      - carol-lnd
+    restart: "no"
+    entrypoint: ["node", "/lndsetup/index.js"]
+    volumes:
+      - ./lnd/alice:/alice
+      - ./lnd/setup:/lndsetup
+
+  db:
+    image: postgres
+    container_name: db.sphinx
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=sphinx
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  tribes:
+    image: sphinxlightning/sphinx-tribes:latest
+    container_name: tribes.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - PORT=13000
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+    ports:
+      - 5002:5002
+      - 13007:13007
+      - 13000:13000
+
+  auth:
+    image: sphinxlightning/sphinx-auth:latest
+    container_name: auth.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - JWT_KEY=19e0bb49bhyuibme
+      - HOST=localhost:9090
+    ports:
+      - 9090:9090
+
+  mqtt:
+    image: sphinxlightning/sphinx-mqtt:latest
+    container_name: mqtt.sphinx
+    restart: on-failure
+    depends_on:
+      - auth
+    ports:
+      - 1883:1883
+
+  meme:
+    image: sphinxlightning/sphinx-meme:latest
+    container_name: meme.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - ./memes:/app/files
+    environment:
+      - PORT=5555
+      - JWT_KEY=19e0bb49bhyuibme
+      - STORAGE_MODE=local
+      - LOCAL_DIR=app/files
+      - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
+      - HOST=localhost:5555
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+    ports:
+      - 5555:5555
+
+  alice:
+    image: sphinxlightning/sphinx-relay-test:latest
+    # image: sphinx-relay
+    container_name: alice.sphinx
+    restart: on-failure
+    depends_on:
+      - alice-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/alice.json",
+        "--db=/relay/configs/alice-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/alice:/relay/alice
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
+    ports:
+      - 3001:3001
+
+  bob:
+    image: sphinxlightning/sphinx-relay-test:latest
+    container_name: bob.sphinx
+    restart: on-failure
+    depends_on:
+      - bob-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/bob.json",
+        "--db=/relay/configs/bob-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/bob:/relay/bob
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
+    ports:
+      - 3002:3002
+
+  carol:
+    image: sphinxlightning/sphinx-relay-test:latest
+    container_name: carol.sphinx
+    restart: on-failure
+    depends_on:
+      - carol-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/carol.json",
+        "--db=/relay/configs/carol-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/carol:/relay/carol
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
+    ports:
+      - 3003:3003
+
+  dave:
+    image: sphinxlightning/sphinx-relay-test:latest
+    container_name: dave.sphinx
+    restart: on-failure
+    depends_on:
+      - dave-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/dave.json",
+        "--db=/relay/configs/dave-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/dave:/relay/dave
+      - ./proxy/:/relay/proxy
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+      - TRIBES_HOST=host.docker.internal:13000
+      - MEDIA_HOST=meme.sphinx:5555
+    ports:
+      - 3004:3004
+
+  proxy:
+    image: sphinx-proxy
+    container_name: proxy.sphinx
+    restart: on-failure
+    depends_on:
+      - dave-lnd
+    volumes:
+      - ./lnd/dave:/lnd
+      - ./proxy/macaroons:/macaroons
+      - ./proxy/badger:/badger
+      - ./proxy/cert:/cert 
+    entrypoint:
+      [
+        "/app/sphinx-proxy",
+        "--rpclisten=0.0.0.0:11111",
+        "--tlscertpath=/cert/tls.cert",
+        "--tlskeypath=/cert/tls.key",
+        "--bitcoin.simnet",
+        "--bitcoin.active",
+        "--bitcoin.basefee=0",
+        "--store-key=4967BC847DDEFF47C4BC890038F5A495",
+        "--unlock-pwd=hi123456",
+        "--server-macaroons-dir=/macaroons",
+        "--channels-start=421",
+        "--admin-token=r46bnf8ibrhbb424heba",
+        "--admin-port=5050",
+        "--admin-pubkey=021d7e8cab0bcdd33da98651ae6cae2977c83860fcd09df115259a58396bd022f5",
+        "--initial-msat=5000000",
+        "--macaroon-location=/lnd/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
+        "--tls-location=/lnd/.lnd/tls.cert",
+        "--lnd-ip=dave-lnd.sphinx",
+        "--lnd-port=10013",
+      ]
+    ports:
+      - 11111:11111
+      - 5050:5050
+
+  relaysetup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice
+      - bob
+      - carol
+      - dave 
+      - proxy
+    restart: on-failure
+    entrypoint: ["node", "/relay/setup/index.js"]
+    volumes:
+      - ./relay:/relay
