@@ -27,3 +27,6 @@ rm -rf ./redisData
 
 #SPHINX_TOKEN for bots
 rm -rf ./relay/botEnvVars.json
+
+#Remove the certs for proxy
+rm -rf ./proxy
