@@ -1,5 +1,14 @@
 {
   "development": {
+    "hub_api_url": "None",
+    "proxy_initial_sats": 20000,
+    "proxy_new_nodes": 6,
+    "proxy_lnd_ip": "dave-lnd.sphinx",
+    "proxy_admin_token": "r46bnf8ibrhbb424heba",
+    "proxy_admin_url": "http://proxy.sphinx:5050",
+    "proxy_lnd_port": "10013",
+    "proxy_tls_location": "/relay/proxy/cert/tls.cert",
+    "proxy_macaroons_dir": "/relay/proxy/macaroons",
     "node_ip": "127.0.0.1",
     "lnd_ip": "dave-lnd.sphinx",
     "lnd_port": "10012",
@@ -10,6 +19,7 @@
     "tribes_mqtt_port": "1883",
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3004",
-    "connect_ui": true
+    "connect_ui": true,
+    "logging_level": "debug"
   }
 }
