@@ -1,9 +1,5 @@
 version: "3"
 
-# networks:
-#   meme:
-#     driver: bridge
-
 services:
   bitcoind:
     image: lncm/bitcoind:v0.21.1
@@ -131,28 +127,20 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5555:5555
-    # networks:
-    #   - meme
 
   etcd:
     image: "quay.io/coreos/etcd"
     container_name: etcd.sphinx
     environment:
-      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd.sphinx:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
     ports:
       # advertise/listen client urls
       - 2379:2379
-      # listen peer urls
-      # - 2380:2380
-    # networks:
-    #   - meme
     command: "etcd -name etcd-meme-aperture"
 
   aperture:
-    # image: "lightninglabs/aperture:v0.1.12-beta"
-    build:
-      context: .
-      dockerfile: ./aperture/Dockerfile.aperture
+    image: "lightninglabs/aperture:v0.1.12-beta"
     container_name: aperture.sphinx
     ports:
       - 8081:8081
@@ -160,8 +148,9 @@ services:
       - ./aperture:/aperture
       # using alice's lnd node as the backend for aperture
       - ./lnd/alice/.lnd:/lnd
-    # networks:
-    #   - meme
+    # want to restart on failure b/c the lightning node needs to be
+    # fully operational so that aperture can connect to it and successfully start
+    restart: on-failure
     depends_on:
       - etcd
       - alice-lnd
