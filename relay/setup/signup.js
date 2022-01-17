@@ -25,7 +25,9 @@ function headers(token) {
 
 async function signup(n) {
   try {
-    const token = Crypto.randomBytes(20).toString("base64").slice(0, 20);
+    const token = Crypto.randomBytes(20)
+      .toString("base64")
+      .slice(0, 20);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
       headers: headers(),
@@ -38,6 +40,16 @@ async function signup(n) {
     console.log("signed up: ", json);
 
     addFieldToNodeJson(n.pubkey, "authToken", token);
+    addFieldToNodeJson(
+      n.pubkey,
+      "transportToken",
+      json.response.transportToken
+    );
+    /*addFieldToNodeJson(
+      n.pubkey,
+      "transportTokenPrivate",
+      json.response.transportTokenPrivate
+		);*/
 
     return token;
   } catch (e) {
