@@ -2,5 +2,8 @@
   "development": {
     "dialect": "sqlite",
     "storage": "./configs/db/alice.db"
+  },
+  "gitactionenv": {
+    "dialect": "sqlite"
   }
 }

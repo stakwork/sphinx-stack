@@ -2,5 +2,8 @@
   "development": {
     "dialect": "sqlite",
     "storage": "./configs/db/bob.db"
+  },
+  "gitactionenv": {
+    "dialect": "sqlite"
   }
 }
