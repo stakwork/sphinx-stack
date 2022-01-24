@@ -1,3 +1,6 @@
+# these configs are based on the sample available in the main repo
+# https://github.com/lightninglabs/aperture/blob/master/sample-conf.yaml 
+
 # The address which the proxy can be reached at.
 listenaddr: "aperture.sphinx:8081"
 
@@ -94,9 +97,9 @@ services:
 
     # List of regular expressions for paths that don't require authentication
     authwhitelistpaths:
-      # generated negative match for "/ask" using 
+      # generated negative match for "/file" using 
       # https://www.formauri.es/personal/pgimeno/misc/non-match-regex 
-      - "^([^\/]|\/(\/|a(\/|s\/))*([^a\/]|a([^s\/]|s[^k\/])))*(\/(\/|a(\/|s\/))*(as?)?)?$"
+      - "^([^f]|f(f|i(f|lf))*([^fi]|i([^fl]|l[^ef])))*(f(f|i(f|lf))*(il?)?)?$"
 
 # Settings for a Tor instance to allow requests over Tor as onion services.
 # Configuring Tor is optional.
