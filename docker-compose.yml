@@ -146,7 +146,7 @@ services:
       - ./relay:/relay/configs
       - ./lnd/alice:/relay/alice
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3001
       - TRIBES_HOST=host.docker.internal:13000
       - MEDIA_HOST=localhost:5555
@@ -170,7 +170,7 @@ services:
       - ./relay:/relay/configs
       - ./lnd/bob:/relay/bob
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3002
       - TRIBES_HOST=host.docker.internal:13000
       - MEDIA_HOST=localhost:5555
@@ -194,7 +194,7 @@ services:
       - ./relay:/relay/configs
       - ./lnd/carol:/relay/carol
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3003
       - TRIBES_HOST=host.docker.internal:13000
       - MEDIA_HOST=localhost:5555
