@@ -17,9 +17,17 @@ async function run_signup(n, i) {
   }
 }
 
-function headers(token) {
+function headers(token, transportToken) {
   const h = { "Content-Type": "application/json" };
-  if (token) h["x-user-token"] = token;
+
+  if (token && !transportToken) h["x-user-token"] = token;
+  if (token != null && transportToken != null) {
+    const currentTime = new Date(Date.now());
+    h["x-transport-token"] = rsa.encrypt(
+      transportToken,
+      `${token}|${currentTime.toString()}`
+    );
+  }
   return h;
 }
 
@@ -28,33 +36,43 @@ async function signup(n) {
     const token = Crypto.randomBytes(20)
       .toString("base64")
       .slice(0, 20);
+    let transportToken = await fetch(n.ip + "/request_transport_token", {
+      method: "GET",
+      headers: headers(),
+    });
+    transportToken = await transportToken.json();
+    transportToken = transportToken.response.transportToken;
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
-      headers: headers(),
+      headers: headers(token, transportToken),
       body: JSON.stringify({
-        token,
         pubkey: n.pubkey,
       }),
     });
     const json = await r.json();
-    console.log("signed up: ", json);
 
     addFieldToNodeJson(n.pubkey, "authToken", token);
-    addFieldToNodeJson(
+    /*addFieldToNodeJson(
       n.pubkey,
       "transportToken",
       json.response.transportToken
-    );
-    /*addFieldToNodeJson(
-      n.pubkey,
-      "transportTokenPrivate",
-      json.response.transportTokenPrivate
 		);*/
+    addFieldToNodeJson(n.pubkey, "transportToken", transportToken);
 
     return token;
   } catch (e) {
     console.log(e);
   }
+}
+
+async function getTransportToken(n) {
+  let transportToken = await fetch(n.ip + "/request_transport_token", {
+    method: "GET",
+    headers: headers(),
+  });
+  transportToken = await transportToken.json();
+  transportToken = transportToken.response.transportToken;
+  return transportToken;
 }
 
 async function getOwner(n) {
@@ -109,7 +127,7 @@ async function createContactKey(n) {
 
 async function clearNode(n) {
   const r2 = await fetch(n.ip + "/test_clear", {
-    headers: headers(n.authToken),
+    headers: headers(n.authToken, n.transportToken),
   });
   const j2 = await r2.json();
 }
