@@ -11,8 +11,8 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
-    "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem"
-    "connect_ui": true
+    "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -26,6 +26,7 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
-    "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem"
+    "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
   }
 }

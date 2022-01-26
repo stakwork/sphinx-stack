@@ -11,8 +11,8 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3002",
     "connect_ui": true,
-    "transportPrivateKeyLocation": "/relay/configs/bobTransportPrivateKey.pem"
-    "connect_ui": true
+    "transportPrivateKeyLocation": "/relay/configs/bobTransportPrivateKey.pem",
+    "transportPublicKeyLocation": "/relay/configs/bobTransportPublicKey.pem"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -26,6 +26,7 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3002",
     "connect_ui": true,
-    "transportPrivateKeyLocation": "/relay/configs/bobTransportPrivateKey.pem"
+    "transportPrivateKeyLocation": "/relay/configs/bobTransportPrivateKey.pem",
+    "transportPublicKeyLocation": "/relay/configs/bobTransportPublicKey.pem"
   }
 }
