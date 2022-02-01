@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  etcd:
+    image: "quay.io/coreos/etcd"
+    container_name: etcd.sphinx
+    environment:
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd.sphinx:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    command: "etcd -name etcd-meme-aperture"
+
+  aperture:
+    image: "lightninglabs/aperture:v0.1.12-beta"
+    container_name: aperture.sphinx
+    ports:
+      # for now we will have aperture run on the default meme port
+      # so that it's easier to use this as a drop in replacement for any existing setups
+      - 5555:8081
+    volumes:
+      - ./aperture:/aperture
+      # using alice's lnd node as the backend for aperture
+      - ./lnd/alice/.lnd:/lnd
+    # want to restart on failure b/c the lightning node needs to be
+    # fully operational so that aperture can connect to it and successfully start
+    restart: on-failure
+    depends_on:
+      - etcd
+      - alice-lnd
+    entrypoint: ["aperture", "--configfile=/aperture/aperture.yaml"]
+
