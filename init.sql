@@ -52,7 +52,9 @@ CREATE TABLE tribes (
   last_active BIGINT,
   bots TEXT,
   owner_route_hint TEXT,
-  unique_name TEXT
+  unique_name TEXT,
+  feed_type INT,
+  pin TEXT
 );
 
 ALTER TABLE tribes ADD COLUMN tsv tsvector;
