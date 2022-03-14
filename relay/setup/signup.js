@@ -21,7 +21,7 @@ function headers(token, transportToken) {
   const h = { "Content-Type": "application/json" };
 
   if (token && !transportToken) h["x-user-token"] = token;
-  if (token != null && transportToken != null) {
+  if (token && transportToken) {
     const currentTime = new Date(Date.now());
     h["x-transport-token"] = rsa.encrypt(
       transportToken,
@@ -33,15 +33,8 @@ function headers(token, transportToken) {
 
 async function signup(n) {
   try {
-    const token = Crypto.randomBytes(20)
-      .toString("base64")
-      .slice(0, 20);
-    let transportToken = await fetch(n.ip + "/request_transport_token", {
-      method: "GET",
-      headers: headers(),
-    });
-    transportToken = await transportToken.json();
-    transportToken = transportToken.response.transportToken;
+    const token = Crypto.randomBytes(20).toString("base64").slice(0, 20);
+    let transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
       headers: headers(token, transportToken),
@@ -66,20 +59,21 @@ async function signup(n) {
 }
 
 async function getTransportToken(n) {
-  let transportToken = await fetch(n.ip + "/request_transport_token", {
+  const r = await fetch(n.ip + "/request_transport_token", {
     method: "GET",
     headers: headers(),
   });
-  transportToken = await transportToken.json();
-  transportToken = transportToken.response.transportToken;
-  return transportToken;
+  const j = await r.json();
+  return j.response.transportToken;
 }
 
 async function getOwner(n) {
+  console.log("-> getOwner");
   try {
+    const transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts", {
       method: "GET",
-      headers: headers(n.authToken),
+      headers: headers(n.authToken, transportToken),
     });
     const j = await r.json();
 

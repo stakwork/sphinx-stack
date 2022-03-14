@@ -127,7 +127,7 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
 
   alice:
-    image: sphinxlightning/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay
     container_name: alice.sphinx
     restart: on-failure
     depends_on:
@@ -151,7 +151,7 @@ services:
       - 3001:3001
 
   bob:
-    image: sphinxlightning/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
     restart: on-failure
     depends_on:
@@ -175,7 +175,7 @@ services:
       - 3002:3002
 
   carol:
-    image: sphinxlightning/sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
