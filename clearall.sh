@@ -27,3 +27,6 @@ rm -rf ./redisData
 
 #SPHINX_TOKEN for bots
 rm -rf ./relay/botEnvVars.json
+
+#transport keys
+rm ./relay/*.pem
