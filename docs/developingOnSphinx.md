@@ -43,7 +43,7 @@ But as you're developing on the sphinx infrastructure there maybe a few things y
 1. How to modify image in the stack
 2. How to troubleshoot stack if not working
 
-## How to modify an Image in the stack
+# How to modify an Image in the stack
 
 This is when we want to modify one of the containers that are running in the stack and I can run through the steps in an example
 Example
@@ -58,27 +58,34 @@ Say we wanted to updtate `sphinx-relay` such that it clears your db's old messag
 
 And there you go you have offically modified an image in the stack, the proccess should be similar for every image you would want to update.
 
-## Troubleshooting the stack
+# Troubleshooting the stack
 
 Now some times there will be issues with your stack and below are some common issues and how to resolve them
 
-1). An error that looks something like this
-
+1. An error that looks something like this
+	
 <img src="https://user-images.githubusercontent.com/15950706/158900226-e5220c2f-83a5-46d2-a56a-d8b63c59d691.jpg" alt="dockerDameonError" width="500" />
 
 This just means the `docker deamon` isnt running you just need to start that up and this error should go away
 
-2). Simply is not working with tests or client
+2. Simply is not working with tests or client
+
 This may be because the `./realy/NODES.json` file and the application trying to connect to the stack are not using the same info. A simple solution is doing the following in `sphinx-stack`
 
 > `docker-compose down`
+
 > `./clearAll.sh`
+
 > `docker-compose up -d`
 
 Then after the `./relay/NODES.json` file is generated then use that file wherever outside the stack
 
-3). When the `./relay/NODES.json` file is not generating
+3. When the `./relay/NODES.json` file is not generating
+
 This is usually because the `sphinx-stack_relaysetup_1` container never exits, at this point you should be checking the logs of that container and also `alice,bob,carol.sphinx` containers aswell
+
 you can do this by doing
+
 `docker logs sphinx-stack_relaysetup_1` and `docker logs alice.sphinx`
+
 from there you need to debug what the issue is
