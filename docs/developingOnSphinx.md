@@ -41,6 +41,7 @@ lncm/bitcoind (bitcoin node) [not sphinx maintained]
 But as you're developing on the sphinx infrastructure there maybe a few things you want to know or some knowlege base that you would like to have
 
 1). How to modify image in the stack
+
 2). How to troubleshoot stack if not working
 
 ## How to modify an Image in the stack
@@ -49,12 +50,12 @@ This is when we want to modify one of the containers that are running in the sta
 Example
 Say we wanted to updtate `sphinx-relay` such that it clears your db's old message after a certain age. Then we must make a change in `sphinx-relay` so...
 
-1). Make sure `sphinx-stack` is up and running, and test that the change is not working yet
-2). Go into `sphinx-relay` and update the code
-3). To update the image first do what every you need to build the code/make generated files locally for `sphinx-relay` this is `npm run build`
-4). Now build the new image `docker build -t sphinxlightning/sphinx-relay .` (dont forget the dot at the end)
-5). go back to `sphinx-stack` and run `docker-compose up -d` and it should restart the stack with the new changes you've made
-**optional** 6). if you come accross issues trying to run the stack it might be worth checking out the troubleshooting section
+1. Make sure `sphinx-stack` is up and running, and test that the change is not working yet
+2. Go into `sphinx-relay` and update the code
+3. To update the image first do what every you need to build the code/make generated files locally for `sphinx-relay` this is `npm run build`
+4. Now build the new image `docker build -t sphinxlightning/sphinx-relay .` (dont forget the dot at the end)
+5. go back to `sphinx-stack` and run `docker-compose up -d` and it should restart the stack with the new changes you've made
+6. **optional** if you come accross issues trying to run the stack it might be worth checking out the troubleshooting section
 
 And there you go you have offically modified an image in the stack, the proccess should be similar for every image you would want to update.
 
@@ -63,7 +64,9 @@ And there you go you have offically modified an image in the stack, the proccess
 Now some times there will be issues with your stack and below are some common issues and how to resolve them
 
 1). An error that looks something like this
-![dockerDameonError](https://user-images.githubusercontent.com/15950706/158900226-e5220c2f-83a5-46d2-a56a-d8b63c59d691.jpg)
+
+<img src="https://user-images.githubusercontent.com/15950706/158900226-e5220c2f-83a5-46d2-a56a-d8b63c59d691.jpg" alt="dockerDameonError" width="500" />
+
 This just means the `docker deamon` isnt running you just need to start that up and this error should go away
 
 2). Simply is not working with tests or client
