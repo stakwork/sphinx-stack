@@ -62,7 +62,11 @@ And there you go you have offically modified an image in the stack, the proccess
 
 Now some times there will be issues with your stack and below are some common issues and how to resolve them
 
-1). Simply is not working with tests or client
+1). An error that looks something like this
+![dockerDameonError](https://user-images.githubusercontent.com/15950706/158900226-e5220c2f-83a5-46d2-a56a-d8b63c59d691.jpg)
+This just means the `docker deamon` isnt running you just need to start that up and this error should go away
+
+2). Simply is not working with tests or client
 This may be because the `./realy/NODES.json` file and the application trying to connect to the stack are not using the same info. A simple solution is doing the following in `sphinx-stack`
 
 > `docker-compose down`
@@ -71,7 +75,7 @@ This may be because the `./realy/NODES.json` file and the application trying to 
 
 Then after the `./relay/NODES.json` file is generated then use that file wherever outside the stack
 
-2). When the `./relay/NODES.json` file is not generating
+3). When the `./relay/NODES.json` file is not generating
 This is usually because the `sphinx-stack_relaysetup_1` container never exits, at this point you should be checking the logs of that container and also `alice,bob,carol.sphinx` containers aswell
 you can do this by doing
 `docker logs sphinx-stack_relaysetup_1` and `docker logs alice.sphinx`
