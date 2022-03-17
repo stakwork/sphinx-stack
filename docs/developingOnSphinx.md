@@ -1,4 +1,4 @@
-# Developing on Sphinx-Stack!
+# Developing/Contributing on Sphinx-Stack!
 
 Hey there congragulations if you'd made it to this point you probably have already gotten `sphinx-stack` up and running are ready to develop either on its parts or around it (ie bots). If you havent reached this point yet we would recommend that you checkout the [setup tutorial](https://github.com/stakwork/sphinx-stack#readme).
 
@@ -38,7 +38,7 @@ lncm/bitcoind (bitcoin node) [not sphinx maintained]
 	bitcoind.sphinx
 ```
 
-But as you're developing on the sphinx infrastructure there maybe a few things you want to do to the parts/images of the sphinx-stack. We'll cover these basic things
+But as you're developing on the sphinx infrastructure there maybe a few things you want to know or some knowlege base that you would like to have
 
 1). How to modify image in the stack
 2). How to add a new image to the stack
