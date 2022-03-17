@@ -40,9 +40,8 @@ lncm/bitcoind (bitcoin node) [not sphinx maintained]
 
 But as you're developing on the sphinx infrastructure there maybe a few things you want to know or some knowlege base that you would like to have
 
-1). How to modify image in the stack
-
-2). How to troubleshoot stack if not working
+1. How to modify image in the stack
+2. How to troubleshoot stack if not working
 
 ## How to modify an Image in the stack
 
