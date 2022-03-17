@@ -30,7 +30,7 @@ You can also run with `Docker Desktop` and just use the "play" and "stop" button
 
 - Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json` (make sure to copy the trailing `=` equal signs if there are any!)
 - the easiest client to get up and running is (Sphinx Desktop)[https://github.com/stakwork/sphinx-win-linux-desktop]
-- To find out how to modify sphinx components on stack vist (Developing on Sphinx)[https://github.com/stakwork/sphinx-stack/blob/master/docs/developingOnSphind.md]
+- To find out how to modify sphinx components and contribute to the stack vist (Developing on Sphinx)[https://github.com/stakwork/sphinx-stack/blob/master/docs/developingOnSphind.md]
 - To find out how to develop bots on the sphinx stack visit (Developing bots on sphinx)[https://github.com/stakwork/sphinx-stack/blob/master/docs/bots.md]
 
 ### troubleshooting
