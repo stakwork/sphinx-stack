@@ -60,7 +60,7 @@ And there you go you have offically modified an image in the stack, the proccess
 
 # Troubleshooting the stack
 
-Now some times there will be issues with your stack and below are some common issues and how to resolve them
+Now some times there will be issues with your stack and below are some common issues and how to resolve them and if none of these issues look like what you're experiencing head over to the [Developing on Sphinx Tribe](https://tribes.sphinx.chat/t/developingonsphinx) and there should be someone over there to help you
 
 1. An error that looks something like this
 	
