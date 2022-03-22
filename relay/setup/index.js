@@ -2,7 +2,7 @@ var signup = require("./signup");
 var fs = require("fs");
 var paths = require("./paths");
 var fetch = require("./fetch");
-var rsa = require("./rsa");
+// var rsa = require("./rsa");
 
 async function setup() {
   preSetup();
@@ -10,7 +10,7 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
-  await asyncForEach(nodes, async function(n, i) {
+  await asyncForEach(nodes, async function (n, i) {
     await pollReady(n, i);
     await sleep(1000);
     console.log("=========> SETUP <==========");
@@ -30,7 +30,7 @@ async function setup() {
 
     let newBotEnvVars = [];
 
-    await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
+    await asyncForEach(botConfig, async function (botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
@@ -81,13 +81,17 @@ async function createBotKey(botConfigValues, botIndex, n) {
     const botResponse = await r.json();
     const botResponseBody = botResponse.response;
 
+    let url = "http://alice.sphinx:3001/action";
+    if (process.env.ALICE_IP) {
+      url = process.env.ALICE_IP + "/action";
+    }
     return {
       SPHINX_TOKEN:
         Buffer.from(botResponseBody.id).toString("base64") +
         "." +
         Buffer.from(botResponseBody.secret).toString("base64") +
         "." +
-        Buffer.from("http://alice.sphinx:3001/action").toString("base64"),
+        Buffer.from(url).toString("base64"),
       PORT: botConfig[botIndex].port,
     };
   } catch (e) {
@@ -144,7 +148,7 @@ async function preSetup() {
 }
 
 function pollReady(n, i) {
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     let ok = false;
     while (!ok) {
       try {
