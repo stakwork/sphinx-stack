@@ -8,6 +8,11 @@ Use this to develop on sphinx-relay
 docker-compose -f ./alts/no-alice.yml --project-directory . up -d
 ```
 
+Then in sphinx-relay
+```
+node ./dist/app.js --config="testing/stack/alice.json" --db="testing/stack/alice-db.json"
+```
+
 ### no tribes server or frontend
 
 Use this to develop on sphinx tribes server and frontend

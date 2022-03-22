@@ -75,8 +75,11 @@ async function getOwner(n) {
       method: "GET",
       headers: headers(n.authToken, transportToken),
     });
+    if (!r.ok) {
+      console.log(await r.text());
+      throw new Error("couldnt getOwner");
+    }
     const j = await r.json();
-
     const owner = j.response.contacts.find((c) => c.is_owner);
     // const id = owner.id;
     return owner;
