@@ -22,10 +22,9 @@ function headers(token, transportToken) {
 
   if (token && !transportToken) h["x-user-token"] = token;
   if (token && transportToken) {
-    const currentTime = new Date(Date.now());
     h["x-transport-token"] = rsa.encrypt(
       transportToken,
-      `${token}|${currentTime.toString()}`
+      `${token}|${Date.now()}`
     );
   }
   return h;
@@ -33,7 +32,9 @@ function headers(token, transportToken) {
 
 async function signup(n) {
   try {
-    const token = Crypto.randomBytes(20).toString("base64").slice(0, 20);
+    const token = Crypto.randomBytes(20)
+      .toString("base64")
+      .slice(0, 20);
     let transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
