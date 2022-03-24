@@ -60,12 +60,12 @@ async function signup(n) {
 }
 
 async function getTransportToken(n) {
-  const r = await fetch(n.ip + "/request_transport_token", {
+  const r = await fetch(n.ip + "/request_transport_key", {
     method: "GET",
     headers: headers(),
   });
   const j = await r.json();
-  return j.response.transportToken;
+  return j.response.transport_key;
 }
 
 async function getOwner(n) {
