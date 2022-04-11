@@ -14,10 +14,10 @@ services:
       - 28333:28333
 
   alice-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: alice-lnd.sphinx
     volumes:
-      - ./lnd/alice:/lnd
+      - ./lnd/alice/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9735:9735
