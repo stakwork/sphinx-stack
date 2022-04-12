@@ -14,10 +14,10 @@ services:
       - 28333:28333
 
   alice-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: alice-lnd.sphinx
     volumes:
-      - ./lnd/alice:/lnd
+      - ./lnd/alice/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9735:9735
@@ -26,10 +26,10 @@ services:
     command: --configfile=/lndsetup/alice.conf
 
   bob-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: bob-lnd.sphinx
     volumes:
-      - ./lnd/bob:/lnd
+      - ./lnd/bob/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9736:9735
@@ -38,10 +38,10 @@ services:
     command: --configfile=/lndsetup/bob.conf
 
   carol-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: carol-lnd.sphinx
     volumes:
-      - ./lnd/carol:/lnd
+      - ./lnd/carol/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9737:9735
