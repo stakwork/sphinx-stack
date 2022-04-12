@@ -58,7 +58,7 @@ services:
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
-      - ./lnd/alice:/alice
+      - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
 
   db:
@@ -141,7 +141,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/alice:/relay/alice
+      - ./lnd/alice/.lnd:/relay/alice/.lnd
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3001
@@ -165,7 +165,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/bob:/relay/bob
+      - ./lnd/bob/.lnd:/relay/bob/.lnd
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3002
@@ -189,7 +189,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/carol:/relay/carol
+      - ./lnd/carol/.lnd:/relay/carol/.lnd
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3003
