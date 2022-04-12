@@ -129,6 +129,7 @@ services:
   alice:
     image: sphinxlightning/sphinx-relay
     container_name: alice.sphinx
+    user: root
     restart: on-failure
     depends_on:
       - alice-lnd
@@ -153,6 +154,7 @@ services:
   bob:
     image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
+    user: root
     restart: on-failure
     depends_on:
       - bob-lnd
@@ -177,6 +179,7 @@ services:
   carol:
     image: sphinxlightning/sphinx-relay
     container_name: carol.sphinx
+    user: root
     restart: on-failure
     depends_on:
       - carol-lnd
