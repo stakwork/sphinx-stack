@@ -10,13 +10,14 @@ async function createOrUnlockWallet(node) {
   try {
     const r = await wallet.initWallet(node);
     console.log("[LND] INIT WALLET");
-    if (r.error) {
-      // r.error === "wallet already exists"
+
+    //code is the "wallet already exisits" code there is also an error message in r
+    // we go into this block of code if we've already initialized a wallet for the node
+    if (r.code === 2) {
       // first mine blocks
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
       const r2 = await wallet.unlockWallet(node);
       console.log("[LND] WALLET UNLOCKED");
-      // console.log("r2", r2);
     }
   } catch (e) {
     console.log("=> err", e);
