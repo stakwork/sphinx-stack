@@ -29,7 +29,7 @@ sphinx-mqtt [Go Lang]
 sphinx-meme [Go Lang]
 	meme.sphinx
 
-lnzap/lnd (lighting node) [not sphinx maintained]
+lightninglabs/lnd (lighting node) [not sphinx maintained]
 	alice-lnd.sphinx
 	bob-lnd.sphinx
 	carol-lnd.sphinx
