@@ -73,14 +73,15 @@ async function channels(node) {
       console.log("=> alice opening channels...");
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
+							await sleep(3000)
         await lightning.openChannel(node, {
           pubkey: p.pubkey,
           amount: 2000000,
           push_amount: 1000000,
         });
-      });
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
       console.log("=> 6 blocked mined to Alice!");
+      });
     }
     await sleep(4000);
     const chans2 = await lightning.listChannels(node);
@@ -98,6 +99,7 @@ async function unlockAll() {
   });
   await sleep(5000);
   await coinsAndChannels(nodes.nodes.alice);
+  await coinsAndChannels(nodes.nodes.bob);
 }
 
 unlockAll();
