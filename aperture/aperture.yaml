@@ -1,0 +1,129 @@
+# these configs are based on the sample available in the main repo
+# https://github.com/lightninglabs/aperture/blob/master/sample-conf.yaml 
+
+# The address which the proxy can be reached at.
+listenaddr: "aperture.sphinx:8081"
+
+# The root path of static content to serve upon receiving a request the proxy
+# cannot handle.
+staticroot: "./aperture/staticroot.json"
+
+# Should the static file server be enabled that serves files from the directory
+# specified in `staticroot`?
+# Only really want this for testing purposes so should disable
+servestatic: false
+
+# The log level that should be used for the proxy.
+#
+# Valid options include: trace, debug, info, warn, error, critical, off.
+debuglevel: "debug"
+
+# Whether the proxy should create a valid certificate through Let's Encrypt for
+# the fully qualifying domain name.
+autocert: false
+# servername: aperture.example.com
+
+# Settings for the lnd node used to generate payment requests. All of these
+# options are required.
+authenticator:
+  # The host:port which lnd's RPC can be reached at.
+  # using alice's node as primary
+  lndhost: "alice-lnd.sphinx:10009"
+
+  # The path to lnd's TLS certificate.
+  tlspath: "/lnd/tls.cert"
+
+  # The path to lnd's macaroon directory.
+  macdir: "/lnd/data/chain/bitcoin/regtest"
+
+  # The chain network the lnd is active on.
+  network: "regtest"
+
+# Settings for the etcd instance which the proxy will use to reliably store and
+# retrieve token information.
+etcd:
+  # The client host:port which the etcd instance can be reached at.
+  # this assumes docker networking from lsat.yml
+  host: "etcd.sphinx:2379"
+
+  # If authentication is enabled, the user and password required to access the
+  # etcd instance.
+  # user: "user"
+  # password: "password"
+
+# List of services that should be reachable behind the proxy.  Requests will be
+# matched to the services in order, picking the first that satisfies hostregexp
+# and (if set) pathregexp. So order is important!
+#
+# Use single quotes for regular expressions with special characters in them to
+# avoid YAML parsing errors!
+services:
+  # The identifying name of the service. This will also be used to identify
+  # which capabilities caveat (if any) corresponds to the service.
+  - name: "meme"
+
+    # The regular expression used to match the service host.
+    hostregexp: "^localhost.*$"
+
+    # The regular expression used to match the path of the URL.
+    # matches all paths if not included. we create a "block list"
+    # by hacking a negative match in the authwhitelistpaths config below
+    # pathregexp: "^/(ask).*$"
+
+    # The host:port which the service can be reached at.
+    address: "meme.sphinx:5555"
+
+    # The HTTP protocol that should be used to connect to the service. Valid
+    # options include: http, https.
+    # meme.sphinx is the local docker host and can be accessed with http
+    protocol: http
+
+    # If required, a path to the service's TLS certificate to successfully
+    # establish a secure connection.
+    # tlscertpath: "path-to-optional-tls-cert/tls.cert"
+
+    # A comma-delimited list of capabilities that will be granted for tokens of
+    # the service at the base tier.
+    # capabilities: "add,subtract"
+
+    # The set of constraints that are applied to tokens of the service at the
+    # base tier. Can also add these on the other side
+    # constraints:
+    #   "valid_until": "2022-12-31"
+
+    # The LSAT value in satoshis for the service. It is ignored if
+    # dynamicprice.enabled is set to true.
+    price: 10
+
+    # List of regular expressions for paths that don't require authentication
+    authwhitelistpaths:
+      # generated negative match for "/file" using 
+      # https://www.formauri.es/personal/pgimeno/misc/non-match-regex 
+      - "^([^f]|f(f|i(f|lf))*([^fi]|i([^fl]|l[^ef])))*(f(f|i(f|lf))*(il?)?)?$"
+
+# Settings for a Tor instance to allow requests over Tor as onion services.
+# Configuring Tor is optional.
+# tor:
+#   # The host:port which Tor's control can be reached at.
+#   control: "localhost:9051"
+
+#   # The internal port we should listen on for client requests over Tor. Note
+#   # that this port should not be exposed to the outside world, it is only
+#   # intended to be reached by clients through the onion service.
+#   listenport: 8082
+
+#   # The port through which the onion services to be created can be reached at.
+#   virtualport: 8082
+
+#   # Whether a v2 onion service should be created to handle requests.
+#   v2: false
+
+#   # Whether a v3 onion service should be created to handle requests.
+#   v3: false
+
+# Enable the Lightning Node Connect hashmail server, allowing up to 1k messages
+# per burst and a new message every 20 milliseconds.
+hashmail:
+  enabled: true
+  messagerate: 20ms
+  messageburstallowance: 1000

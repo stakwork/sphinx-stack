@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   bitcoind:
     image: lncm/bitcoind:v0.21.1
     restart: on-failure
@@ -130,7 +129,7 @@ services:
       - 5555:5555
 
   bob:
-    image: sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
     restart: on-failure
     depends_on:
@@ -146,15 +145,15 @@ services:
       - ./relay:/relay/configs
       - ./lnd/bob:/relay/bob
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3002
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=meme.sphinx:5555
+      - MEDIA_HOST=localhost:5555
     ports:
       - 3002:3002
 
   carol:
-    image: sphinx-relay:latest
+    image: sphinxlightning/sphinx-relay
     container_name: carol.sphinx
     restart: on-failure
     depends_on:
@@ -170,10 +169,10 @@ services:
       - ./relay:/relay/configs
       - ./lnd/carol:/relay/carol
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3003
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=meme.sphinx:5555
+      - MEDIA_HOST=localhost:5555
     ports:
       - 3003:3003
 
@@ -182,7 +181,9 @@ services:
     depends_on:
       - bob
       - carol
-    restart: "no"
+      - lndsetup
+      - tribes
+    restart: on-failure
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay

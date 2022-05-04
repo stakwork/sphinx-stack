@@ -30,3 +30,6 @@ rm -rf ./relay/botEnvVars.json
 
 #Remove the certs for proxy
 rm -rf ./proxy
+
+#transport keys
+rm ./relay/*.pem

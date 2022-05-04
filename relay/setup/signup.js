@@ -19,9 +19,16 @@ async function run_signup(n, i) {
   }
 }
 
-function headers(token) {
+function headers(token, transportToken) {
   const h = { "Content-Type": "application/json" };
-  if (token) h["x-user-token"] = token;
+
+  if (token && !transportToken) h["x-user-token"] = token;
+  if (token && transportToken) {
+    h["x-transport-token"] = rsa.encrypt(
+      transportToken,
+      `${token}|${Date.now()}`
+    );
+  }
   return h;
 }
 function proxyHeaders(token) {
@@ -68,18 +75,23 @@ async function signup(n) {
     const token = Crypto.randomBytes(20)
       .toString("base64")
       .slice(0, 20);
+    let transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
-      headers: headers(),
+      headers: headers(token, transportToken),
       body: JSON.stringify({
-        token,
         pubkey: n.pubkey,
       }),
     });
     const json = await r.json();
-    console.log("signed up: ", json);
 
     addFieldToNodeJson(n.pubkey, "authToken", token);
+    /*addFieldToNodeJson(
+      n.pubkey,
+      "transportToken",
+      json.response.transportToken
+		);*/
+    addFieldToNodeJson(n.pubkey, "transportToken", transportToken);
 
     return token;
   } catch (e) {
@@ -87,14 +99,28 @@ async function signup(n) {
   }
 }
 
+async function getTransportToken(n) {
+  const r = await fetch(n.ip + "/request_transport_key", {
+    method: "GET",
+    headers: headers(),
+  });
+  const j = await r.json();
+  return j.response.transport_key;
+}
+
 async function getOwner(n) {
+  console.log("-> getOwner");
   try {
+    const transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts", {
       method: "GET",
-      headers: headers(n.authToken),
+      headers: headers(n.authToken, transportToken),
     });
+    if (!r.ok) {
+      console.log(await r.text());
+      throw new Error("couldnt getOwner");
+    }
     const j = await r.json();
-
     const owner = j.response.contacts.find((c) => c.is_owner);
     // const id = owner.id;
     return owner;
@@ -146,7 +172,7 @@ async function createContactKey(n) {
 
 async function clearNode(n) {
   const r2 = await fetch(n.ip + "/test_clear", {
-    headers: headers(n.authToken),
+    headers: headers(n.authToken, n.transportToken),
   });
   const j2 = await r2.json();
 }

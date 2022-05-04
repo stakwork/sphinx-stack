@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  meme:
+    # in some environments, like alt/lsat.yml, we don't want
+    # to expose the meme server to the outside world. This will
+    # add this mapping to the default configuration, but allows
+    # the meme server configs in the lsat setup to not expose them.
+    # see here for more details: https://mindbyte.nl/2018/04/04/overwrite-ports-in-docker-compose.html
+    ports:
+      - 5555:5555

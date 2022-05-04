@@ -16,3 +16,9 @@ pgdata
 proxy/*/*
 !proxy/*/.gitkeep
 redisData
+relay/aliceTransportPublicKey.pem
+relay/aliceTransportPrivateKey.pem
+relay/bobTransportPublicKey.pem
+relay/bobTransportPrivateKey.pem
+relay/carolTransportPublicKey.pem
+relay/carolTransportPrivateKey.pem

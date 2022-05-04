@@ -18,7 +18,7 @@ async function getBalance(node) {
 }
 
 async function newAddress(node) {
-  return await doRequest(node, "v1/newaddress?type=1&account=" + node.alias);
+  return await doRequest(node, "v1/newaddress?type=1");
 }
 
 async function listChannels(node) {
