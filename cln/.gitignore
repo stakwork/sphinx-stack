@@ -1,0 +1,3 @@
+regtest
+lightningd-regtest.pid
+remote_hsmd_vls 

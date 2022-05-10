@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+
+  bitcoind:
+    image: lncm/bitcoind:v0.21.1
+    restart: on-failure
+    container_name: bitcoind.sphinx
+    volumes:
+      - ./bitcoind:/data/.bitcoin
+    ports:
+      - 18443:18443
+      - 8333:8333
+      - 28332:28332
+      - 28333:28333
+
+  cln1:
+    image: elementsproject/lightningd:latest
+    restart: on-failure
+    container_name: cln1.sphinx
+    depends_on:
+      - bitcoind
+    command:
+      - --bitcoin-rpcconnect=bitcoind.sphinx
+      - --bitcoin-rpcuser=evan
+      - --bitcoin-rpcpassword=thepass
+      - --network=regtest
+      - --plugin-dir=/usr/local/libexec/c-lightning
+      - --alias=cln1
+      - --log-level=debug
+      - --subdaemon=hsmd:vls-proxy/remote_hsmd_vls
+      # - --subdaemon=hsmd:/usr/local/libexec/c-lightning/lightning_hsmd
+    environment:
+      EXPOSE_TCP: "true"
+    ports:
+      - "0.0.0.0:9735:9735"
+      - "0.0.0.0:9835:9835"
+    volumes:
+      - ./cln/cln1:/root/.lightning
+      - ./bitcoind:/root/.bitcoin
+      - ./cln/vls-proxy:/usr/local/libexec/c-lightning/vls-proxy
