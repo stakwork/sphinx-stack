@@ -71,7 +71,7 @@ async function channels(node) {
     const chans = await lightning.listChannels(node);
     const channels = chans.channels || [];
     if (!channels.length) {
-      console.log("=> alice opening channels...");
+      console.log("=> alice opening channels...", peersToMake);
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         await lightning.openChannel(node, {
@@ -97,7 +97,7 @@ async function unlockAll() {
   await asyncForEach(Object.values(nodes.nodes), async (node) => {
     await createOrUnlockWallet(node);
   });
-  await sleep(5000);
+  await sleep(20000);
   await coinsAndChannels(nodes.nodes.alice);
 }
 

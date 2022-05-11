@@ -10,7 +10,7 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
-  await asyncForEach(nodes, async function (n, i) {
+  await asyncForEach(nodes, async function(n, i) {
     await pollReady(n, i);
     await sleep(1000);
     console.log("=========> SIGNUP SETUP <==========");
@@ -180,7 +180,10 @@ async function writeVirtualNodes() {
             console.log(privateChannel);
             const pushValue = {
               pubkey: privateChannel.pubkey,
-              route_hint: privateChannel.channel,
+              route_hint:
+                "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f" +
+                ":" +
+                privateChannel.channel,
               alias: `virtualNode${index}`,
               ip: "http://dave.sphinx:3004",
               external_ip: "http://localhost:3004",
@@ -202,11 +205,11 @@ async function writeVirtualNodes() {
 }
 
 function pollReady(n, i) {
-  return new Promise(async function (resolve, reject) {
+  return new Promise(async function(resolve, reject) {
     let ok = false;
     while (!ok) {
       try {
-        await sleep(1000);
+        await sleep(10000);
         console.log("=> try ", n.ip + "/is_setup");
         const r = await fetch(n.ip + "/is_setup");
         // const txt = await r.json();

@@ -231,7 +231,7 @@ services:
     volumes:
       - ./relay:/relay/configs
       - ./lnd/dave/.lnd:/relay/dave/.lnd
-      - ./proxy/:/proxy
+      - ./proxy:/proxy
     environment:
       - NODE_ENV=development
       - PORT=3004
@@ -246,6 +246,7 @@ services:
       - alice
       - bob
       - carol
+      - dave  
       - lndsetup
       - tribes
     restart: on-failure
@@ -279,7 +280,7 @@ services:
         "--channels-start=421",
         "--admin-token=r46bnf8ibrhbb424heba",
         "--admin-port=5050",
-        "--admin-pubkey=021d7e8cab0bcdd33da98651ae6cae2977c83860fcd09df115259a58396bd022f5",
+        "--admin-pubkey=030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
         "--initial-msat=5000000",
         "--macaroon-location=/lnd/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
         "--tls-location=/lnd/.lnd/tls.cert",
