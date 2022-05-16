@@ -16,11 +16,12 @@ const nodes = {
         host: "carol-lnd.sphinx:9735",
         pubkey:
           "0364c05cbcbb9612036cc66297445a88bcfc21941fd816e17a56b54b0b52ff02b9",
-      },{
+      },
+      {
         host: "dave-lnd.sphinx:9735",
         pubkey:
           "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
-      },,
+      },
     ],
     mnemonic: [
       "above",

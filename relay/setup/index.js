@@ -180,7 +180,7 @@ async function writeVirtualNodes() {
             console.log(privateChannel);
             const pushValue = {
               pubkey: privateChannel.pubkey,
-              route_hint:
+              routeHint:
                 "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f" +
                 ":" +
                 privateChannel.channel,
