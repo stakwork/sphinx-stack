@@ -160,7 +160,7 @@ async function createContactKey(n) {
     const pin = "111111";
     const enc = JSCryptor.JSCryptor.Encrypt(str, pin);
     const final = Buffer.from(`keys::${enc}`).toString("base64");
-    console.log("FINAL: ", final);
+    //console.log("FINAL: ", final);
     addFieldToNodeJson(n.pubkey, "exported_keys", final);
 
     addFieldToNodeJson(n.pubkey, "pin", pin);
@@ -178,7 +178,7 @@ async function clearNode(n) {
 }
 
 async function addFieldToNodeJson(pubkey, key, value) {
-  var nodes = require(paths.path);
+  var nodes = require(paths.pathToWrite);
   const idx = nodes.findIndex((n) => n.pubkey === pubkey);
   if (idx < 0) return;
   nodes[idx][key] = value;

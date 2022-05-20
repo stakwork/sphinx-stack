@@ -282,7 +282,7 @@ services:
         "--admin-token=r46bnf8ibrhbb424heba",
         "--admin-port=5050",
         "--admin-pubkey=030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
-        "--initial-msat=5000",
+        "--initial-msat=500000",
         "--macaroon-location=/lnd/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
         "--tls-location=/lnd/.lnd/tls.cert",
         "--lnd-ip=dave-lnd.sphinx",

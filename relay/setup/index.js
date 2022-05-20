@@ -6,7 +6,8 @@ var fetch = require("./fetch");
 
 async function setup() {
   await preSetup();
-  var nodes = require(paths.path);
+  var nodes = require(paths.pathToWrite);
+  console.log("nodes we're working with after presetup", nodes);
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
@@ -65,7 +66,6 @@ setup();
 async function createBotKey(botConfigValues, botIndex, n) {
   const { name, webhook } = botConfigValues;
 
-  console.log(n.authToken);
   try {
     const r = await fetch(n.ip + "/bot/", {
       method: "POST",
@@ -80,9 +80,7 @@ async function createBotKey(botConfigValues, botIndex, n) {
     });
 
     //We're aborting if the relay service isn't availible yet
-    console.log("What is the status", r.status);
     const NODES = require(paths.pathToWrite);
-    console.log(NODES);
     if (r.status == 401) {
       process.abort();
     }
@@ -110,7 +108,7 @@ async function createBotKey(botConfigValues, botIndex, n) {
 
 async function preSetup() {
   try {
-    const exists = fs.existsSync(paths.pathToWrite);
+    let exists = fs.existsSync(paths.pathToWrite);
     const botKeysExist = fs.existsSync(paths.botEnvVars);
 
     if (!botKeysExist) {
@@ -129,8 +127,13 @@ async function preSetup() {
         "does not exist, creating now",
         exists
       );
-      await writeVirtualNodes();
       fs.copyFileSync(paths.path, paths.pathToWrite);
+      const existingNodes = require(paths.pathToWrite);
+      for (const node of existingNodes) {
+        if (node.admin_token) {
+          await writeVirtualNodes(node);
+        }
+      }
     } else {
       console.log("=>", paths.pathToWrite, "exists");
       // check ready to go! All fields there
@@ -157,7 +160,7 @@ async function preSetup() {
   }
 }
 
-async function writeVirtualNodes() {
+async function writeVirtualNodes(node) {
   //const virtualNodes = await fetch("http://proxy.sphinx:5050/list", {"x-admin-token": "r46bnf8ibrhbb424heba"})
 
   return new Promise(async function(resolve, reject) {
@@ -169,31 +172,31 @@ async function writeVirtualNodes() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-admin-token": "r46bnf8ibrhbb424heba",
+            "x-admin-token": node.admin_token,
           },
         });
         const json = await r.json();
         if (json.length > 0) {
           console.log("THIS IS THE RESPONSE OF LIST FROM PROXY: ", json);
-          var nodesPartial = require(paths.path);
+          var nodesPartial = require(paths.pathToWrite);
+          nodesPartial.pop();
           json.forEach((privateChannel, index) => {
             console.log(privateChannel);
             const pushValue = {
               pubkey: privateChannel.pubkey,
-              routeHint:
-                "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f" +
-                ":" +
-                privateChannel.channel,
+              routeHint: node.pubkey + ":" + privateChannel.channel,
               alias: `virtualNode${index}`,
-              ip: "http://dave.sphinx:3004",
-              external_ip: "http://localhost:3004",
+              ip: node.ip,
+              external_ip: node.external_ip,
             };
             nodesPartial.push(pushValue);
           });
           const jsonString = JSON.stringify(nodesPartial, null, 2);
           console.log(nodesPartial);
 
-          fs.writeFileSync(paths.path, jsonString);
+          console.log("this is what we're writing", jsonString);
+          //fs.copyFileSync(jsonString, paths.pathToWrite);
+          fs.writeFileSync(paths.pathToWrite, []);
         }
         if (r.ok && json.length > 0) ok = true;
       } catch (e) {
