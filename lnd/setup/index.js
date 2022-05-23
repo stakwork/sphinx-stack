@@ -70,8 +70,6 @@ async function channels(node) {
 
     const chans = await lightning.listChannels(node);
     const channels = chans.channels || [];
-      await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
-      console.log("=> 6 blocked mined to Alice!");
     if (!channels.length) {
       console.log("=> alice opening channels...");
       // open channels here
