@@ -165,10 +165,11 @@ async function writeVirtualNodes(node) {
 
   return new Promise(async function(resolve, reject) {
     let ok = false;
-    while (!ok) {
+				let count = 0
+    while (!ok && count < 100) {
       try {
         await sleep(2000);
-        const r = await fetch("http://proxy.sphinx:5050/list", {
+        const r = await fetch(node.proxy_ip + "/list", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -202,6 +203,7 @@ async function writeVirtualNodes(node) {
       } catch (e) {
         console.log(e);
       }
+						count++
     }
     resolve();
   });
