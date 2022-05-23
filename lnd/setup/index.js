@@ -72,9 +72,8 @@ async function channels(node) {
     const channels = chans.channels || [];
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
       console.log("=> 6 blocked mined to Alice!");
-					await sleep(20000)
     if (!channels.length) {
-      console.log("=> alice opening channels...", peersToMake);
+      console.log("=> alice opening channels...");
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         await lightning.openChannel(node, {
@@ -100,7 +99,7 @@ async function unlockAll() {
   await asyncForEach(Object.values(nodes.nodes), async (node) => {
     await createOrUnlockWallet(node);
   });
-  await sleep(20000);
+  await sleep(5000);
   await coinsAndChannels(nodes.nodes.alice);
 }
 
