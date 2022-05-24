@@ -256,7 +256,7 @@ services:
       - ./relay:/relay
 
   proxy:
-    image: sphinx-proxy
+    image: sphinxlightning/sphinx-proxy
     container_name: proxy.sphinx
     restart: always 
     depends_on:
