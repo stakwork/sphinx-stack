@@ -3,4 +3,8 @@
     "dialect": "sqlite",
     "storage": "./configs/db/dave.db"
   }
+	,
+  "gitactionenv": {
+    "dialect": "sqlite"
+  }
 }
