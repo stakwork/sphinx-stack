@@ -266,6 +266,9 @@ services:
       - ./proxy/cert:/cert
       - ./proxy/macaroons:/macaroons
       - ./proxy/badger:/badger
+      - type: bind
+        source: ./proxy/lnd_proxy.conf
+        target: /lnd_proxy.conf
     entrypoint:
       [
         "/app/sphinx-proxy",

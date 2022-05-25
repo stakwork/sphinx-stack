@@ -29,7 +29,9 @@ rm -rf ./redisData
 rm -rf ./relay/botEnvVars.json
 
 #Remove the certs for proxy
-rm -rf ./proxy
+rm -rf ./proxy/badger
+rm -rf ./proxy/cert
+rm -rf ./proxy/macaroons
 
 #transport keys
 rm ./relay/*.pem
