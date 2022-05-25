@@ -259,6 +259,7 @@ services:
     image: sphinxlightning/sphinx-proxy
     container_name: proxy.sphinx
     restart: always 
+    user: root
     depends_on:
       - dave-lnd
     volumes:
