@@ -256,9 +256,10 @@ services:
       - ./relay:/relay
 
   proxy:
-    image: sphinx-proxy
+    image: sphinxlightning/sphinx-proxy
     container_name: proxy.sphinx
     restart: always 
+    user: root
     depends_on:
       - dave-lnd
     volumes:
@@ -266,6 +267,9 @@ services:
       - ./proxy/cert:/cert
       - ./proxy/macaroons:/macaroons
       - ./proxy/badger:/badger
+      - type: bind
+        source: ./proxy/lnd_proxy.conf
+        target: /lnd_proxy.conf
     entrypoint:
       [
         "/app/sphinx-proxy",
