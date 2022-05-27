@@ -49,30 +49,18 @@ services:
       - 38883:38883
     command: --configfile=/lndsetup/carol.conf
 
-  dave-lnd:
-    image: lightninglabs/lnd:v0.14.3-beta.rc1
-    container_name: dave-lnd.sphinx
-    volumes:
-      - ./lnd/dave/.lnd:/root/.lnd
-      - ./lnd/setup:/lndsetup
-    ports:
-      - 9738:9735
-      - 10012:10012
-      - 38884:38884
-    command: --configfile=/lndsetup/dave.conf
-
   lndsetup:
     image: node:12-buster-slim
     depends_on:
       - alice-lnd
       - bob-lnd
       - carol-lnd
-      - dave-lnd
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
+      - ./lnd/setup/nodes/nodes.js:/lndsetup/nodes.js
 
   db:
     image: postgres
@@ -214,90 +202,16 @@ services:
     ports:
       - 3003:3003
 
-  dave:
-    image: sphinxlightning/sphinx-relay
-    container_name: dave.sphinx
-    user: root
-    restart: on-failure
-    depends_on:
-      - dave-lnd
-      - proxy  
-    entrypoint:
-      [
-        "node",
-        "/relay/dist/app.js",
-        "--config=/relay/configs/dave.json",
-        "--db=/relay/configs/dave-db.json",
-      ]
-    volumes:
-      - ./relay:/relay/configs
-      - ./lnd/dave/.lnd:/relay/dave/.lnd
-      - ./proxy:/proxy
-    environment:
-      - NODE_ENV=${GITACTION_ENV:-development}
-      - PORT=3004
-      - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
-    ports:
-      - 3004:3004
-
   relaysetup:
     image: node:12-buster-slim
     depends_on:
       - alice
       - bob
       - carol
-      - dave  
       - lndsetup
       - tribes
     restart: on-failure
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
-
-  proxy:
-    image: sphinxlightning/sphinx-proxy
-    container_name: proxy.sphinx
-    restart: always 
-    user: root
-    depends_on:
-      - dave-lnd
-    volumes:
-      - ./lnd/dave/.lnd:/lnd/.lnd
-      - ./proxy/cert:/cert
-      - ./proxy/macaroons:/macaroons
-      - ./proxy/badger:/badger
-      - type: bind
-        source: ./proxy/lnd_proxy.conf
-        target: /lnd_proxy.conf
-    entrypoint:
-      [
-        "/app/sphinx-proxy",
-        "--rpclisten=0.0.0.0:11111",
-        "--tlscertpath=/cert/tls.cert",
-        "--tlskeypath=/cert/tls.key",
-        "--bitcoin.regtest",
-        "--bitcoin.active",
-        "--bitcoin.basefee=0",
-        "--store-key=4967BC847DDEFF47C4BC890038F5A495",
-        "--unlock-pwd=hi123456",
-        "--server-macaroons-dir=/macaroons",
-        "--channels-start=2",
-        "--admin-token=r46bnf8ibrhbb424heba",
-        "--admin-port=5050",
-        "--admin-pubkey=030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
-        "--initial-msat=500000",
-        "--macaroon-location=/lnd/.lnd/data/chain/bitcoin/regtest/admin.macaroon",
-        "--tls-location=/lnd/.lnd/tls.cert",
-        "--lnd-ip=dave-lnd.sphinx",
-        "--lnd-port=10012",
-        "--mqtt-broker=tcps://mqtt.sphinx:1883",
-        "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
-        "--tlsextradomain=proxy.sphinx"
-      ]
-    ports:
-      - 11111:11111
-      - 5050:5050
-
-
-
+      - ./relay/nodes_partial/nodes_partial.json:/relay/nodes_partial.json

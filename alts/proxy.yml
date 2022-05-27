@@ -73,10 +73,7 @@ services:
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
-      - type: bind
-        source: ./lnd/setup/nodes.js
-        target: /lndsetup/nodes.js
-
+      - ./lnd/setup/nodes/proxynodes.js:/lndsetup/nodes.js
 
   db:
     image: postgres
@@ -260,6 +257,7 @@ services:
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
+      - ./relay/nodes_partial/proxy_nodes_partial.json:/relay/nodes_partial.json
 
   proxy:
     image: sphinxlightning/sphinx-proxy

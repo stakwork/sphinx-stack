@@ -16,12 +16,7 @@ const nodes = {
         host: "carol-lnd.sphinx:9735",
         pubkey:
           "0364c05cbcbb9612036cc66297445a88bcfc21941fd816e17a56b54b0b52ff02b9",
-      },
-      {
-        host: "dave-lnd.sphinx:9735",
-        pubkey:
-          "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
-      },
+      }
     ],
     mnemonic: [
       "above",
@@ -112,38 +107,6 @@ const nodes = {
       "reason",
       "genre",
       "master",
-    ],
-  },
-  dave: {
-    alias: "dave",
-    hostname: "dave-lnd.sphinx:38884",
-    password: "dave12345",
-    macaroon: "/dave/" + macpath,
-    mnemonic: [
-      "able",
-      "stuff",
-      "magic",
-      "beach",
-      "ankle",
-      "exotic",
-      "blood",
-      "capital",
-      "motor",
-      "crouch",
-      "once",
-      "pigeon",
-      "awake",
-      "same",
-      "ill",
-      "crane",
-      "write",
-      "resource",
-      "interest",
-      "rail",
-      "cigar",
-      "duty",
-      "body",
-      "outdoor",
     ],
   },
 };
