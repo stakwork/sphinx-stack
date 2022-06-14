@@ -83,7 +83,7 @@ async function doRequest(node, theurl, body) {
     const url = `https://${node.hostname}/${theurl}`;
     const r = await fetch(url, theParams);
     if (!r.ok) {
-      console.log("=> Request Failed:", r);
+      console.log("=> Request Failed:", r.status, r.statusText);
     }
     const j = await r.json();
     return j;

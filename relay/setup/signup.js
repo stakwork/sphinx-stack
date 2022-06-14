@@ -39,39 +39,6 @@ function proxyHeaders(token) {
 
 async function signup(n) {
   try {
-    /*if (n.is_proxy && !n.is_lite_node) {
-      let ok = false;
-      console.log("about ot enter while loop");
-      while (!ok) {
-        try {
-          await sleep(1000);
-          const proxyGenerateUserResponse = await fetch(
-            "http://proxy.sphinx:5050/generate",
-            {
-              method: "POST",
-              headers: proxyHeaders("r46bnf8ibrhbb424heba"),
-            }
-          );
-          const proxyGenerateUserResponseJson = await proxyGenerateUserResponse.json();
-          addFieldToNodeJson(
-            n.pubkey,
-            "pubkey",
-            proxyGenerateUserResponseJson.pubkey
-          );
-          addFieldToNodeJson(
-            proxyGenerateUserResponseJson.pubkey,
-            "is_proxy",
-            "false"
-          );
-
-          n.pubkey = proxyGenerateUserResponseJson.pubkey;
-          if (proxyGenerateUserResponse.ok) ok = true;
-        } catch (e) {
-          console.log(e);
-        }
-      }
-		}*/
-
     const token = Crypto.randomBytes(20)
       .toString("base64")
       .slice(0, 20);
@@ -86,11 +53,6 @@ async function signup(n) {
     const json = await r.json();
 
     addFieldToNodeJson(n.pubkey, "authToken", token);
-    /*addFieldToNodeJson(
-      n.pubkey,
-      "transportToken",
-      json.response.transportToken
-		);*/
     addFieldToNodeJson(n.pubkey, "transportToken", transportToken);
 
     return token;
@@ -136,11 +98,7 @@ async function createContactKey(n) {
 
     const owner = await getOwner(n);
     const id = owner.id;
-    console.log("==> Generating keys");
     const { public, private } = await rsa.genKeys();
-    console.log("==> Finished Generating keys");
-
-    console.log("THIS IS THE PUB KEY: ", n.pubkey);
     addFieldToNodeJson(n.pubkey, "contact_key", public);
     addFieldToNodeJson(n.pubkey, "privkey", private);
 
@@ -152,7 +110,6 @@ async function createContactKey(n) {
         alias: n.alias,
       }),
     });
-    console.log("===> contacts call finished");
     const j = await r.json();
     const owner2 = await getOwner(n);
 
@@ -160,9 +117,7 @@ async function createContactKey(n) {
     const pin = "111111";
     const enc = JSCryptor.JSCryptor.Encrypt(str, pin);
     const final = Buffer.from(`keys::${enc}`).toString("base64");
-    //console.log("FINAL: ", final);
     addFieldToNodeJson(n.pubkey, "exported_keys", final);
-
     addFieldToNodeJson(n.pubkey, "pin", pin);
     console.log("===> contacts exchange key call finished");
   } catch (e) {

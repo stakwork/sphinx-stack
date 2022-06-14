@@ -14,9 +14,8 @@ async function setup() {
   await asyncForEach(nodes, async function(n, i) {
     await pollReady(n, i);
     await sleep(1000);
-    console.log("=========> SIGNUP SETUP <==========");
+    console.log("=========> SETUP <==========");
     await signup.run_signup(n, i);
-    console.log("=========> SIGNUP SETUP DONE <==========");
   });
 
   /*Bot creation is being done here
@@ -27,33 +26,28 @@ async function setup() {
   botEnvVars = require(paths.botEnvVars);
   botConfig = require(paths.botConfig);
 
-  console.log("===> setting up botEnvVars");
   if (botEnvVars.length != botConfig.length) {
     var finalNodes = require(paths.pathToWrite);
 
     let newBotEnvVars = [];
 
-    console.log("===> before await each");
     await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
       await sleep(20000);
-      console.log("===> before createBotKey");
       const nextKeyPortPair = await createBotKey(
         botConfigValues,
         botIndex,
         finalNodes[0]
       );
 
-      console.log("===> before newBotEnvVars");
       newBotEnvVars[botIndex] = nextKeyPortPair;
     });
 
     fs.writeFileSync(paths.botEnvVars, JSON.stringify(newBotEnvVars, null, 2));
   }
-  console.log("===> finished setting up botEnvVars");
 
   console.log("======================================");
   console.log("==                                  ==");

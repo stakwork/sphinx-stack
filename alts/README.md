@@ -28,14 +28,11 @@ docker-compose -f ./alts/no-tribes.yml --project-directory . up -d
 
 ### proxy testing
 
-sphinx-proxy:
+in sphinx-proxy dir
 docker build --no-cache -t sphinx-proxy .
 
 docker-compose -f ./alts/proxy.yml --project-directory . up -d
 
-docker rm -f proxy.sphinx
-docker rm -f dave.sphinx
-docker rm -f dave-lnd.sphinx
 ```
 
 ### LSAT-based paywall
