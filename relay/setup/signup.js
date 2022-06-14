@@ -10,7 +10,9 @@ async function run_signup(n, i) {
     var finalNodes = require(paths.pathToWrite);
     if (finalNodes[i].authToken) return; // ALREADY SIGNED UP!
     const token = await signup(n);
+    n = require(paths.pathToWrite)[i];
     n.authToken = token;
+
     await createContactKey(n);
   } catch (e) {
     console.log(e);
@@ -27,6 +29,11 @@ function headers(token, transportToken) {
       `${token}|${Date.now()}`
     );
   }
+  return h;
+}
+function proxyHeaders(token) {
+  const h = { "Content-Type": "application/json" };
+  if (token) h["x-admin-token"] = token;
   return h;
 }
 
@@ -46,11 +53,6 @@ async function signup(n) {
     const json = await r.json();
 
     addFieldToNodeJson(n.pubkey, "authToken", token);
-    /*addFieldToNodeJson(
-      n.pubkey,
-      "transportToken",
-      json.response.transportToken
-		);*/
     addFieldToNodeJson(n.pubkey, "transportToken", transportToken);
 
     return token;
@@ -96,7 +98,6 @@ async function createContactKey(n) {
 
     const owner = await getOwner(n);
     const id = owner.id;
-
     const { public, private } = await rsa.genKeys();
     addFieldToNodeJson(n.pubkey, "contact_key", public);
     addFieldToNodeJson(n.pubkey, "privkey", private);
@@ -118,6 +119,7 @@ async function createContactKey(n) {
     const final = Buffer.from(`keys::${enc}`).toString("base64");
     addFieldToNodeJson(n.pubkey, "exported_keys", final);
     addFieldToNodeJson(n.pubkey, "pin", pin);
+    console.log("===> contacts exchange key call finished");
   } catch (e) {
     console.log(e);
   }
@@ -131,12 +133,16 @@ async function clearNode(n) {
 }
 
 async function addFieldToNodeJson(pubkey, key, value) {
-  var nodes = require(paths.path);
+  var nodes = require(paths.pathToWrite);
   const idx = nodes.findIndex((n) => n.pubkey === pubkey);
   if (idx < 0) return;
   nodes[idx][key] = value;
   const jsonString = JSON.stringify(nodes, null, 2);
   fs.writeFileSync(paths.pathToWrite, jsonString);
+}
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 module.exports = { run_signup };

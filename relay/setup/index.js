@@ -5,12 +5,13 @@ var fetch = require("./fetch");
 // var rsa = require("./rsa");
 
 async function setup() {
-  preSetup();
-  var nodes = require(paths.path);
+  await preSetup();
+  var nodes = require(paths.pathToWrite);
+  console.log("nodes we're working with after presetup", nodes);
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
-  await asyncForEach(nodes, async function (n, i) {
+  await asyncForEach(nodes, async function(n, i) {
     await pollReady(n, i);
     await sleep(1000);
     console.log("=========> SETUP <==========");
@@ -30,18 +31,17 @@ async function setup() {
 
     let newBotEnvVars = [];
 
-    await asyncForEach(botConfig, async function (botConfigValues, botIndex) {
+    await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
+      await sleep(20000);
       const nextKeyPortPair = await createBotKey(
         botConfigValues,
         botIndex,
         finalNodes[0]
       );
-
-      await sleep(20000);
 
       newBotEnvVars[botIndex] = nextKeyPortPair;
     });
@@ -74,6 +74,7 @@ async function createBotKey(botConfigValues, botIndex, n) {
     });
 
     //We're aborting if the relay service isn't availible yet
+    const NODES = require(paths.pathToWrite);
     if (r.status == 401) {
       process.abort();
     }
@@ -101,7 +102,7 @@ async function createBotKey(botConfigValues, botIndex, n) {
 
 async function preSetup() {
   try {
-    const exists = fs.existsSync(paths.pathToWrite);
+    let exists = fs.existsSync(paths.pathToWrite);
     const botKeysExist = fs.existsSync(paths.botEnvVars);
 
     if (!botKeysExist) {
@@ -121,6 +122,12 @@ async function preSetup() {
         exists
       );
       fs.copyFileSync(paths.path, paths.pathToWrite);
+      const existingNodes = require(paths.pathToWrite);
+      for (const node of existingNodes) {
+        if (node.admin_token) {
+          await writeVirtualNodes(node);
+        }
+      }
     } else {
       console.log("=>", paths.pathToWrite, "exists");
       // check ready to go! All fields there
@@ -147,12 +154,61 @@ async function preSetup() {
   }
 }
 
+async function writeVirtualNodes(node) {
+  //const virtualNodes = await fetch("http://proxy.sphinx:5050/list", {"x-admin-token": "r46bnf8ibrhbb424heba"})
+
+  return new Promise(async function(resolve, reject) {
+    let ok = false;
+				let count = 0
+    while (!ok && count < 100) {
+      try {
+        await sleep(2000);
+        const r = await fetch(node.proxy_ip + "/list", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": node.admin_token,
+          },
+        });
+        const json = await r.json();
+        if (json.length > 0) {
+          console.log("THIS IS THE RESPONSE OF LIST FROM PROXY: ", json);
+          var nodesPartial = require(paths.pathToWrite);
+          nodesPartial.pop();
+          json.forEach((privateChannel, index) => {
+            console.log(privateChannel);
+            const pushValue = {
+              pubkey: privateChannel.pubkey,
+              routeHint: node.pubkey + ":" + privateChannel.channel,
+              alias: `virtualNode${index}`,
+              ip: node.ip,
+              external_ip: node.external_ip,
+            };
+            nodesPartial.push(pushValue);
+          });
+          const jsonString = JSON.stringify(nodesPartial, null, 2);
+          console.log(nodesPartial);
+
+          console.log("this is what we're writing", jsonString);
+          //fs.copyFileSync(jsonString, paths.pathToWrite);
+          fs.writeFileSync(paths.pathToWrite, []);
+        }
+        if (r.ok && json.length > 0) ok = true;
+      } catch (e) {
+        console.log(e);
+      }
+						count++
+    }
+    resolve();
+  });
+}
+
 function pollReady(n, i) {
-  return new Promise(async function (resolve, reject) {
+  return new Promise(async function(resolve, reject) {
     let ok = false;
     while (!ok) {
       try {
-        await sleep(1000);
+        await sleep(10000);
         console.log("=> try ", n.ip + "/is_setup");
         const r = await fetch(n.ip + "/is_setup");
         // const txt = await r.json();

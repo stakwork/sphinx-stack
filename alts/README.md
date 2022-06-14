@@ -25,6 +25,14 @@ Use this to develop on sphinx tribes server and frontend
 
 ```
 docker-compose -f ./alts/no-tribes.yml --project-directory . up -d
+
+### proxy testing
+
+in sphinx-proxy dir
+docker build --no-cache -t sphinx-proxy .
+
+docker-compose -f ./alts/proxy.yml --project-directory . up -d
+
 ```
 
 ### LSAT-based paywall
