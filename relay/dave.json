@@ -21,6 +21,7 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3004",
     "connect_ui": true,
+    "logging": "LIGHTNING,TRIBES,MEME,NOTIFICATION,EXPRESS,NETWORK,DB,PROXY,LSAT",
     "logging_level": "debug"
   },
   "gitactionenv": {
@@ -45,6 +46,7 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3004",
     "connect_ui": true,
+    "logging": "LIGHTNING,TRIBES,MEME,NOTIFICATION,EXPRESS,NETWORK,DB,PROXY,LSAT",
     "logging_level": "debug"
   }
 }

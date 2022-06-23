@@ -24,28 +24,17 @@ async function createOrUnlockWallet(node) {
   }
 }
 
-async function coinsAndChannels(node) {
-  try {
-    const coins_success = await coins(node);
-    if (coins_success) {
-      await channels(node);
-    }
-  } catch (e) {
-    console.log("=> err", e);
-  }
-}
-
 async function coins(node) {
   try {
     const balres = await lightning.getBalance(node);
     const confirmed = parseInt(balres.confirmed_balance);
-    console.log("=> ALICE confirmed balance:", confirmed);
+    console.log(`=> ${node.alias} confirmed balance:`, confirmed);
     if (!confirmed) {
       const ares = await lightning.newAddress(node);
       const addy = ares.address;
-      console.log("=> ALICE address", addy);
+      console.log(`=> ${node.alias} address`, addy);
       await bitcoind.mine(101, addy);
-      console.log("=> 101 blocks mined to alice!", addy);
+      console.log(`=> 101 blocks mined to ${node.alias}!`);
       await sleep(5000);
     }
     return true;
@@ -73,8 +62,10 @@ async function channels(node) {
     await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
     console.log("=> 6 blocked mined to Alice!");
     await sleep(20000)
-    if (!channels.length) {
-      console.log("=> alice opening channels...");
+    if (channels.length) {
+      console.log(`=> ${node.alias} already has open channels`);
+    } else {
+      console.log(`=> ${node.alias} opening ${peersToMake.length} channels...`);
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         await lightning.openChannel(node, {
@@ -83,12 +74,17 @@ async function channels(node) {
           push_amount: 1000000,
         });
       });
-      await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
-      console.log("=> 6 blocked mined to Alice!");
     }
     await sleep(4000);
-    const chans2 = await lightning.listChannels(node);
-    console.log("FINAL CHANS", chans2.channels);
+  } catch (e) {
+    console.log("=> err:", e);
+  }
+}
+
+async function logChannels(node) {
+  try {
+    const chans = await lightning.listChannels(node);
+    console.log(`${node.alias} channels:`, chans.channels);
   } catch (e) {
     console.log("=> err:", e);
   }
@@ -96,18 +92,31 @@ async function channels(node) {
 
 async function unlockAll() {
   await sleep(3500);
-  // createOrUnlockWallet(nodes.nodes.alice);
-  await asyncForEach(Object.values(nodes.nodes), async (node) => {
-    await createOrUnlockWallet(node);
-  });
+
+  await forEachNode(createOrUnlockWallet);
+
   await sleep(5000);
-  await coinsAndChannels(nodes.nodes.alice);
+
+  await forEachNode(coins);
+
+  await forEachNode(channels);
+
+  await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
+  console.log("=> mined 6 blocks to confirm channels");
+
+  await sleep(2500);
+
+  await forEachNode(logChannels);
 }
 
 unlockAll();
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function forEachNode(callback) {
+  await asyncForEach(Object.values(nodes.nodes), callback);
 }
 
 async function asyncForEach(array, callback) {
