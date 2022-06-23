@@ -49,32 +49,18 @@ services:
       - 38883:38883
     command: --configfile=/lndsetup/carol.conf
 
-  dave-lnd:
-    image: lightninglabs/lnd:v0.14.3-beta.rc1
-    container_name: dave-lnd.sphinx
-    volumes:
-      - ./lnd/dave/.lnd:/root/.lnd
-      - ./lnd/setup:/lndsetup
-    ports:
-      - 9738:9735
-      - 10012:10012
-      - 38884:38884
-    command: --configfile=/lndsetup/dave.conf
-
   lndsetup:
     image: node:12-buster-slim
     depends_on:
       - alice-lnd
       - bob-lnd
       - carol-lnd
-      - dave-lnd
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/bob/.lnd:/bob/.lnd
       - ./lnd/carol/.lnd:/carol/.lnd
-      - ./lnd/dave/.lnd:/dave/.lnd
       - ./lnd/setup:/lndsetup
       - ./lnd/setup/nodes/nodes.js:/lndsetup/nodes.js
 
@@ -218,38 +204,12 @@ services:
     ports:
       - 3003:3003
 
-  dave:
-    image: sphinxlightning/sphinx-relay
-    container_name: dave.sphinx
-    user: root
-    restart: on-failure
-    depends_on:
-      - dave-lnd
-    entrypoint:
-      [
-        "node",
-        "/relay/dist/app.js",
-        "--config=/relay/configs/dave.json",
-        "--db=/relay/configs/dave-db.json",
-      ]
-    volumes:
-      - ./relay:/relay/configs
-      - ./lnd/dave/.lnd:/relay/dave/.lnd
-    environment:
-      - NODE_ENV=${GITACTION_ENV:-development}
-      - PORT=3004
-      - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
-    ports:
-      - 3004:3004
-
   relaysetup:
     image: node:12-buster-slim
     depends_on:
       - alice
       - bob
       - carol
-      - dave
       - lndsetup
       - tribes
     restart: on-failure

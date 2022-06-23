@@ -116,6 +116,7 @@ const nodes = {
       "master",
     ],
   },
+/*
   dave: {
     alias: "dave",
     hostname: "dave-lnd.sphinx:38884",
@@ -148,6 +149,7 @@ const nodes = {
       "outdoor",
     ],
   },
+*/
 };
 
 module.exports = {
