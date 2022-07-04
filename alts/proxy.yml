@@ -166,6 +166,9 @@ services:
       - MEDIA_HOST=localhost:5555
     ports:
       - 3001:3001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 
   bob:
     image: sphinxlightning/sphinx-relay
@@ -191,6 +194,8 @@ services:
       - MEDIA_HOST=localhost:5555
     ports:
       - 3002:3002
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   carol:
     image: sphinxlightning/sphinx-relay
@@ -216,6 +221,8 @@ services:
       - MEDIA_HOST=localhost:5555
     ports:
       - 3003:3003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   dave:
     image: sphinxlightning/sphinx-relay

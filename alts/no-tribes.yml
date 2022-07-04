@@ -140,6 +140,9 @@ services:
       - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3001:3001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 
   bob:
     image: sphinxlightning/sphinx-relay-test:latest
@@ -165,6 +168,8 @@ services:
       - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3002:3002
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   carol:
     image: sphinxlightning/sphinx-relay-test:latest
@@ -190,6 +195,8 @@ services:
       - MEDIA_HOST=meme.sphinx:5555
     ports:
       - 3003:3003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   relaysetup:
     image: node:12-buster-slim
