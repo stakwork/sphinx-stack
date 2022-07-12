@@ -28,3 +28,7 @@ services:
       - alice-lnd
     entrypoint: ["aperture", "--configfile=/aperture/aperture.yaml"]
 
+networks: 
+  default:
+    name: sphinx-stack
+    

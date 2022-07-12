@@ -54,5 +54,21 @@ Some configs to look at for more customization:
 To run sphinx stack with aperture:
 
 ```
-docker-compose -f docker-compose.yml -f ./alts/lsat.yml --project-directory . up -d
+docker compose -f docker-compose.yml -f ./alts/lsat.yml --project-directory . up -d
 ```
+
+#### Local Development with Meme
+There is also a special service and profile in the main docker compose file
+that allows for running with a local development instance of a service. 
+By commenting out one of the `depends_on` services listed in the `exclude-services`
+service, everything but that service or services will be run. 
+
+Furthermore, by using `profiles` you can make services that will only run with that
+specific profile passed. For example, to run a local meme for developing against,
+comment out `meme` from the exclude-services list, and then run:
+
+```
+$  docker compose -f docker-compose.yml --profile aperture --project-directory . up exclude-services
+```
+
+Once your meme server is running and connected to the other services, everything should be working.
