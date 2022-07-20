@@ -60,7 +60,7 @@ etcd:
 services:
   # The identifying name of the service. This will also be used to identify
   # which capabilities caveat (if any) corresponds to the service.
-  - name: "meme"
+  - name: "sphinx_meme"
 
     # The regular expression used to match the service host.
     hostregexp: "^localhost.*$"
@@ -84,12 +84,14 @@ services:
 
     # A comma-delimited list of capabilities that will be granted for tokens of
     # the service at the base tier.
-    # capabilities: "add,subtract"
+    capabilities: "large_upload"
 
     # The set of constraints that are applied to tokens of the service at the
     # base tier. Can also add these on the other side
-    # constraints:
-    #   "valid_until": "2022-12-31"
+    # should be of format of: [capability]_[constraint]_[constraint_unit] 
+    # with the unit being dependent on the actual constraint itself
+    constraints:
+      "large_upload_max_mb": "500"
 
     # The LSAT value in satoshis for the service. It is ignored if
     # dynamicprice.enabled is set to true.
@@ -97,9 +99,9 @@ services:
 
     # List of regular expressions for paths that don't require authentication
     authwhitelistpaths:
-      # generated negative match for "/file" using 
+      # generated negative match for "largefile" using 
       # https://www.formauri.es/personal/pgimeno/misc/non-match-regex 
-      - "^([^f]|f(f|i(f|lf))*([^fi]|i([^fl]|l[^ef])))*(f(f|i(f|lf))*(il?)?)?$"
+      - "^([^l]|l(l|a(l|r(l|g(l|e(l|f(l|il(argefil)*(l|a(l|r(l|g(l|e(l|fl)))))))))))*([^al]|a([^lr]|r([^gl]|g([^el]|e([^fl]|f([^il]|i([^l]|l(argefil)*([^ael]|a([^lr]|r([^gl]|g([^el]|e([^fl]|f([^il]|i[^l]))))))))))))))*(l(l|a(l|r(l|g(l|e(l|f(l|il(argefil)*(l|a(l|r(l|g(l|e(l|fl)))))))))))*(a((r(g?|ge(fi?)?))?|rgefil(argefil)*(a(r(g?|ge(fi?)?))?)?))?)?$"
 
 # Settings for a Tor instance to allow requests over Tor as onion services.
 # Configuring Tor is optional.
