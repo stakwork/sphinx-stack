@@ -12,7 +12,9 @@
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
     "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
-    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem",
+    "logging": "LIGHTNING,TRIBES,MEME,NOTIFICATION,EXPRESS,NETWORK,DB,PROXY,LSAT",
+    "logging_level": "debug"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -27,6 +29,8 @@
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
     "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
-    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem",
+    "logging": "LIGHTNING,TRIBES,MEME,NOTIFICATION,EXPRESS,NETWORK,DB,PROXY,LSAT",
+    "logging_level": "debug"
   }
 }
