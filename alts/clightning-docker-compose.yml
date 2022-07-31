@@ -1,0 +1,34 @@
+version: "3"
+services:
+  bitcoind:
+    image: ruimarinho/bitcoin-core:23.0
+    command:
+      -regtest=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcpassword=bar
+      -rpcport=18443
+      -rpcuser=foo
+      -server
+    ports:
+      - 18443:18443
+
+  lightningd:
+    image: elementsproject/lightningd
+    container_name: lightningd
+    command:
+      - --bitcoin-rpcconnect=bitcoind
+      - --bitcoin-rpcport=18443
+      - --bitcoin-rpcuser=foo
+      - --bitcoin-rpcpassword=bar
+      - --network=regtest
+      - --log-level=debug
+      - --alias=omoniyi24-cln
+    environment:
+      EXPOSE_TCP: "true"
+    expose:
+      - "9735"
+    ports:
+      - "0.0.0.0:9735:9735"
+    links:
+      - bitcoind

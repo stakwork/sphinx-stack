@@ -24,3 +24,4 @@ relay/carolTransportPublicKey.pem
 relay/carolTransportPrivateKey.pem
 admin
 cln-notes.md
+.idea/
