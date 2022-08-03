@@ -3,6 +3,13 @@
 
 docker-compose -f ./cln/cln.yml --project-directory . up -d
 
+./cln/setup1.sh
+./cln/setup2.sh ADDY
+
+docker-compose -f ./cln/cln.yml --project-directory . down
+
+./cln/clear.sh
+
 ### down
 
 docker rm cln1.sphinx -f
@@ -22,6 +29,8 @@ find . -name 'lightning*'
 lightning_hsmd
 
 ### inside 
+
+docker exec -it bitcoincore bitcoin-cli -regtest -rpcuser=foo -rpcpassword=bar -getinfo
 
 docker exec -it cln1.sphinx bash
 

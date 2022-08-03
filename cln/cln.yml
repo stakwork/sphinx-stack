@@ -14,6 +14,8 @@ services:
       -server
     ports:
       - 18443:18443
+    volumes:
+      - ./cln/btc1:/home/bitcoin/.bitcoin
 
   lightningd:
     image: elementsproject/lightningd
@@ -25,7 +27,7 @@ services:
       - --bitcoin-rpcpassword=bar
       - --network=regtest
       - --log-level=debug
-      - --alias=omoniyi24-cln
+      - --alias=sphinx-cln1
       - --grpc-port=10019
     environment:
       EXPOSE_TCP: "true"
