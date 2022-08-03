@@ -1,41 +1,39 @@
 version: "3"
 
 services:
-
   bitcoind:
-    image: lncm/bitcoind:v0.21.1
-    restart: on-failure
-    container_name: bitcoind.sphinx
-    volumes:
-      - ./bitcoind:/data/.bitcoin
+    image: ruimarinho/bitcoin-core:23.0
+    container_name: bitcoincore
+    command:
+      -regtest=1
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcpassword=bar
+      -rpcport=18443
+      -rpcuser=foo
+      -server
     ports:
       - 18443:18443
-      - 8333:8333
-      - 28332:28332
-      - 28333:28333
 
-  cln1:
-    image: elementsproject/lightningd:latest
-    restart: on-failure
-    container_name: cln1.sphinx
-    depends_on:
-      - bitcoind
+  lightningd:
+    image: elementsproject/lightningd
+    container_name: lightningd
     command:
-      - --bitcoin-rpcconnect=bitcoind.sphinx
-      - --bitcoin-rpcuser=evan
-      - --bitcoin-rpcpassword=thepass
+      - --bitcoin-rpcconnect=bitcoind
+      - --bitcoin-rpcport=18443
+      - --bitcoin-rpcuser=foo
+      - --bitcoin-rpcpassword=bar
       - --network=regtest
-      - --plugin-dir=/usr/local/libexec/c-lightning
-      - --alias=cln1
       - --log-level=debug
-      - --subdaemon=hsmd:vls-proxy/remote_hsmd_vls
-      # - --subdaemon=hsmd:/usr/local/libexec/c-lightning/lightning_hsmd
+      - --alias=omoniyi24-cln
+      - --grpc-port=10019
     environment:
       EXPOSE_TCP: "true"
+    expose:
+      - "9735"
     ports:
       - "0.0.0.0:9735:9735"
-      - "0.0.0.0:9835:9835"
+    links:
+      - bitcoind
     volumes:
       - ./cln/cln1:/root/.lightning
-      - ./bitcoind:/root/.bitcoin
-      - ./cln/vls-proxy:/usr/local/libexec/c-lightning/vls-proxy
