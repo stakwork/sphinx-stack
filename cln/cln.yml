@@ -33,8 +33,10 @@ services:
       EXPOSE_TCP: "true"
     expose:
       - "9735"
+      - "10019"
     ports:
       - "0.0.0.0:9735:9735"
+      - 10019:10019
     links:
       - bitcoind
     volumes:

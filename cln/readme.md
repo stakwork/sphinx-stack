@@ -4,7 +4,7 @@
 docker-compose -f ./cln/cln.yml --project-directory . up -d
 
 ./cln/setup1.sh
-./cln/setup2.sh ADDY
+./cln/setup2.sh bcrt1q96ef94wkk9cvuhkdz5tewdvctp5l4pmuj6rhwe
 
 docker-compose -f ./cln/cln.yml --project-directory . down
 
