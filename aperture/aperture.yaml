@@ -95,7 +95,7 @@ services:
 
     # The LSAT value in satoshis for the service. It is ignored if
     # dynamicprice.enabled is set to true.
-    price: 10
+    price: 25000
 
     # List of regular expressions for paths that don't require authentication
     authwhitelistpaths:
