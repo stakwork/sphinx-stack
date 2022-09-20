@@ -18,7 +18,7 @@ services:
       - ./cln/btc1:/home/bitcoin/.bitcoin
 
   lightningd:
-    image: elementsproject/lightningd
+    image: elementsproject/lightningd:v0.11.1
     container_name: lightningd
     command:
       - --bitcoin-rpcconnect=bitcoind
@@ -29,15 +29,20 @@ services:
       - --log-level=debug
       - --alias=sphinx-cln1
       - --grpc-port=10019
+      # - --subdaemon=hsmd:/broker/sphinx-key-broker
     environment:
-      EXPOSE_TCP: "true"
+      - EXPOSE_TCP=true
+      - GREENLIGHT_VERSION=v0.11.0.1
     expose:
       - "9735"
       - "10019"
+      - "1883"
     ports:
       - "0.0.0.0:9735:9735"
       - 10019:10019
+      - 1883:1883
     links:
       - bitcoind
     volumes:
       - ./cln/cln1:/root/.lightning
+      - ./cln/broker:/broker

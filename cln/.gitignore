@@ -1,3 +1,8 @@
 regtest
+cln1/bitcoin
 lightningd-regtest.pid
+lightningd-bitcoin.pid
 remote_hsmd_vls 
+broker/*
+!broker/.gitkeep
+.jules-bashrc

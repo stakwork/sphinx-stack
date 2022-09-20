@@ -4,11 +4,16 @@
 docker-compose -f ./cln/cln.yml --project-directory . up -d
 
 ./cln/setup1.sh
-./cln/setup2.sh bcrt1q96ef94wkk9cvuhkdz5tewdvctp5l4pmuj6rhwe
+./cln/setup2.sh bcrt1qqv5jmzm2zuljrpqm47amcvawr896crfp6glhnr
 
 docker-compose -f ./cln/cln.yml --project-directory . down
 
 ./cln/clear.sh
+
+docker exec -it lightningd ls broker
+docker exec -it lightningd echo $GREENLIGHT_VERSION
+docker exec -it lightningd locate lightningd
+docker exec -it lightningd usr/local/bin/lightningd
 
 ### down
 
