@@ -13,7 +13,8 @@ docker-compose -f ./cln/cln.yml --project-directory . down
 docker exec -it lightningd ls broker
 docker exec -it lightningd echo $GREENLIGHT_VERSION
 docker exec -it lightningd locate lightningd
-docker exec -it lightningd usr/local/bin/lightningd
+docker exec -it lightningd usr/local/bin/lightningd 
+docker exec -it lightningd usr/local/bin/sphinx-key-broker --version
 
 ### down
 
@@ -70,3 +71,9 @@ file target/x86_64-unknown-linux-musl/release/remote_hsmd_vls
 in sphinx-stack
 
 cp ../validating-lightning-signer/target/x86_64-unknown-linux-musl/debug/remote_hsmd_vls ./cln
+
+### copy broker executable 
+
+cid=$(docker create sphinx-key-broker)
+docker cp $cid:/usr/src/sphinx-key-broker - > cln/broker/sphinx-key-broker
+docker rm -v $cid
