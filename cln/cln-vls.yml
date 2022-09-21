@@ -18,8 +18,7 @@ services:
       - ./cln/btc1:/home/bitcoin/.bitcoin
 
   lightningd:
-    image: sphinxlightning/sphinx-cln-test:0.1.0
-    # image: sphinx-cln
+    image: sphinxlightning/sphinx-cln-vls:0.1.0
     container_name: lightningd
     command:
       - --bitcoin-rpcconnect=bitcoind
@@ -30,11 +29,10 @@ services:
       - --log-level=debug
       - --alias=sphinx-cln1
       - --grpc-port=10019
-      - --accept-htlc-tlv-types=133773310
-      # - --subdaemon=hsmd:/usr/local/libexec/c-lightning/sphinx-key-broker
+      - --subdaemon=hsmd:/usr/local/libexec/c-lightning/sphinx-key-broker
     environment:
       - EXPOSE_TCP=true
-      # - GREENLIGHT_VERSION=v0.11.0.1-605-g844e7fb
+      - GREENLIGHT_VERSION=v0.11.0.1-605-g844e7fb
     expose:
       - "9735"
       - "10019"
@@ -47,4 +45,4 @@ services:
       - bitcoind
     volumes:
       - ./cln/cln1:/root/.lightning
-      # - ./cln/broker/sphinx-key-broker:/usr/local/libexec/c-lightning/sphinx-key-broker
+      - ./cln/broker/sphinx-key-broker:/usr/local/libexec/c-lightning/sphinx-key-broker

@@ -12,9 +12,10 @@ docker-compose -f ./cln/cln.yml --project-directory . down
 
 ./cln/clear.sh
 
-docker exec -it lightningd ls broker
-docker exec -it lightningd echo $GREENLIGHT_VERSION
-docker exec -it lightningd locate lightningd
+export CLN="docker exec -it lightningd usr/local/bin/lightning-cli --network regtest"
+
+docker exec -it lightningd usr/local/bin/lightning-cli --lightning-dir root/.lightning --network regtest getinfo
+
 docker exec -it lightningd usr/local/bin/lightningd 
 docker exec -it lightningd /usr/local/libexec/c-lightning/sphinx-key-broker --version
 
@@ -37,6 +38,10 @@ find . -name 'lightning*'
 lightning_hsmd
 
 ### inside 
+
+export BTC="docker exec -it bitcoincore bitcoin-cli -regtest -rpcuser=foo -rpcpassword=bar"
+
+$BTC -getinfo
 
 docker exec -it bitcoincore bitcoin-cli -regtest -rpcuser=foo -rpcpassword=bar -getinfo
 
@@ -79,3 +84,7 @@ cp ../validating-lightning-signer/target/x86_64-unknown-linux-musl/debug/remote_
 cid=$(docker create sphinx-key-broker)
 docker cp $cid:/usr/src/sphinx-key-broker - > cln/broker/sphinx-key-broker
 docker rm -v $cid
+
+
+
+
