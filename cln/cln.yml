@@ -29,7 +29,7 @@ services:
       - --log-level=debug
       - --alias=sphinx-cln1
       - --grpc-port=10019
-      - --subdaemon=hsmd:/usr/local/bin/sphinx-key-broker
+      - --subdaemon=hsmd:/usr/local/libexec/c-lightning/sphinx-key-broker
     environment:
       - EXPOSE_TCP=true
       - GREENLIGHT_VERSION=v0.11.0.1-605-g844e7fb
@@ -45,4 +45,4 @@ services:
       - bitcoind
     volumes:
       - ./cln/cln1:/root/.lightning
-      - ./cln/broker/sphinx-key-broker:/usr/local/bin/sphinx-key-broker
+      - ./cln/broker/sphinx-key-broker:/usr/local/libexec/c-lightning/sphinx-key-broker

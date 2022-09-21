@@ -1,7 +1,9 @@
 
 ### run
 
-docker-compose -f ./cln/cln.yml --project-directory . up -d
+docker volume rm $(docker volume ls -q)
+
+docker-compose -f ./cln/cln.yml --project-directory . up -d --force-recreate
 
 ./cln/setup1.sh
 ./cln/setup2.sh bcrt1qqv5jmzm2zuljrpqm47amcvawr896crfp6glhnr
