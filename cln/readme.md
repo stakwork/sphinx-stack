@@ -16,7 +16,7 @@ docker exec -it lightningd ls broker
 docker exec -it lightningd echo $GREENLIGHT_VERSION
 docker exec -it lightningd locate lightningd
 docker exec -it lightningd usr/local/bin/lightningd 
-docker exec -it lightningd usr/local/bin/sphinx-key-broker --version
+docker exec -it lightningd /usr/local/libexec/c-lightning/sphinx-key-broker --version
 
 ### down
 
