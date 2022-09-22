@@ -1,14 +1,13 @@
 
 export BTC="docker exec -it bitcoincore bitcoin-cli -regtest -rpcuser=foo -rpcpassword=bar"
 
-
 # cln1
 
 export CLN1="docker exec -it cln1 usr/local/bin/lightning-cli --network regtest"
 
 `$CLN1 getinfo`
 
-02e04e587983913d847d28627d4317d84688ae21c49a2b330e8b02256b58e2bc2a
+02010083aa8badd8a0720587220242920db7d33a0c5e3720bcc4e32b75043c8548
 
 # cln2
 
@@ -16,28 +15,28 @@ export CLN2="docker exec -it cln2 usr/local/bin/lightning-cli --network regtest"
 
 `$CLN2 getinfo`
 
-03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010
+export CLN2_PUBKEY=03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2
 
 # connect
 
 `$CLN1 newaddr`
 
-bcrt1qahdawsad4aqpdgcxefvvr5rcuztskq95h8hhrd
+export CLN1_ADDY=bcrt1qsug4ku9cc4wfjvhrq9q8mn25hm6u2jsemws5hr
 
-`$BTC generatetoaddress 101 bcrt1qahdawsad4aqpdgcxefvvr5rcuztskq95h8hhrd`
+`$BTC generatetoaddress 101 $CLN1_ADDY`
 
-`$BTC generatetoaddress 101 bcrt1qahdawsad4aqpdgcxefvvr5rcuztskq95h8hhrd`
+`$BTC generatetoaddress 101 $CLN1_ADDY`
 
-`$CLN1 connect 03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010 cln2:9736`
+`$CLN1 connect $CLN2_PUBKEY cln2:9736`
 
 channel id: 
-03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010
+03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2
 
-`$CLN1 fundchannel 03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010 100000`
+`$CLN1 fundchannel 03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2 100000`
 
-`$BTC generatetoaddress 101 bcrt1qahdawsad4aqpdgcxefvvr5rcuztskq95h8hhrd`
+`$BTC generatetoaddress 101 $CLN1_ADDY`
 
-`$CLN1 keysend 03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010 1000`
+`$CLN1 keysend $CLN2_PUBKEY 1000`
 
 # check
 
@@ -45,8 +44,8 @@ channel id:
 
 # with TLVs
 
-`$CLN1 keysend 03238baf36a8cd5da6bede79f925a26b728263b6d103b1dfc4c02c4bb871c77010 1000 label 0.5 60 1 5000 {\"133773310\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}`
+`$CLN1 keysend $CLN2_PUBKEY 1000 label 0.5 60 1 5000 {\"133773310\":\"444444444444444444444444444444444444444444444444444444444444444444\"}`
 
 # check
 
-`$CLN2 waitanyinvoice 3 0`
+`$CLN2 waitanyinvoice 1 0`
