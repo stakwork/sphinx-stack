@@ -1,4 +1,5 @@
 regtest
+cln2/bitcoin
 cln1/bitcoin
 lightningd-regtest.pid
 lightningd-bitcoin.pid

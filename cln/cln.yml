@@ -17,9 +17,9 @@ services:
     volumes:
       - ./cln/btc1:/home/bitcoin/.bitcoin
 
-  lightningd:
+  cln1:
     image: sphinxlightning/sphinx-cln-test:0.1.0
-    container_name: lightningd
+    container_name: cln1
     command:
       - --bitcoin-rpcconnect=bitcoind
       - --bitcoin-rpcport=18443
@@ -32,15 +32,34 @@ services:
       - --accept-htlc-tlv-types=133773310
     environment:
       - EXPOSE_TCP=true
-    expose:
-      - "9735"
-      - "10019"
-      - "1883"
     ports:
       - "0.0.0.0:9735:9735"
       - 10019:10019
-      - 1883:1883
     links:
       - bitcoind
     volumes:
       - ./cln/cln1:/root/.lightning
+
+  cln2:
+    image: sphinxlightning/sphinx-cln-test:0.1.0
+    container_name: cln2
+    command:
+      - --addr=0.0.0.0:9736
+      - --bitcoin-rpcconnect=bitcoind
+      - --bitcoin-rpcport=18443
+      - --bitcoin-rpcuser=foo
+      - --bitcoin-rpcpassword=bar
+      - --network=regtest
+      - --log-level=debug
+      - --alias=sphinx-cln2
+      - --grpc-port=10020
+      - --accept-htlc-tlv-types=133773310
+    environment:
+      - EXPOSE_TCP=true
+    ports:
+      - "0.0.0.0:9736:9736"
+      - 10020:10020
+    links:
+      - bitcoind
+    volumes:
+      - ./cln/cln2:/root/.lightning

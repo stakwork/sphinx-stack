@@ -1,12 +1,10 @@
 
 ### run
 
-docker volume rm $(docker volume ls -q)
-
 docker-compose -f ./cln/cln.yml --project-directory . up -d --force-recreate
 
 ./cln/setup1.sh
-./cln/setup2.sh bcrt1qqv5jmzm2zuljrpqm47amcvawr896crfp6glhnr
+./cln/setup2.sh bcrt1qnwze8xczdn2gfmk7n40rgrwh3k2x20r2td7txs
 
 docker-compose -f ./cln/cln.yml --project-directory . down
 
@@ -24,6 +22,9 @@ docker exec -it lightningd /usr/local/libexec/c-lightning/sphinx-key-broker --ve
 docker rm cln1.sphinx -f
 
 docker-compose down
+
+docker volume rm $(docker volume ls -q)
+
 
 ### logs
 
