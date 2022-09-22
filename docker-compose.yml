@@ -234,7 +234,10 @@ services:
     command: "etcd -name etcd-meme-aperture"
 
   aperture:
-    image: "lightninglabs/aperture:v0.1.12-beta"
+    # image: "lightninglabs/aperture:v0.1.12-beta"
+    # hopefully this is a temporary replacement to use the new aperture
+    # support for a timeout caveat
+    image: "bucko/aperture:timeout"
     container_name: aperture.sphinx
     profiles:
       - aperture
