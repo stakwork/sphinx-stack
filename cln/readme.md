@@ -14,8 +14,11 @@ export CLN="docker exec -it lightningd usr/local/bin/lightning-cli --network reg
 
 docker exec -it lightningd usr/local/bin/lightning-cli --lightning-dir root/.lightning --network regtest getinfo
 
-docker exec -it lightningd usr/local/bin/lightningd 
+docker exec -it lightningd usr/local/bin/lightningd --version
+
 docker exec -it lightningd /usr/local/libexec/c-lightning/sphinx-key-broker --version
+
+docker exec -it lightningd /bin/bash
 
 ### down
 
@@ -24,7 +27,6 @@ docker rm cln1.sphinx -f
 docker-compose down
 
 docker volume rm $(docker volume ls -q)
-
 
 ### logs
 
