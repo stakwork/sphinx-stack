@@ -7,7 +7,7 @@ export CLN1="docker exec -it cln1 usr/local/bin/lightning-cli --network regtest"
 
 `$CLN1 getinfo`
 
-02010083aa8badd8a0720587220242920db7d33a0c5e3720bcc4e32b75043c8548
+02c7046d20f62012362ccf835fe5b4d4a1708e518592f216afeefabeadfc20154b
 
 # cln2
 
@@ -15,13 +15,13 @@ export CLN2="docker exec -it cln2 usr/local/bin/lightning-cli --network regtest"
 
 `$CLN2 getinfo`
 
-export CLN2_PUBKEY=03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2
+export CLN2_PUBKEY=038655ec57fe06611cde27a386c52c5bdcb82c468386db02ef24e14a6e861f4c25
 
 # connect
 
 `$CLN1 newaddr`
 
-export CLN1_ADDY=bcrt1qsug4ku9cc4wfjvhrq9q8mn25hm6u2jsemws5hr
+export CLN1_ADDY=bcrt1qerw8fc2palc4vazppjn5ya7qdpj37apefnd9ew
 
 `$BTC generatetoaddress 101 $CLN1_ADDY`
 
@@ -30,9 +30,9 @@ export CLN1_ADDY=bcrt1qsug4ku9cc4wfjvhrq9q8mn25hm6u2jsemws5hr
 `$CLN1 connect $CLN2_PUBKEY cln2:9736`
 
 channel id: 
-03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2
+038655ec57fe06611cde27a386c52c5bdcb82c468386db02ef24e14a6e861f4c25
 
-`$CLN1 fundchannel 03ae7a6e718d6e683720eb4d9e7804b5ba27b7c5a16b201951b96aaa87607b72b2 100000`
+`$CLN1 fundchannel 038655ec57fe06611cde27a386c52c5bdcb82c468386db02ef24e14a6e861f4c25 100000`
 
 `$BTC generatetoaddress 101 $CLN1_ADDY`
 

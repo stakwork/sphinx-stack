@@ -1,6 +1,4 @@
 
-
-
 docker-compose -f ./cln/cln-vls.yml --project-directory . up -d --force-recreate
 
 docker-compose -f ./cln/cln-vls.yml --project-directory . down
@@ -16,3 +14,17 @@ or
 `docker run -it --entrypoint "/bin/bash" sphinx-cln`
 
 `lightningd --version`
+
+### build
+
+docker build . -t sphinx-cln
+
+docker tag sphinx-cln sphinxlightning/sphinx-cln-vls:0.1.2
+
+docker push sphinxlightning/sphinx-cln-vls:0.1.2
+
+### testing
+
+in sphinx-key:
+
+cargo run --bin sphinx-key-tester -- --log
