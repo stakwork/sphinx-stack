@@ -184,7 +184,6 @@ services:
   relaysetup:
     image: node:12-buster-slim
     depends_on:
-      - alice
       - bob
       - carol
       - lndsetup
@@ -242,7 +241,6 @@ services:
       - auth
       - mqtt
       # - meme
-      - alice
       - bob
       - carol
       - relaysetup
