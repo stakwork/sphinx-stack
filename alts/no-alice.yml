@@ -14,10 +14,10 @@ services:
       - 28333:28333
 
   alice-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: alice-lnd.sphinx
     volumes:
-      - ./lnd/alice:/lnd
+      - ./lnd/alice/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9735:9735
@@ -26,10 +26,10 @@ services:
     command: --configfile=/lndsetup/alice.conf
 
   bob-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: bob-lnd.sphinx
     volumes:
-      - ./lnd/bob:/lnd
+      - ./lnd/bob/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9736:9735
@@ -38,10 +38,10 @@ services:
     command: --configfile=/lndsetup/bob.conf
 
   carol-lnd:
-    image: lnzap/lnd:latest
+    image: lightninglabs/lnd:v0.14.3-beta.rc1
     container_name: carol-lnd.sphinx
     volumes:
-      - ./lnd/carol:/lnd
+      - ./lnd/carol/.lnd:/root/.lnd
       - ./lnd/setup:/lndsetup
     ports:
       - 9737:9735
@@ -58,8 +58,9 @@ services:
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
-      - ./lnd/alice:/alice
+      - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
+      - ./lnd/setup/nodes/nodes.js:/lndsetup/nodes.js
 
   db:
     image: postgres
@@ -125,12 +126,11 @@ services:
       - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
       - HOST=localhost:5555
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
-    ports:
-      - 5555:5555
 
   bob:
     image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
+    user: root
     restart: on-failure
     depends_on:
       - bob-lnd
@@ -143,7 +143,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/bob:/relay/bob
+      - ./lnd/bob/.lnd:/relay/bob/.lnd
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3002
@@ -157,6 +157,7 @@ services:
   carol:
     image: sphinxlightning/sphinx-relay
     container_name: carol.sphinx
+    user: root
     restart: on-failure
     depends_on:
       - carol-lnd
@@ -169,7 +170,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/carol:/relay/carol
+      - ./lnd/carol/.lnd:/relay/carol/.lnd
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3003
@@ -183,6 +184,7 @@ services:
   relaysetup:
     image: node:12-buster-slim
     depends_on:
+      - alice
       - bob
       - carol
       - lndsetup
@@ -191,5 +193,64 @@ services:
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
+      - ./relay/nodes_partial/nodes_partial.json:/relay/nodes_partial.json
+
+  etcd:
+    image: "quay.io/coreos/etcd"
+    container_name: etcd.sphinx
+    profiles:
+      - aperture
     environment:
-      - ALICE_IP=http://host.docker.internal:3001
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd.sphinx:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    command: "etcd -name etcd-meme-aperture"
+
+  aperture:
+    image: "lightninglabs/aperture:v0.1.12-beta"
+    container_name: aperture.sphinx
+    profiles:
+      - aperture
+    ports:
+      # for now we will have aperture run on the default meme port
+      # so that it's easier to use this as a drop in replacement for any existing setups
+      - 5555:8081
+    volumes:
+      - ./aperture:/aperture
+      # using alice's lnd node as the backend for aperture
+      - ./lnd/alice/.lnd:/lnd
+    # want to restart on failure b/c the lightning node needs to be
+    # fully operational so that aperture can connect to it and successfully start
+    restart: on-failure
+    depends_on:
+      - etcd
+      - alice-lnd
+    entrypoint: ["aperture", "--configfile=/aperture/aperture.yaml"]
+    
+  # an override service that runs everything in the
+  # depends_on list. Comment out to use overrides
+  exclude-services:
+    image: nginx
+    command: echo done
+    depends_on:
+      - bitcoind
+      - alice-lnd
+      - bob-lnd
+      - carol-lnd
+      - lndsetup
+      - db
+      - tribes
+      - auth
+      - mqtt
+      # - meme
+      - alice
+      - bob
+      - carol
+      - relaysetup
+      - aperture
+      - etcd
+    profiles:
+      - aperture
+  
+networks: 
+  default:
+    name: sphinx-stack
