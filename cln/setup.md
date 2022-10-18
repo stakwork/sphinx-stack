@@ -49,3 +49,16 @@ channel id:
 # check
 
 `$CLN2 waitanyinvoice 1 0`
+
+
+### DEMO TEST
+
+SEED=56b289899f2871f77260a0ec8f1c2f1006b7ae4a74be4bb472a97945e416b191 BROKER=192.168.86.240:1886 ./target/debug/sphinx-key-tester
+
+SEED=55b289899f2871f77260b0ac8f1c2f1016b7ae4a74be4bb472a97345e416b191 BROKER=192.168.86.240:1889 STORE_PATH=teststore2 ./target/debug/sphinx-key-tester
+
+### TEST ONLINE
+
+SEED=56b289899f2871f77260a0ec8f1c2f1006b7ae4a74be4bb472a97945e416b191 BROKER=44.211.127.45:1886 ./target/debug/sphinx-key-tester
+
+SEED=55b289899f2871f77260b0ac8f1c2f1016b7ae4a74be4bb472a97345e416b191 BROKER=44.211.127.45:1889 STORE_PATH=teststore2 ./target/debug/sphinx-key-tester

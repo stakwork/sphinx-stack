@@ -19,9 +19,9 @@ or
 
 docker build . -t sphinx-cln
 
-docker tag sphinx-cln sphinxlightning/sphinx-cln-vls:0.1.2
+docker tag sphinx-cln sphinxlightning/sphinx-cln-vls:0.1.3
 
-docker push sphinxlightning/sphinx-cln-vls:0.1.2
+docker push sphinxlightning/sphinx-cln-vls:0.1.3
 
 ### testing
 
