@@ -193,6 +193,8 @@ services:
     volumes:
       - ./relay:/relay
       - ./relay/nodes_partial/nodes_partial.json:/relay/nodes_partial.json
+    environment:
+      - ALICE_IP=http://host.docker.internal:3001
 
   etcd:
     image: "quay.io/coreos/etcd"
