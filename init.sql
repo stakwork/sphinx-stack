@@ -54,7 +54,8 @@ CREATE TABLE tribes (
   owner_route_hint TEXT,
   unique_name TEXT,
   feed_type INT,
-  pin TEXT
+  pin TEXT,
+  profile_filters TEXT
 );
 
 ALTER TABLE tribes ADD COLUMN tsv tsvector;
@@ -91,6 +92,7 @@ CREATE INDEX bots_tsv ON bots USING GIN(tsv);
 
 CREATE TABLE people (
   id SERIAL PRIMARY KEY,
+  uuid TEXT,
   owner_pub_key TEXT NOT NULL,
   owner_alias TEXT,
   owner_route_hint TEXT,

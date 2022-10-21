@@ -15,13 +15,13 @@ or
 
 `lightningd --version`
 
-### build
+### build c-lightning
 
 docker build . -t sphinx-cln
 
-docker tag sphinx-cln sphinxlightning/sphinx-cln-vls:0.1.3
+docker tag sphinx-cln sphinxlightning/sphinx-cln-vls:0.1.5
 
-docker push sphinxlightning/sphinx-cln-vls:0.1.3
+docker push sphinxlightning/sphinx-cln-vls:0.1.5
 
 ### testing
 

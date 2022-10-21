@@ -26,6 +26,12 @@ Running `docker-compose down` instead of sending a SIGINT or SIGTERM is very imp
 
 You can also run with `Docker Desktop` and just use the "play" and "stop" buttons (and view the logs from each container).
 
+### clear
+
+Clear the existing configs, so you can start fresh:
+
+`./clearall.sh`
+
 ### developing/contributing to Sphinx
 
 - Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json` (make sure to copy the trailing `=` equal signs if there are any!)
