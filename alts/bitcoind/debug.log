@@ -1,0 +1,192 @@
+
+
+
+
+
+2022-10-20T16:25:11Z Bitcoin Core version v0.21.1.0-g194b9b8792d9b0798fdb570b79fa51f1d1f5ebaf (release build)
+2022-10-20T16:25:11Z Assuming ancestors of block 0000000000000000000b9d2ec5a352ecba0592946514a92f14319dc2b367fc72 have valid signatures.
+2022-10-20T16:25:11Z Setting nMinimumChainWork=00000000000000000000000000000000000000001533efd8d716a517fe2c5008
+2022-10-20T16:25:11Z Using the 'standard' SHA256 implementation
+2022-10-20T16:25:11Z Default data directory /data/.bitcoin
+2022-10-20T16:25:11Z Using data directory /data/.bitcoin
+2022-10-20T16:25:11Z Config file: /data/.bitcoin/bitcoin.conf (not found, skipping)
+2022-10-20T16:25:11Z Command-line arg: zmqpubrawblock="tcp://0.0.0.0:28332"
+2022-10-20T16:25:11Z Command-line arg: zmqpubrawtx="tcp://0.0.0.0:28333"
+2022-10-20T16:25:11Z Using at most 125 automatic connections (1048576 file descriptors available)
+2022-10-20T16:25:12Z Using 16 MiB out of 32/2 requested for signature cache, able to store 524288 elements
+2022-10-20T16:25:12Z Using 16 MiB out of 32/2 requested for script execution cache, able to store 524288 elements
+2022-10-20T16:25:12Z Script verification uses 5 additional threads
+2022-10-20T16:25:12Z scheduler thread start
+2022-10-20T16:25:12Z libevent: getaddrinfo: nodename nor servname provided, or not known
+2022-10-20T16:25:12Z Binding RPC on address ::1 port 8332 failed.
+2022-10-20T16:25:12Z HTTP: creating work queue of depth 16
+2022-10-20T16:25:12Z Using random cookie authentication.
+2022-10-20T16:25:12Z Generated RPC authentication cookie /data/.bitcoin/.cookie
+2022-10-20T16:25:12Z HTTP: starting 4 worker threads
+2022-10-20T16:25:12Z Using wallet directory /data/.bitcoin
+2022-10-20T16:25:12Z init message: Verifying wallet(s)...
+2022-10-20T16:25:12Z init message: Loading banlist...
+2022-10-20T16:25:12Z ERROR: DeserializeFileDB: Failed to open file /data/.bitcoin/banlist.dat
+2022-10-20T16:25:12Z Invalid or missing banlist.dat; recreating
+2022-10-20T16:25:12Z SetNetworkActive: true
+2022-10-20T16:25:12Z Using /16 prefix for IP bucketing
+2022-10-20T16:25:12Z Cache configuration:
+2022-10-20T16:25:12Z * Using 2.0 MiB for block index database
+2022-10-20T16:25:12Z * Using 8.0 MiB for chain state database
+2022-10-20T16:25:12Z * Using 440.0 MiB for in-memory UTXO set (plus up to 286.1 MiB of unused mempool space)
+2022-10-20T16:25:12Z init message: Loading block index...
+2022-10-20T16:25:12Z Switching active chainstate to Chainstate [ibd] @ height -1 (null)
+2022-10-20T16:25:12Z Opening LevelDB in /data/.bitcoin/blocks/index
+2022-10-20T16:25:12Z Opened LevelDB successfully
+2022-10-20T16:25:12Z Using obfuscation key for /data/.bitcoin/blocks/index: 0000000000000000
+2022-10-20T16:25:12Z LoadBlockIndexDB: last block file = 0
+2022-10-20T16:25:12Z LoadBlockIndexDB: last block file info: CBlockFileInfo(blocks=0, size=0, heights=0...0, time=1970-01-01...1970-01-01)
+2022-10-20T16:25:12Z Checking all blk files are present...
+2022-10-20T16:25:12Z Initializing databases...
+2022-10-20T16:25:12Z Pre-allocating up to position 0x1000000 in blk00000.dat
+2022-10-20T16:25:12Z Opening LevelDB in /data/.bitcoin/chainstate
+2022-10-20T16:25:12Z Opened LevelDB successfully
+2022-10-20T16:25:12Z Wrote new obfuscate key for /data/.bitcoin/chainstate: a2447aab1880cd11
+2022-10-20T16:25:12Z Using obfuscation key for /data/.bitcoin/chainstate: a2447aab1880cd11
+2022-10-20T16:25:12Z init message: Rewinding blocks...
+2022-10-20T16:25:12Z  block index             301ms
+2022-10-20T16:25:12Z loadblk thread start
+2022-10-20T16:25:12Z UpdateTip: new best=000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f height=0 version=0x00000001 log2_work=32.000022 tx=1 date='2009-01-03T18:15:05Z' progress=0.000000 cache=0.0MiB(0txo)
+2022-10-20T16:25:12Z block tree size = 1
+2022-10-20T16:25:12Z nBestHeight = 0
+2022-10-20T16:25:12Z torcontrol thread start
+2022-10-20T16:25:12Z Bound to [::]:8333
+2022-10-20T16:25:12Z Failed to open mempool file from disk. Continuing anyway.
+2022-10-20T16:25:12Z loadblk thread exit
+2022-10-20T16:25:12Z Bound to 0.0.0.0:8333
+2022-10-20T16:25:12Z Bound to 127.0.0.1:8334
+2022-10-20T16:25:12Z init message: Loading P2P addresses...
+2022-10-20T16:25:12Z ERROR: DeserializeFileDB: Failed to open file /data/.bitcoin/peers.dat
+2022-10-20T16:25:12Z Invalid or missing peers.dat; recreating
+2022-10-20T16:25:13Z ERROR: DeserializeFileDB: Failed to open file /data/.bitcoin/anchors.dat
+2022-10-20T16:25:13Z 0 block-relay-only anchors will be tried for connections.
+2022-10-20T16:25:13Z init message: Starting network threads...
+2022-10-20T16:25:13Z init message: Done loading
+2022-10-20T16:25:13Z msghand thread start
+2022-10-20T16:25:13Z addcon thread start
+2022-10-20T16:25:13Z net thread start
+2022-10-20T16:25:13Z dnsseed thread start
+2022-10-20T16:25:13Z Loading addresses from DNS seed seed.btc.petertodd.org
+2022-10-20T16:25:13Z opencon thread start
+2022-10-20T16:25:13Z Loading addresses from DNS seed dnsseed.emzy.de
+2022-10-20T16:25:13Z Loading addresses from DNS seed seed.bitcoinstats.com
+2022-10-20T16:25:13Z Loading addresses from DNS seed seed.bitcoin.jonasschnelli.ch
+2022-10-20T16:25:14Z Loading addresses from DNS seed seed.bitcoin.wiz.biz
+2022-10-20T16:25:14Z Loading addresses from DNS seed seed.bitcoin.sipa.be
+2022-10-20T16:25:15Z Loading addresses from DNS seed seed.bitcoin.sprovoost.nl
+2022-10-20T16:25:15Z Loading addresses from DNS seed dnsseed.bluematt.me
+2022-10-20T16:25:15Z Loading addresses from DNS seed dnsseed.bitcoin.dashjr.org
+2022-10-20T16:25:16Z 209 addresses found from DNS seeds
+2022-10-20T16:25:16Z dnsseed thread exit
+2022-10-20T16:25:20Z New outbound peer connected: version: 70016, blocks=759543, peer=0 (full-relay)
+2022-10-20T16:25:21Z New outbound peer connected: version: 70016, blocks=759543, peer=2 (full-relay)
+2022-10-20T16:25:22Z Synchronizing blockheaders, height: 2000 (~0.28%)
+2022-10-20T16:25:23Z Synchronizing blockheaders, height: 4000 (~0.55%)
+2022-10-20T16:25:24Z Synchronizing blockheaders, height: 6000 (~0.83%)
+2022-10-20T16:25:26Z Synchronizing blockheaders, height: 8000 (~1.11%)
+2022-10-20T16:25:28Z Synchronizing blockheaders, height: 10000 (~1.38%)
+2022-10-20T16:25:30Z Synchronizing blockheaders, height: 12000 (~1.66%)
+2022-10-20T16:25:32Z Synchronizing blockheaders, height: 14000 (~1.94%)
+2022-10-20T16:25:33Z Synchronizing blockheaders, height: 16000 (~2.22%)
+2022-10-20T16:25:35Z New outbound peer connected: version: 70016, blocks=759543, peer=4 (full-relay)
+2022-10-20T16:25:36Z Synchronizing blockheaders, height: 18000 (~2.50%)
+2022-10-20T16:25:36Z New outbound peer connected: version: 70016, blocks=759543, peer=5 (full-relay)
+2022-10-20T16:25:37Z New outbound peer connected: version: 70016, blocks=759543, peer=6 (full-relay)
+2022-10-20T16:25:38Z Synchronizing blockheaders, height: 20000 (~2.79%)
+2022-10-20T16:25:39Z New outbound peer connected: version: 70016, blocks=759543, peer=7 (full-relay)
+2022-10-20T16:25:41Z Synchronizing blockheaders, height: 22000 (~3.09%)
+2022-10-20T16:25:43Z Synchronizing blockheaders, height: 24000 (~3.38%)
+2022-10-20T16:25:45Z Synchronizing blockheaders, height: 26000 (~3.67%)
+2022-10-20T16:25:47Z Synchronizing blockheaders, height: 28000 (~3.96%)
+2022-10-20T16:25:50Z Synchronizing blockheaders, height: 30000 (~4.25%)
+2022-10-20T16:25:54Z Synchronizing blockheaders, height: 32000 (~4.53%)
+2022-10-20T16:25:56Z Synchronizing blockheaders, height: 34000 (~4.82%)
+2022-10-20T16:25:58Z Synchronizing blockheaders, height: 36000 (~5.10%)
+2022-10-20T16:26:01Z Synchronizing blockheaders, height: 38000 (~5.38%)
+2022-10-20T16:26:03Z Synchronizing blockheaders, height: 40000 (~5.66%)
+2022-10-20T16:26:06Z Synchronizing blockheaders, height: 42000 (~5.93%)
+2022-10-20T16:26:08Z Synchronizing blockheaders, height: 44000 (~6.21%)
+2022-10-20T16:26:10Z Synchronizing blockheaders, height: 46000 (~6.50%)
+2022-10-20T16:26:11Z Synchronizing blockheaders, height: 48000 (~6.77%)
+2022-10-20T16:26:12Z Synchronizing blockheaders, height: 50000 (~7.05%)
+2022-10-20T16:26:13Z Synchronizing blockheaders, height: 52000 (~7.33%)
+2022-10-20T16:26:15Z Synchronizing blockheaders, height: 54000 (~7.61%)
+2022-10-20T16:26:16Z Synchronizing blockheaders, height: 56000 (~7.89%)
+2022-10-20T16:26:18Z Synchronizing blockheaders, height: 58000 (~8.17%)
+2022-10-20T16:26:19Z Synchronizing blockheaders, height: 60000 (~8.45%)
+2022-10-20T16:26:21Z Synchronizing blockheaders, height: 62000 (~8.73%)
+2022-10-20T16:26:23Z Synchronizing blockheaders, height: 64000 (~9.00%)
+2022-10-20T16:26:25Z Synchronizing blockheaders, height: 66000 (~9.28%)
+2022-10-20T16:26:27Z Synchronizing blockheaders, height: 68000 (~9.54%)
+2022-10-20T16:26:28Z Synchronizing blockheaders, height: 70000 (~9.81%)
+2022-10-20T16:26:30Z Synchronizing blockheaders, height: 72000 (~10.08%)
+2022-10-20T16:26:32Z Synchronizing blockheaders, height: 74000 (~10.35%)
+2022-10-20T16:26:34Z Synchronizing blockheaders, height: 76000 (~10.62%)
+2022-10-20T16:26:36Z Synchronizing blockheaders, height: 78000 (~10.90%)
+2022-10-20T16:26:37Z Synchronizing blockheaders, height: 80000 (~11.17%)
+2022-10-20T16:26:38Z Synchronizing blockheaders, height: 82000 (~11.44%)
+2022-10-20T16:26:40Z Synchronizing blockheaders, height: 84000 (~11.72%)
+2022-10-20T16:26:42Z Synchronizing blockheaders, height: 86000 (~11.99%)
+2022-10-20T16:26:44Z Synchronizing blockheaders, height: 88000 (~12.25%)
+2022-10-20T16:26:45Z Synchronizing blockheaders, height: 90000 (~12.52%)
+2022-10-20T16:26:48Z Synchronizing blockheaders, height: 92000 (~12.79%)
+2022-10-20T16:26:52Z Synchronizing blockheaders, height: 94000 (~13.06%)
+2022-10-20T16:26:55Z Synchronizing blockheaders, height: 96000 (~13.33%)
+2022-10-20T16:26:56Z Synchronizing blockheaders, height: 98000 (~13.59%)
+2022-10-20T16:26:58Z Synchronizing blockheaders, height: 100000 (~13.87%)
+2022-10-20T16:27:00Z Synchronizing blockheaders, height: 102000 (~14.14%)
+2022-10-20T16:27:00Z New outbound peer connected: version: 70016, blocks=759543, peer=8 (full-relay)
+2022-10-20T16:27:01Z Synchronizing blockheaders, height: 104000 (~14.41%)
+2022-10-20T16:27:02Z Synchronizing blockheaders, height: 106000 (~14.68%)
+2022-10-20T16:27:04Z Synchronizing blockheaders, height: 108000 (~14.95%)
+2022-10-20T16:27:06Z Synchronizing blockheaders, height: 110000 (~15.21%)
+2022-10-20T16:27:08Z Synchronizing blockheaders, height: 112000 (~15.48%)
+2022-10-20T16:27:10Z Synchronizing blockheaders, height: 114000 (~15.75%)
+2022-10-20T16:27:12Z Synchronizing blockheaders, height: 116000 (~16.03%)
+2022-10-20T16:27:14Z Synchronizing blockheaders, height: 118000 (~16.30%)
+2022-10-20T16:27:17Z Synchronizing blockheaders, height: 120000 (~16.57%)
+2022-10-20T16:27:19Z Synchronizing blockheaders, height: 122000 (~16.83%)
+2022-10-20T16:27:21Z Synchronizing blockheaders, height: 124000 (~17.09%)
+2022-10-20T16:27:23Z Synchronizing blockheaders, height: 126000 (~17.35%)
+2022-10-20T16:27:26Z Synchronizing blockheaders, height: 128000 (~17.61%)
+2022-10-20T16:27:28Z Synchronizing blockheaders, height: 130000 (~17.87%)
+2022-10-20T16:27:30Z Synchronizing blockheaders, height: 132000 (~18.13%)
+2022-10-20T16:27:32Z Synchronizing blockheaders, height: 134000 (~18.39%)
+2022-10-20T16:27:35Z Synchronizing blockheaders, height: 136000 (~18.66%)
+2022-10-20T16:27:36Z Synchronizing blockheaders, height: 138000 (~18.93%)
+2022-10-20T16:27:38Z Synchronizing blockheaders, height: 140000 (~19.20%)
+2022-10-20T16:27:41Z Synchronizing blockheaders, height: 142000 (~19.47%)
+2022-10-20T16:27:42Z Synchronizing blockheaders, height: 144000 (~19.75%)
+2022-10-20T16:27:44Z Synchronizing blockheaders, height: 146000 (~20.02%)
+2022-10-20T16:27:46Z Synchronizing blockheaders, height: 148000 (~20.30%)
+2022-10-20T16:27:48Z Synchronizing blockheaders, height: 150000 (~20.59%)
+2022-10-20T16:27:49Z Synchronizing blockheaders, height: 152000 (~20.87%)
+2022-10-20T16:27:50Z Synchronizing blockheaders, height: 154000 (~21.15%)
+2022-10-20T16:27:52Z Synchronizing blockheaders, height: 156000 (~21.42%)
+2022-10-20T16:27:54Z Synchronizing blockheaders, height: 158000 (~21.70%)
+2022-10-20T16:27:56Z Synchronizing blockheaders, height: 160000 (~21.97%)
+2022-10-20T16:27:59Z Synchronizing blockheaders, height: 162000 (~22.24%)
+2022-10-20T16:28:01Z Synchronizing blockheaders, height: 164000 (~22.51%)
+2022-10-20T16:28:04Z Synchronizing blockheaders, height: 166000 (~22.79%)
+2022-10-20T16:28:06Z Synchronizing blockheaders, height: 168000 (~23.06%)
+2022-10-20T16:28:08Z tor: Thread interrupt
+2022-10-20T16:28:08Z Shutdown: In progress...
+2022-10-20T16:28:08Z torcontrol thread exit
+2022-10-20T16:28:08Z opencon thread exit
+2022-10-20T16:28:08Z addcon thread exit
+2022-10-20T16:28:08Z net thread exit
+2022-10-20T16:28:08Z msghand thread exit
+2022-10-20T16:28:09Z DumpAnchors: Flush 0 outbound block-relay-only peer addresses to anchors.dat started
+2022-10-20T16:28:09Z DumpAnchors: Flush 0 outbound block-relay-only peer addresses to anchors.dat completed (0.01s)
+2022-10-20T16:28:09Z scheduler thread exit
+2022-10-20T16:28:09Z Writing 0 unbroadcast transactions to disk.
+2022-10-20T16:28:09Z Dumped mempool: 1.7e-05s to copy, 0.039028s to dump
+2022-10-20T16:28:11Z FlushStateToDisk: write coins cache to disk (0 coins, 0kB) started
+2022-10-20T16:28:11Z FlushStateToDisk: write coins cache to disk (0 coins, 0kB) completed (0.00s)
+2022-10-20T16:28:11Z FlushStateToDisk: write coins cache to disk (0 coins, 0kB) started
+2022-10-20T16:28:11Z FlushStateToDisk: write coins cache to disk (0 coins, 0kB) completed (0.00s)
