@@ -55,6 +55,7 @@ CREATE TABLE tribes (
   unique_name TEXT,
   feed_type INT,
   pin TEXT,
+  preview BOOLEAN,
   profile_filters TEXT
 );
 
