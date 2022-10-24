@@ -154,7 +154,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-
   bob:
     image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
