@@ -76,7 +76,8 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes:latest
+#    image: sphinxlightning/sphinx-tribes:latest
+    image: omoniyi-sphinx-tribe
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
