@@ -277,6 +277,16 @@ services:
       - etcd
     profiles:
       - aperture
+
+  boltwall:
+    image: sphinxlightning/sphinx-boltwall
+    container_name: boltwall.sphinx
+    restart: on-failure
+    depends_on:
+      - bob-lnd
+    env_file: ./boltwall/.env
+    ports:
+      - 8444:8444
   
 networks: 
   default:
