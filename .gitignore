@@ -25,3 +25,4 @@ relay/carolTransportPrivateKey.pem
 admin
 cln-notes.md
 .idea/
+alts/bitcoind
