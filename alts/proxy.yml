@@ -140,7 +140,7 @@ services:
       - HOST=localhost:5555
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
-      - 5555:5555  
+      - 5555:5555
 
   alice:
     image: sphinxlightning/sphinx-relay
@@ -168,7 +168,6 @@ services:
       - 3001:3001
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
 
   bob:
     image: sphinxlightning/sphinx-relay
@@ -231,7 +230,7 @@ services:
     restart: on-failure
     depends_on:
       - dave-lnd
-      - proxy  
+      - proxy
     entrypoint:
       [
         "node",
@@ -257,7 +256,7 @@ services:
       - alice
       - bob
       - carol
-      - dave  
+      - dave
       - lndsetup
       - tribes
     restart: on-failure
@@ -269,7 +268,7 @@ services:
   proxy:
     image: sphinxlightning/sphinx-proxy
     container_name: proxy.sphinx
-    restart: always 
+    restart: always
     user: root
     depends_on:
       - dave-lnd
@@ -304,12 +303,28 @@ services:
         "--lnd-port=10012",
         "--mqtt-broker=tcps://mqtt.sphinx:1883",
         "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
-        "--tlsextradomain=proxy.sphinx"
+        "--tlsextradomain=proxy.sphinx",
       ]
     ports:
       - 11111:11111
       - 5050:5050
 
+  boltwall:
+    image: sphinxlightning/sphinx-boltwall
+    container_name: boltwall.sphinx
+    restart: on-failure
+    depends_on:
+      - boltwallsetup
+    volumes:
+      - ./boltwall/.env:/usr/src/app/.env
+    ports:
+      - 8444:8444
 
-
-
+  boltwallsetup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/boltwall/setup/index.js"]
+    volumes:
+      - ./boltwall:/boltwall
+      - ./boltwall/.env:/boltwall/.env
+      - ./lnd:/lnd
