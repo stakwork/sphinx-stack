@@ -310,7 +310,7 @@ services:
       - 5050:5050
 
   boltwall:
-    image: sphinxlightning/sphinx-boltwall
+    sphinxlightning/sphinx-boltwall:latest
     container_name: boltwall.sphinx
     restart: on-failure
     depends_on:

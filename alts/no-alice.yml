@@ -252,7 +252,7 @@ services:
       - aperture
 
   boltwall:
-    image: sphinxlightning/sphinx-boltwall
+    image: sphinxlightning/sphinx-boltwall:latest
     container_name: boltwall.sphinx
     restart: on-failure
     depends_on:
