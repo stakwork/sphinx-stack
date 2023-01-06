@@ -126,7 +126,7 @@ services:
       - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
       - HOST=localhost:5555
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
-  
+
   alice:
     image: sphinxlightning/sphinx-relay
     container_name: alice.sphinx
@@ -252,7 +252,7 @@ services:
       - etcd
       - alice-lnd
     entrypoint: ["aperture", "--configfile=/aperture/aperture.yaml"]
-    
+
   # an override service that runs everything in the
   # depends_on list. Comment out to use overrides
   exclude-services:
@@ -277,7 +277,28 @@ services:
       - etcd
     profiles:
       - aperture
-  
-networks: 
+
+  boltwall:
+    image: sphinxlightning/sphinx-boltwall
+    image: tobi-boltwall
+    container_name: boltwall.sphinx
+    restart: on-failure
+    depends_on:
+      - boltwallsetup
+    volumes:
+      - ./boltwall/.env:/usr/src/app/.env
+    ports:
+      - 8444:8444
+
+  boltwallsetup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/boltwall/setup/index.js"]
+    volumes:
+      - ./boltwall:/boltwall
+      - ./boltwall/.env:/boltwall/.env
+      - ./lnd:/lnd
+
+networks:
   default:
     name: sphinx-stack
