@@ -283,7 +283,7 @@ services:
 
   boltwall:
     image: sphinxlightning/sphinx-boltwall
-    image: tobi-boltwall
+    # image: tobi-boltwall
     container_name: boltwall.sphinx
     restart: on-failure
     depends_on:
