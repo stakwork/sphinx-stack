@@ -128,7 +128,8 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
   
   alice:
-    image: sphinxlightning/sphinx-relay
+    image: sphinx-relay
+    # image: sphinxlightning/sphinx-relay
     container_name: alice.sphinx
     user: root
     restart: on-failure
@@ -155,7 +156,8 @@ services:
       - "host.docker.internal:host-gateway"
 
   bob:
-    image: sphinxlightning/sphinx-relay
+    image: sphinx-relay
+    # image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
     user: root
     restart: on-failure
@@ -182,7 +184,8 @@ services:
       - "host.docker.internal:host-gateway"
 
   carol:
-    image: sphinxlightning/sphinx-relay
+    image: sphinx-relay
+    # image: sphinxlightning/sphinx-relay
     container_name: carol.sphinx
     user: root
     restart: on-failure

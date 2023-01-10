@@ -18,8 +18,8 @@ services:
       - ./cln/btc1:/home/bitcoin/.bitcoin
 
   cln1:
-    image: sphinx-cln
-    # image: sphinxlightning/sphinx-cln-vls:0.1.2
+    # image: sphinx-cln
+    image: sphinxlightning/sphinx-cln-vls:0.1.5
     container_name: cln1
     command:
       - --bitcoin-rpcconnect=bitcoind
@@ -35,7 +35,7 @@ services:
       # - --rpc-file=/socket
     environment:
       - EXPOSE_TCP=true
-      - GREENLIGHT_VERSION=v0.11.0.1-792-g17cc61c
+      - GREENLIGHT_VERSION=v0.11.0.1-793-g243f8e3
     ports:
       - "0.0.0.0:9735:9735"
       - 10019:10019
