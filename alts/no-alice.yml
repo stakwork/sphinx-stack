@@ -226,7 +226,7 @@ services:
       - etcd
       - alice-lnd
     entrypoint: ["aperture", "--configfile=/aperture/aperture.yaml"]
-    
+
   # an override service that runs everything in the
   # depends_on list. Comment out to use overrides
   exclude-services:
@@ -250,7 +250,27 @@ services:
       - etcd
     profiles:
       - aperture
-  
-networks: 
+
+  boltwall:
+    image: sphinxlightning/sphinx-boltwall:latest
+    container_name: boltwall.sphinx
+    restart: on-failure
+    depends_on:
+      - boltwallsetup
+    volumes:
+      - ./boltwall/.env:/usr/src/app/.env
+    ports:
+      - 8444:8444
+
+  boltwallsetup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/boltwall/setup/index.js"]
+    volumes:
+      - ./boltwall:/boltwall
+      - ./boltwall/.env:/boltwall/.env
+      - ./lnd:/lnd
+
+networks:
   default:
     name: sphinx-stack
