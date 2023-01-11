@@ -26,3 +26,5 @@ admin
 cln-notes.md
 .idea/
 alts/bitcoind
+boltwall/.env
+
