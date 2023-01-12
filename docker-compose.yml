@@ -302,6 +302,13 @@ services:
       - ./boltwall/.env:/boltwall/.env
       - ./lnd:/lnd
 
+  nav-fiber:
+    image: sphinxlightning/sphinx-nav-fiber
+    container_name: nav-fiber.sphinx
+    restart: on-failure
+    ports:
+      - 3000:3000
+
 networks:
   default:
     name: sphinx-stack
