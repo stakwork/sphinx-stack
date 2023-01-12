@@ -1,0 +1,24 @@
+server {
+	listen 80 default_server;
+	
+	
+	listen [::]:80 default_server;
+	
+
+	
+	include /config/nginx/meet.conf;
+	
+}
+
+
+server {
+	listen 443 ssl http2;
+	
+	
+	listen [::]:443 ssl http2;
+	
+
+	include /config/nginx/ssl.conf;
+	include /config/nginx/meet.conf;
+}
+
