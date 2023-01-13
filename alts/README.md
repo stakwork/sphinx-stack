@@ -55,7 +55,8 @@ Some configs to look at for more customization:
 - `authenticator` - lightning node configurations including host and where credentials can be found
 - `services` - a list of services that will be protected by aperture.
   These have other options that can be used to customize the endpoint and protection conditions
-
+- `services.price` to change the price for access to meme server 
+- `services.timeout` to change the relative expiration for lsats minted by aperture.
 To run sphinx stack with aperture:
 
 ```

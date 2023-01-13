@@ -10,7 +10,8 @@ services:
     command: "etcd -name etcd-meme-aperture"
 
   aperture:
-    image: "lightninglabs/aperture:v0.1.12-beta"
+    # image: "lightninglabs/aperture:v0.1.12-beta"
+    image: "bucko/aperture:timeout"
     container_name: aperture.sphinx
     ports:
       # for now we will have aperture run on the default meme port

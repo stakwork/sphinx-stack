@@ -93,9 +93,13 @@ services:
     constraints:
       "large_upload_max_mb": "500"
 
+    # a caveat will be added that expires the LSAT
+    # after this many seconds, 31557600 = 1 year.
+    timeout: 31557600
+
     # The LSAT value in satoshis for the service. It is ignored if
     # dynamicprice.enabled is set to true.
-    price: 10
+    price: 25000
 
     # List of regular expressions for paths that don't require authentication
     authwhitelistpaths:
