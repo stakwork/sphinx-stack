@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   bitcoind:
@@ -309,6 +309,54 @@ services:
     ports:
       - 3000:3000
 
+  jitsi-web:
+    extends:
+      file: ./jitsi/docker-compose.yml
+      service: web
+    container_name: jitsi-web.sphinx
+    networks:
+      meet.jitsi:
+    profiles:
+      - jitsi
+
+  prosody:
+    extends:
+      file: ./jitsi/docker-compose.yml
+      service: prosody
+    container_name: prosody.sphinx
+    networks:
+      meet.jitsi:
+        aliases:
+          - ${XMPP_SERVER:-xmpp.meet.jitsi}
+    profiles:
+      - jitsi
+
+
+  jicofo:
+    extends:
+      file: ./jitsi/docker-compose.yml
+      service: jicofo
+    container_name: jicofo.sphinx
+    depends_on:
+      - prosody
+    networks:
+      meet.jitsi:
+    profiles:
+      - jitsi
+
+  jvb:
+    extends:
+      file: ./jitsi/docker-compose.yml
+      service: jvb
+    container_name: jvb.sphinx
+    depends_on:
+      - prosody
+    networks:
+      meet.jitsi:
+    profiles:
+      - jitsi
+
 networks:
   default:
     name: sphinx-stack
+  meet.jitsi:
