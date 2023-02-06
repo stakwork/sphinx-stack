@@ -26,7 +26,7 @@
   "gitactionenv": {
     "hub_api_url": "None",
     "proxy_initial_sats": 20000,
-    "proxy_new_nodes": 2,
+    "proxy_new_nodes": 4,
     "proxy_lnd_ip": "proxy.sphinx",
     "proxy_admin_token": "r46bnf8ibrhbb424heba",
     "proxy_admin_url": "http://proxy.sphinx:5050",
