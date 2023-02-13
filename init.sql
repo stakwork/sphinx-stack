@@ -56,7 +56,8 @@ CREATE TABLE tribes (
   feed_type INT,
   pin TEXT,
   preview TEXT,
-  profile_filters TEXT
+  profile_filters TEXT,
+  badges TEXT[] not null default '{}'
 );
 
 ALTER TABLE tribes ADD COLUMN tsv tsvector;
