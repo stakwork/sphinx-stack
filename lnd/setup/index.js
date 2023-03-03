@@ -3,11 +3,11 @@ var nodes = require("./nodes");
 var lightning = require("./lightning");
 var bitcoind = require("./bitcoind");
 
-if (process.env.DAVE_IP) {
-  if (nodes.nodes["dave"]) {
-    nodes.nodes["dave"].hostname = process.env.DAVE_IP;
-  }
-}
+// if (process.env.DAVE_IP) {
+//   if (nodes.nodes["dave"]) {
+//     nodes.nodes["dave"].hostname = process.env.DAVE_IP;
+//   }
+// }
 
 async function createOrUnlockWallet(node) {
   console.log("[LND] setup");

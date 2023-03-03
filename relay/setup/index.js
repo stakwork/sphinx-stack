@@ -11,7 +11,10 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
-  await asyncForEach(nodes, async function(n, i) {
+  if (process.env.DAVE_IP && nodes.length > 3) {
+    nodes[3].ip = process.env.DAVE_IP;
+  }
+  await asyncForEach(nodes, async function (n, i) {
     await pollReady(n, i);
     await sleep(1000);
     console.log("=========> SETUP <==========");
@@ -31,7 +34,7 @@ async function setup() {
 
     let newBotEnvVars = [];
 
-    await asyncForEach(botConfig, async function(botConfigValues, botIndex) {
+    await asyncForEach(botConfig, async function (botConfigValues, botIndex) {
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
@@ -157,9 +160,9 @@ async function preSetup() {
 async function writeVirtualNodes(node) {
   //const virtualNodes = await fetch("http://proxy.sphinx:5050/list", {"x-admin-token": "r46bnf8ibrhbb424heba"})
 
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     let ok = false;
-				let count = 0
+    let count = 0;
     while (!ok && count < 100) {
       try {
         await sleep(2000);
@@ -197,14 +200,14 @@ async function writeVirtualNodes(node) {
       } catch (e) {
         console.log(e);
       }
-						count++
+      count++;
     }
     resolve();
   });
 }
 
 function pollReady(n, i) {
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     let ok = false;
     while (!ok) {
       try {
