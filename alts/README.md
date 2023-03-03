@@ -55,9 +55,9 @@ Some configs to look at for more customization:
 - `authenticator` - lightning node configurations including host and where credentials can be found
 - `services` - a list of services that will be protected by aperture.
   These have other options that can be used to customize the endpoint and protection conditions
-- `services.price` to change the price for access to meme server 
+- `services.price` to change the price for access to meme server
 - `services.timeout` to change the relative expiration for lsats minted by aperture.
-To run sphinx stack with aperture:
+  To run sphinx stack with aperture:
 
 ```
 docker compose -f docker-compose.yml -f ./alts/lsat.yml --project-directory . up -d
@@ -79,3 +79,9 @@ $  docker compose -f docker-compose.yml --profile aperture --project-directory .
 ```
 
 Once your meme server is running and connected to the other services, everything should be working.
+
+### no dave proxy relay
+
+```
+docker-compose -f ./alts/proxy-no-dave.yml --project-directory . up -d
+```

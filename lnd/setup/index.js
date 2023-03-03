@@ -3,6 +3,10 @@ var nodes = require("./nodes");
 var lightning = require("./lightning");
 var bitcoind = require("./bitcoind");
 
+if (process.env.PROXY === "true") {
+  console.log("test proxy nodes!");
+  nodes = require("./nodes/proxynodes");
+}
 // if (process.env.DAVE_IP) {
 //   if (nodes.nodes["dave"]) {
 //     nodes.nodes["dave"].hostname = process.env.DAVE_IP;
@@ -10,10 +14,10 @@ var bitcoind = require("./bitcoind");
 // }
 
 async function createOrUnlockWallet(node) {
-  console.log("[LND] setup");
+  console.log("[LND] setup", node.alias);
   try {
     const r = await wallet.initWallet(node);
-    console.log("[LND] INIT WALLET");
+    console.log("[LND] INIT WALLET", node.alias);
 
     //code is the "wallet already exisits" code there is also an error message in r
     // we go into this block of code if we've already initialized a wallet for the node
@@ -21,7 +25,7 @@ async function createOrUnlockWallet(node) {
       // first mine blocks
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
       const r2 = await wallet.unlockWallet(node);
-      console.log("[LND] WALLET UNLOCKED");
+      console.log("[LND] WALLET UNLOCKED", node.alias);
     }
   } catch (e) {
     console.log("=> err", e);
@@ -68,6 +72,7 @@ async function channels(node) {
           return exists ? false : true;
         })
       : [];
+    console.log("peers to make:", peersToMake);
     await asyncForEach(peersToMake, async (p) => {
       await lightning.addPeer(node, p);
     });
@@ -81,6 +86,7 @@ async function channels(node) {
       console.log("=> alice opening channels...");
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
+        console.log("open channel with:", p);
         await lightning.openChannel(node, {
           pubkey: p.pubkey,
           amount: 2000000,
