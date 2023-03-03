@@ -3,7 +3,11 @@ var nodes = require("./nodes");
 var lightning = require("./lightning");
 var bitcoind = require("./bitcoind");
 
-const CENTRAL = "alice";
+if (process.env.DAVE_IP) {
+  if (nodes.nodes["dave"]) {
+    nodes.nodes["dave"].hostname = process.env.DAVE_IP;
+  }
+}
 
 async function createOrUnlockWallet(node) {
   console.log("[LND] setup");
@@ -72,7 +76,7 @@ async function channels(node) {
     const channels = chans.channels || [];
     await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
     console.log("=> 6 blocked mined to Alice!");
-    await sleep(20000)
+    await sleep(20000);
     if (!channels.length) {
       console.log("=> alice opening channels...");
       // open channels here
