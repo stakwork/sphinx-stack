@@ -11,8 +11,7 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
-  console.log("==> DAVE IP", process.env.DAVE_IP);
-  console.log("=====> Nodes", nodes);
+
   if (process.env.DAVE_IP && nodes.length > 3) {
     nodes[3].ip = process.env.DAVE_IP;
   }
