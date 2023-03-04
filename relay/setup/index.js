@@ -13,15 +13,22 @@ async function setup() {
   }
 
   if (process.env.DAVE_IP && nodes.length > 3) {
-    nodes[3].ip = process.env.DAVE_IP;
+    let change = true;
+    index = 3;
+    while (change) {
+      if (nodes[index]) {
+        nodes[index].ip = process.env.DAVE_IP;
+        index += 1;
+      } else {
+        change = false;
+      }
+    }
   }
   await asyncForEach(nodes, async function (n, i) {
-    if (!n.routeHint) {
-      await pollReady(n, i);
-      await sleep(1000);
-      console.log("=========> SETUP <==========");
-      await signup.run_signup(n, i);
-    }
+    await pollReady(n, i);
+    await sleep(1000);
+    console.log("=========> SETUP <==========");
+    await signup.run_signup(n, i);
   });
 
   /*Bot creation is being done here
