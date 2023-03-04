@@ -45,7 +45,6 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3004",
     "connect_ui": true,
-    "logging_level": "debug",
-    "proxy_hd_keys": true
+    "logging_level": "debug"
   }
 }
