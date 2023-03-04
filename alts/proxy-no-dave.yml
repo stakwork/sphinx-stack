@@ -104,7 +104,8 @@ services:
       - 13000:13000
 
   auth:
-    image: sphinxlightning/sphinx-auth:latest
+    # image: sphinxlightning/sphinx-auth:latest
+    image: sphinxlightning/sphinx-auth:0.2.1
     container_name: auth.sphinx
     restart: on-failure
     depends_on:
@@ -268,7 +269,8 @@ services:
       - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
-    image: sphinxlightning/sphinx-proxy
+    # image: sphinxlightning/sphinx-proxy
+    image: sphinxlightning/sphinx-proxy:0.1.13
     container_name: proxy.sphinx
     restart: always
     user: root
@@ -306,6 +308,7 @@ services:
         "--mqtt-broker=tcps://mqtt.sphinx:1883",
         "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
         "--tlsextradomain=proxy.sphinx",
+        "--use-hd-keys",
       ]
     ports:
       - 11111:11111

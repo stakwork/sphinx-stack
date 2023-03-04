@@ -11,14 +11,18 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
+  console.log("==> DAVE IP", process.env.DAVE_IP);
+  console.log("=====> Nodes", nodes);
   if (process.env.DAVE_IP && nodes.length > 3) {
     nodes[3].ip = process.env.DAVE_IP;
   }
   await asyncForEach(nodes, async function (n, i) {
-    await pollReady(n, i);
-    await sleep(1000);
-    console.log("=========> SETUP <==========");
-    await signup.run_signup(n, i);
+    if (!n.routeHint) {
+      await pollReady(n, i);
+      await sleep(1000);
+      console.log("=========> SETUP <==========");
+      await signup.run_signup(n, i);
+    }
   });
 
   /*Bot creation is being done here
@@ -177,7 +181,7 @@ async function writeVirtualNodes(node) {
         if (json.length > 0) {
           console.log("THIS IS THE RESPONSE OF LIST FROM PROXY: ", json);
           var nodesPartial = require(paths.pathToWrite);
-          nodesPartial.pop();
+          // nodesPartial.pop();
           json.forEach((privateChannel, index) => {
             console.log(privateChannel);
             const pushValue = {
