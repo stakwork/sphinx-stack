@@ -117,7 +117,7 @@ services:
       - 9090:9090
 
   mqtt:
-    image: sphinxlightning/sphinx-mqtt:latest
+    image: sphinxlightning/sphinx-mqtt:test-2
     container_name: mqtt.sphinx
     restart: on-failure
     depends_on:
@@ -270,7 +270,7 @@ services:
 
   proxy:
     # image: sphinxlightning/sphinx-proxy
-    image: sphinxlightning/sphinx-proxy:0.1.13
+    image: sphinxlightning/sphinx-proxy:0.1.14
     container_name: proxy.sphinx
     restart: always
     user: root
