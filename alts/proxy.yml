@@ -269,8 +269,7 @@ services:
       - ./relay/nodes_partial/proxy_nodes_partial.json:/relay/nodes_partial.json
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:0.1.15
-    # image: sphinxlightning/sphinx-proxy:0.1.13
+    image: sphinxlightning/sphinx-proxy:0.1.16
     container_name: proxy.sphinx
     restart: always
     user: root
