@@ -105,8 +105,7 @@ services:
       - 13000:13000
 
   auth:
-    # image: sphinxlightning/sphinx-auth:latest
-    image: sphinxlightning/sphinx-auth:0.2.1
+    image: sphinxlightning/sphinx-auth:latest
     container_name: auth.sphinx
     restart: on-failure
     depends_on:
@@ -269,7 +268,7 @@ services:
       - ./relay/nodes_partial/proxy_nodes_partial.json:/relay/nodes_partial.json
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:0.1.16
+    image: sphinxlightning/sphinx-proxy:latest
     container_name: proxy.sphinx
     restart: always
     user: root
