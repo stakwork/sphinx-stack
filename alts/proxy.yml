@@ -266,6 +266,8 @@ services:
     volumes:
       - ./relay:/relay
       - ./relay/nodes_partial/proxy_nodes_partial.json:/relay/nodes_partial.json
+    environment:
+      - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
     image: sphinxlightning/sphinx-proxy:latest
