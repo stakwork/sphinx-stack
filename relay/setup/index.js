@@ -11,8 +11,18 @@ async function setup() {
   if (process.env.ALICE_IP) {
     nodes[0].ip = process.env.ALICE_IP;
   }
+
   if (process.env.DAVE_IP && nodes.length > 3) {
-    nodes[3].ip = process.env.DAVE_IP;
+    let change = true;
+    index = 3;
+    while (change) {
+      if (nodes[index]) {
+        nodes[index].ip = process.env.DAVE_IP;
+        index += 1;
+      } else {
+        change = false;
+      }
+    }
   }
   await asyncForEach(nodes, async function (n, i) {
     await pollReady(n, i);
@@ -177,7 +187,7 @@ async function writeVirtualNodes(node) {
         if (json.length > 0) {
           console.log("THIS IS THE RESPONSE OF LIST FROM PROXY: ", json);
           var nodesPartial = require(paths.pathToWrite);
-          nodesPartial.pop();
+          // nodesPartial.pop();
           json.forEach((privateChannel, index) => {
             console.log(privateChannel);
             const pushValue = {

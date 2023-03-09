@@ -74,6 +74,8 @@ services:
       - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
       - ./lnd/setup/nodes/proxynodes.js:/lndsetup/nodes.js
+    environment:
+      - PROXY=true
 
   db:
     image: postgres
@@ -115,7 +117,7 @@ services:
       - 9090:9090
 
   mqtt:
-    image: sphinxlightning/sphinx-mqtt:latest
+    image: sphinxlightning/sphinx-mqtt:test-2
     container_name: mqtt.sphinx
     restart: on-failure
     depends_on:
@@ -266,7 +268,7 @@ services:
       - ./relay/nodes_partial/proxy_nodes_partial.json:/relay/nodes_partial.json
 
   proxy:
-    image: sphinxlightning/sphinx-proxy
+    image: sphinxlightning/sphinx-proxy:latest
     container_name: proxy.sphinx
     restart: always
     user: root
@@ -304,6 +306,7 @@ services:
         "--mqtt-broker=tcps://mqtt.sphinx:1883",
         "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
         "--tlsextradomain=proxy.sphinx",
+        "--use-hd-keys",
       ]
     ports:
       - 11111:11111

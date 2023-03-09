@@ -39,9 +39,7 @@ function proxyHeaders(token) {
 
 async function signup(n) {
   try {
-    const token = Crypto.randomBytes(20)
-      .toString("base64")
-      .slice(0, 20);
+    const token = Crypto.randomBytes(20).toString("base64").slice(0, 20);
     let transportToken = await getTransportToken(n);
     const r = await fetch(n.ip + "/contacts/tokens", {
       method: "POST",
