@@ -225,33 +225,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # dave:
-  #   image: sphinxlightning/sphinx-relay
-  #   container_name: dave.sphinx
-  #   user: root
-  #   restart: on-failure
-  #   depends_on:
-  #     - dave-lnd
-  #     - proxy
-  #   entrypoint:
-  #     [
-  #       "node",
-  #       "/relay/dist/app.js",
-  #       "--config=/relay/configs/dave.json",
-  #       "--db=/relay/configs/dave-db.json",
-  #     ]
-  #   volumes:
-  #     - ./relay:/relay/configs
-  #     - ./lnd/dave/.lnd:/relay/dave/.lnd
-  #     - ./proxy:/proxy
-  #   environment:
-  #     - NODE_ENV=${GITACTION_ENV:-development}
-  #     - PORT=3004
-  #     - TRIBES_HOST=host.docker.internal:13000
-  #     - MEDIA_HOST=localhost:5555
-  #   ports:
-  #     - 3004:3004
-
   relaysetup:
     image: node:12-buster-slim
     depends_on:
@@ -315,22 +288,23 @@ services:
       - 11111:11111
       - 5050:5050
 
-  boltwall:
-    image: sphinxlightning/sphinx-boltwall:latest
-    container_name: boltwall.sphinx
-    restart: on-failure
+  cache:
+    image: sphinxlightning/sphinx-cache:0.1.14
+    container_name: cache.sphinx
     depends_on:
-      - boltwallsetup
-    volumes:
-      - ./boltwall/.env:/usr/src/app/.env
-    ports:
-      - 8444:8444
-
-  boltwallsetup:
-    image: node:12-buster-slim
+      - mqtt
     restart: on-failure
-    entrypoint: ["node", "/boltwall/setup/index.js"]
     volumes:
-      - ./boltwall:/boltwall
-      - ./boltwall/.env:/boltwall/.env
-      - ./lnd:/lnd
+      - ./cache/store:/store
+    environment: 
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=8008
+      - STORE_PATH=/store
+      - PRIVATE_KEY=b3cd3f01bb4def01ab4def01abcd3f01a4cdef01abcdef21a4cdef01abc3ef01
+      - RSA_KEY=MIIEogIBAAKCAQEAt2RSUo/xlB1dGQBn6Ko4j6w6FyLIQ7CL47qm4ihDapne6bG5dmiBT3lcGmrvjLBJqIKHLejhgRY2VgVU8YK0R94/HWWyz709d7nLhtYBbdWmwIjGD7aDxeRX5ATp0THZbEebfUc/237iqD5Enf6pmzdD9JQgtFU9A8uNjexuULmV1Kq2nr3w2OUlTP1a84UP1Qs0XSlFA0HOBj6OLGcP/VD7H4wbfrZXCIMGQo4LPy+htM4k31Qn0K3LgKfU1bKHzJk+kGYTHThOEpHRUIbd8lOAnZwzIg0P47QvY1pVs5Te26sXvnt5Uxj+hrilg829GfvrIG/TDzb1EXIqZmwM3wIDAQABAoIBABF6aDYiLd315neJiF2uS3G18lteH0QEQXDUyy7ms3YncA1JuOlGEHzojhSeeHIqIvsCZavEdCl/WnJcU7oowNHQpqdAmAggewk8Fd+l6cD0Cc5zupyowmpL1uyOY1Jis9wT/wezkKx0rVlnhdag/L0kST+4Fl3ZedUwwy7xh5n9zKuTk5byo5jErTPzW7I+i8tonvB50082xQGsbNlCNrgFkYTeGNKSOeDnDqYerneFder4c5iePEnt5fW+Cl21VQ+I9G6jqZnxJHXMyILrPmhYxFsKAFpTclRLElERag2PPvKzWGC0k50zSvwFzs9qrWatEggf14UsDR/OSi48UzECgYEA0Nfc9HbRqSq+ex0h+kP4Vs0ig3w7d9h/FKFllY3sJSwdcMY/mh/7JZO7640IqM6nRpBqYpOQeV1DnQZBG3ss6chBBfQzkXb3x6spPEkZUp0MkGSIe5VZBS4qp//nHWt4l1/1d/ZCRGz/oscpdbt0YetN80VMFfOf/58nzZVWTKUCgYEA4M0/5fTYQaN7wN4bfp86LMciOKl781LXiUIIVHDxH1oVZLShxPhN/MiY4+c5Sj/YDmXz1+SRZSkj2o2VMq7iS+1PSZhXOGHbRcVhRhoLsl5o7ZuX4auIfNNRWkxDTU8GXyzsAnmSoCDBEQR3N3AV8Pj34NrRIAHJMhynPOhtKDMCgYAMuwvqDxAqysM/x//ZPKl3yRtwfnM1lAnzHP+PRU5+2ZiV1k/sOkTZ/o53Bmrft3E0+PqzNaGZ9Fh5yvbPEQwk2CM2lLNMC7+A+WsTFLWpdo9cgfRb7De3/B93jD7vaSy5tYzGGknh1+8hYhih56Jpkal3yeKgd/Bp6a7IdnEDTQKBgEtI8alVgkcZNQy2VYbmVFlCp1dKi1RF3iD9mESPPnE9fgSn6bVJYvTRSUKp4SnYj8bipfMbfQXf7T34RIsgvnCnHPKMrkkXnJOVMqqDdn9Z1tIcVZUiGSeUrZ4MBE4TtRKSvMdnZ49w6LeGQ1axlueIuZr4LSkG8BZ0Oh3PyR65AoGAUPrimvzCwUaw+Mtwgsnfam8ZrMV+MFc1wTA/gnsXpvgOUGpYPQTamYtHQscYQt4rRfIpuEO3wNKTwQIa3dkqpyhLVeUYg9WPIrvQnZ75aRCGZbZA2DUG7iv6vAPvGsgjpq0nqS++WtNBZ49ppHwXcI9X0TTtiZpcnRtf8MdUId0=
+      - MQTT_HOST=mqtt.sphinx
+      - MQTT_PORT=1883
+      - MQTT_CLIENT_ID=sphinx-cache-test-1
+      - MEME_HOST=meme.sphinx
+    ports:
+      - 8008:8008
