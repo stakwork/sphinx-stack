@@ -10,9 +10,9 @@ and only take the last 8 chars of the last string
 
 or
 
-`docker run -it --entrypoint "/bin/bash" sphinxlightning/sphinx-cln-vls:0.1.5`
+docker run -it --entrypoint "/bin/bash" cln-sphinx
 
-`docker run -it --entrypoint "/bin/bash" sphinx-cln`
+`docker run -it --entrypoint "/bin/bash" sphinxlightning/sphinx-cln-vls:0.1.5`
 
 `lightningd --version`
 
