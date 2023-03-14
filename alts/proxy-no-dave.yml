@@ -289,7 +289,7 @@ services:
       - 5050:5050
 
   cache:
-    image: sphinxlightning/sphinx-cache:0.1.15
+    image: sphinxlightning/sphinx-cache:0.1.16
     container_name: cache.sphinx
     depends_on:
       - mqtt
