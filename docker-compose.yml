@@ -111,7 +111,7 @@ services:
       - 1883:1883
 
   meme:
-    image: sphinxlightning/sphinx-meme:latest
+    image: bucko/sphinx-meme:latest
     container_name: meme.sphinx
     restart: on-failure
     depends_on:
@@ -239,7 +239,7 @@ services:
     # image: "lightninglabs/aperture:v0.1.12-beta"
     # hopefully this is a temporary replacement to use the new aperture
     # support for a timeout caveat
-    image: "bucko/aperture:timeout"
+    image: "bucko/aperture:timeoutv2"
     container_name: aperture.sphinx
     profiles:
       - aperture
