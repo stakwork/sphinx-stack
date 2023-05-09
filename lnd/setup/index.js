@@ -87,11 +87,24 @@ async function channels(node) {
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         console.log("open channel with:", p);
-        await lightning.openChannel(node, {
-          pubkey: p.pubkey,
-          amount: 2000000,
-          push_amount: 1000000,
-        });
+
+        //create a small channel for bob, to ensure sats reversal works
+        if (
+          p.pubkey ===
+          "02a38857848aca6b32ebcc3c85d07ee41354988f4f1e0b4e6ccd255eee6ed75b8d"
+        ) {
+          await lightning.openChannel(node, {
+            pubkey: p.pubkey,
+            amount: 1000000,
+            push_amount: 500000,
+          });
+        } else {
+          await lightning.openChannel(node, {
+            pubkey: p.pubkey,
+            amount: 2000000,
+            push_amount: 1000000,
+          });
+        }
       });
       await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
       console.log("=> 6 blocked mined to Alice!");
