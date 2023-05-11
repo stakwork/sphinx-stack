@@ -14,6 +14,6 @@ else
     rm ./root/.lightning/regtest/lightningd.sqlite3
     lightning-cli --network=regtest stop
     echo "Core lighting Stopped"
-    lightningd --bitcoin-rpcconnect=bitcoind.sphinx --bitcoin-rpcport=18443 --network=regtest --bitcoin-rpcuser=evan --bitcoin-rpcpassword=thepass --log-level=debug --alias=dave-cln --grpc-port=10012 --accept-htlc-tlv-types=133773310 --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
+    lightningd --addr=0.0.0.0:19846 --bitcoin-rpcconnect=bitcoind.sphinx --bitcoin-rpcport=18443 --network=regtest --bitcoin-rpcuser=evan --bitcoin-rpcpassword=thepass --log-level=debug --alias=dave-cln --grpc-port=10012 --accept-htlc-tlv-types=133773310 --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
     echo "Core ligthning restarted"
 fi

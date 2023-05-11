@@ -326,6 +326,7 @@ services:
     image: sphinxlightning/cln-sphinx:0.1.1
     container_name: dave-cln.sphinx
     command:
+      - --addr=0.0.0.0:19846
       - --bitcoin-rpcconnect=bitcoind.sphinx
       - --bitcoin-rpcport=18443
       - --bitcoin-rpcuser=evan
@@ -341,7 +342,7 @@ services:
       - GREENLIGHT_VERSION=v23.02.2-50-gd15200c
       - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
     ports:
-      - "0.0.0.0:9738:9735"
+      - "0.0.0.0:19846:19846"
       - 10012:10012
       - 10212:10212
     links:

@@ -6,6 +6,7 @@ const nodes = {
     hostname: "alice-lnd.sphinx:38881",
     password: "alice12345",
     macaroon: "/alice/" + macpath,
+    type: "lnd",
     channels: [
       {
         host: "bob-lnd.sphinx:9735",
@@ -16,7 +17,7 @@ const nodes = {
         host: "carol-lnd.sphinx:9735",
         pubkey:
           "0364c05cbcbb9612036cc66297445a88bcfc21941fd816e17a56b54b0b52ff02b9",
-      }
+      },
     ],
     mnemonic: [
       "above",
@@ -50,6 +51,7 @@ const nodes = {
     hostname: "bob-lnd.sphinx:38882",
     password: "bob12345",
     macaroon: "/bob/" + macpath,
+    type: "lnd",
     mnemonic: [
       "above",
       "street",
@@ -82,6 +84,7 @@ const nodes = {
     hostname: "carol-lnd.sphinx:38883",
     password: "carol12345",
     macaroon: "/carol/" + macpath,
+    type: "lnd",
     mnemonic: [
       "about",
       "coconut",
