@@ -49,25 +49,13 @@ services:
       - 38883:38883
     command: --configfile=/lndsetup/carol.conf
 
-  dave-lnd:
-    image: lightninglabs/lnd:v0.14.3-beta.rc1
-    container_name: dave-lnd.sphinx
-    volumes:
-      - ./lnd/dave/.lnd:/root/.lnd
-      - ./lnd/setup:/lndsetup
-    ports:
-      - 9738:9735
-      - 10012:10012
-      - 38884:38884
-    command: --configfile=/lndsetup/dave.conf
-
   lndsetup:
     image: node:12-buster-slim
     depends_on:
       - alice-lnd
       - bob-lnd
       - carol-lnd
-      - dave-lnd
+      - dave-cln
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
@@ -231,7 +219,7 @@ services:
     user: root
     restart: on-failure
     depends_on:
-      - dave-lnd
+      - dave-cln
       - proxy
     entrypoint:
       [
@@ -275,7 +263,7 @@ services:
     restart: always
     user: root
     depends_on:
-      - dave-lnd
+      - dave-cln
     volumes:
       - ./lnd/dave/.lnd:/lnd/.lnd
       - ./proxy/cert:/cert
@@ -333,3 +321,32 @@ services:
       - ./boltwall:/boltwall
       - ./boltwall/.env:/boltwall/.env
       - ./lnd:/lnd
+
+  dave-cln:
+    image: sphinxlightning/cln-sphinx:0.1.1
+    container_name: dave-cln.sphinx
+    command:
+      - --bitcoin-rpcconnect=bitcoind.sphinx
+      - --bitcoin-rpcport=18443
+      - --bitcoin-rpcuser=evan
+      - --bitcoin-rpcpassword=thepass
+      - --network=regtest
+      - --log-level=debug
+      - --alias=dave-cln
+      - --grpc-port=10012
+      - --accept-htlc-tlv-types=133773310
+      - --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
+    environment:
+      - EXPOSE_TCP=true
+      - GREENLIGHT_VERSION=v23.02.2-50-gd15200c
+      - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
+    ports:
+      - "0.0.0.0:9738:9735"
+      - 10012:10012
+      - 10212:10212
+    links:
+      - bitcoind
+    volumes:
+      - ./cln/dave-cln:/root/.lightning
+      - ./cln/dave-cln/script_test.sh:/script_test.sh:rw
+      - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
