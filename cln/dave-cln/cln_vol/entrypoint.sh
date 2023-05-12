@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./setup_script.sh
+
 : "${EXPOSE_TCP:=false}"
 
 networkdatadir="${LIGHTNINGD_DATA}/${LIGHTNINGD_NETWORK}"
@@ -13,7 +15,6 @@ if [ "$EXPOSE_TCP" == "true" ]; then
     < <(inotifywait -e create,open --format '%f' --quiet "${networkdatadir}" --monitor)
     echo "Core-Lightning started"
     echo "Core-Lightning started, RPC available on port $LIGHTNINGD_RPC_PORT"
-    ./setup_script.sh
     socat "TCP4-listen:$LIGHTNINGD_RPC_PORT,fork,reuseaddr" "UNIX-CONNECT:${networkdatadir}/lightning-rpc" &
     fg %-
 else
