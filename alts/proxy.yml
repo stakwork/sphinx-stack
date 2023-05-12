@@ -230,7 +230,7 @@ services:
       ]
     volumes:
       - ./relay:/relay/configs
-      - ./lnd/dave/.lnd:/relay/dave/.lnd
+      - ./cln/dave-cln/regtest:/relay/dave/regtest
       - ./proxy:/proxy
     environment:
       - NODE_ENV=${GITACTION_ENV:-development}
@@ -269,6 +269,7 @@ services:
       - ./proxy/cert:/cert
       - ./proxy/macaroons:/macaroons
       - ./proxy/badger:/badger
+      - ./cln/dave-cln/regtest:/cln/creds
       - type: bind
         source: ./proxy/lnd_proxy.conf
         target: /lnd_proxy.conf
@@ -297,6 +298,8 @@ services:
         "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
         "--tlsextradomain=proxy.sphinx",
         "--use-hd-keys",
+        "--mode=cln",
+        "--cln-port=10012",
       ]
     ports:
       - 11111:11111
