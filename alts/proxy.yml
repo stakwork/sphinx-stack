@@ -355,5 +355,5 @@ services:
       - bitcoind
     volumes:
       - ./cln/dave-cln:/root/.lightning
-      - ./cln/dave-cln/script_test.sh:/setup_script.sh
+      - ./cln/dave-cln/setup_script.sh:/setup_script.sh
       - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
