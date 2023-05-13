@@ -288,7 +288,7 @@ services:
         "--channels-start=2",
         "--admin-token=r46bnf8ibrhbb424heba",
         "--admin-port=5050",
-        "--admin-pubkey=030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
+        "--admin-pubkey=037ec785c6004d512ebaeb0020f81a2bcdb6fccc9539f7b891f704289ebc65a4e3",
         "--initial-msat=500000",
         "--mqtt-broker=tcps://mqtt.sphinx:1883",
         "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",

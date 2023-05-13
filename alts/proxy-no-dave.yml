@@ -296,7 +296,7 @@ services:
     restart: on-failure
     volumes:
       - ./cache/store:/store
-    environment: 
+    environment:
       - ROCKET_ADDRESS=0.0.0.0
       - ROCKET_PORT=8008
       - STORE_PATH=/store
