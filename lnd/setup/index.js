@@ -7,6 +7,11 @@ if (process.env.PROXY === "true") {
   console.log("test proxy nodes!");
   nodes = require("./nodes/proxynodes");
 }
+
+if (process.env.CLN_PROXY === "true") {
+  console.log("test cln proxy nodes!");
+  nodes = require("./nodes/clnProxyNodes");
+}
 // if (process.env.DAVE_IP) {
 //   if (nodes.nodes["dave"]) {
 //     nodes.nodes["dave"].hostname = process.env.DAVE_IP;
