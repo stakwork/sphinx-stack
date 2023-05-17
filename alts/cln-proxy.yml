@@ -258,7 +258,7 @@ services:
       - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:0.1.24
+    image: sphinxlightning/sphinx-proxy:0.1.26
     container_name: proxy.sphinx
     restart: always
     user: root
@@ -329,7 +329,7 @@ services:
       - ./lnd:/lnd
 
   dave-cln:
-    image: sphinxlightning/cln-sphinx:0.1.1
+    image: sphinxlightning/cln-sphinx:0.1.2
     container_name: dave-cln.sphinx
     command:
       - --addr=0.0.0.0:19846
