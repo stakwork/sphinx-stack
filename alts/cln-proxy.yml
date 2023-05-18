@@ -114,7 +114,7 @@ services:
       - 1883:1883
 
   meme:
-    image: sphinxlightning/sphinx-meme:latest
+    image: sphinxlightning/sphinx-meme:0.2
     container_name: meme.sphinx
     restart: on-failure
     depends_on:
@@ -258,7 +258,7 @@ services:
       - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:0.1.27
+    image: sphinxlightning/sphinx-proxy:0.1.28
     container_name: proxy.sphinx
     restart: always
     user: root
