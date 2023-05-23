@@ -214,8 +214,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   dave:
-    # image: sphinxlightning/sphinx-relay-swarm:v0.1.27
-    image: tobi-swarm-proxy
+    image: sphinxlightning/sphinx-relay-swarm:v0.1.27
     container_name: dave.sphinx
     user: root
     restart: on-failure
