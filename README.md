@@ -32,6 +32,19 @@ Clear the existing configs, so you can start fresh:
 
 `./clearall.sh`
 
+### aperture enabled paywall
+
+The sphinx-stack docker compose file uses profiles to opt-in to particular services.
+To run with an aperture-enabled paywall, start the stack with the 
+following command:
+
+```shell
+docker compose -f docker-compose.yml --profile aperture --project-directory . up  -d
+```
+
+This will use the configs set in `/aperture/aperture.yaml`.
+To update the timeout and other paywall related configs, edit that file. 
+
 ### developing/contributing to Sphinx
 
 - Run one of the sphinx clients on your local computer, and enter the `exported_keys` that you can find in `/relay/NODES.json` (make sure to copy the trailing `=` equal signs if there are any!)
