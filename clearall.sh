@@ -35,3 +35,8 @@ rm -rf ./proxy/macaroons
 
 #transport keys
 rm ./relay/*.pem
+
+#Remove cln 
+rm -rf ./cln/dave-cln/regtest
+
+rm -rf ./cln/dave-cln/lightningd-regtest.pid
