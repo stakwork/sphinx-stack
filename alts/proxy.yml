@@ -91,7 +91,7 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes:latest
+    image: sphinxlightning/sphinx-tribes:0.1.10
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
@@ -270,7 +270,7 @@ services:
       - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:latest
+    image: sphinxlightning/sphinx-proxy:0.1.30
     container_name: proxy.sphinx
     restart: always
     user: root
