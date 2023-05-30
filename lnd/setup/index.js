@@ -7,6 +7,11 @@ if (process.env.PROXY === "true") {
   console.log("test proxy nodes!");
   nodes = require("./nodes/proxynodes");
 }
+
+if (process.env.CLN_PROXY === "true") {
+  console.log("test cln proxy nodes!");
+  nodes = require("./nodes/clnProxyNodes");
+}
 // if (process.env.DAVE_IP) {
 //   if (nodes.nodes["dave"]) {
 //     nodes.nodes["dave"].hostname = process.env.DAVE_IP;
@@ -14,21 +19,23 @@ if (process.env.PROXY === "true") {
 // }
 
 async function createOrUnlockWallet(node) {
-  console.log("[LND] setup", node.alias);
-  try {
-    const r = await wallet.initWallet(node);
-    console.log("[LND] INIT WALLET", node.alias);
+  if (node.type === "lnd") {
+    console.log("[LND] setup", node.alias);
+    try {
+      const r = await wallet.initWallet(node);
+      console.log("[LND] INIT WALLET", node.alias);
 
-    //code is the "wallet already exisits" code there is also an error message in r
-    // we go into this block of code if we've already initialized a wallet for the node
-    if (r.code === 2) {
-      // first mine blocks
-      await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
-      const r2 = await wallet.unlockWallet(node);
-      console.log("[LND] WALLET UNLOCKED", node.alias);
+      //code is the "wallet already exisits" code there is also an error message in r
+      // we go into this block of code if we've already initialized a wallet for the node
+      if (r.code === 2) {
+        // first mine blocks
+        await bitcoind.mine(6, "bcrt1qsrq4qj4zgwyj8hpsnpgeeh0p0aqfe5vqhv7yrr");
+        const r2 = await wallet.unlockWallet(node);
+        console.log("[LND] WALLET UNLOCKED", node.alias);
+      }
+    } catch (e) {
+      console.log("=> err", e);
     }
-  } catch (e) {
-    console.log("=> err", e);
   }
 }
 

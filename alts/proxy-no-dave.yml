@@ -90,7 +90,7 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes:latest
+    image: sphinxlightning/sphinx-tribes:0.1.10
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
@@ -244,7 +244,7 @@ services:
   proxy:
     # image: sphinxlightning/sphinx-proxy
     # image: sphinx-proxy
-    image: sphinxlightning/sphinx-proxy:0.1.16
+    image: sphinxlightning/sphinx-proxy:0.1.30
     container_name: proxy.sphinx
     restart: always
     user: root
@@ -296,7 +296,7 @@ services:
     restart: on-failure
     volumes:
       - ./cache/store:/store
-    environment: 
+    environment:
       - ROCKET_ADDRESS=0.0.0.0
       - ROCKET_PORT=8008
       - STORE_PATH=/store
