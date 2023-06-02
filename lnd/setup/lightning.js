@@ -47,6 +47,7 @@ async function openChannel(node, chan) {
     node_pubkey: Buffer.from(chan.pubkey, "hex").toString("base64"),
     local_funding_amount: chan.amount,
     push_sat: chan.push_amount,
+    spend_unconfirmed: true,
   });
 }
 
