@@ -214,7 +214,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   dave:
-    image: sphinxlightning/sphinx-relay-swarm
+    image: sphinxlightning/sphinx-relay
     container_name: dave.sphinx
     user: root
     restart: on-failure
