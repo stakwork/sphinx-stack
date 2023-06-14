@@ -270,7 +270,7 @@ services:
       - DAVE_IP=http://host.docker.internal:3004
 
   proxy:
-    image: sphinxlightning/sphinx-proxy:0.1.31
+    image: sphinxlightning/sphinx-proxy:latest
     container_name: proxy.sphinx
     restart: always
     user: root
