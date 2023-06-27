@@ -22,7 +22,9 @@
     "public_url": "127.0.0.1:3004",
     "connect_ui": true,
     "logging_level": "debug",
-    "proxy_hd_keys": true
+    "proxy_hd_keys": true,
+    "allow_swarm_invite": true,
+    "host_name": "localhost:3004"
   },
   "gitactionenv": {
     "hub_api_url": "None",
@@ -47,6 +49,8 @@
     "public_url": "127.0.0.1:3004",
     "connect_ui": true,
     "logging_level": "debug",
-    "proxy_hd_keys": true
+    "proxy_hd_keys": true,
+    "allow_swarm_invite": true,
+    "host_name": "localhost:3004"
   }
 }
