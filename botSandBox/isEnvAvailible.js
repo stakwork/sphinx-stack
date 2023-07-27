@@ -1,10 +1,10 @@
 var fs = require("fs");
 
 let index = process.env.SPHINX_INDEX;
-var envVars = require("/example_bot/botEnvVars.json");
+var envVars = require("./botEnvVars.json");
 
-if (!fs.existsSync("/example_bot/botEnvVars.json")) {
-  let envVars = require("/example_bot/botEnvVars");
+if (!fs.existsSync("./botEnvVars.json")) {
+  let envVars = require("./botEnvVars");
   if (envVars.length == 0) {
     process.abort();
   }
