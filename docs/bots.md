@@ -5,7 +5,11 @@
 Setup and run the `sphinx-stack` cluster.
 
 But instead of just `docker-compose up -d` we want to run our bots aswell
-we can do this by running `docker-compose -f docker-compose.yml -f alts/bots.yml up -d`
+Ensure you're in the sphinx-stack directory, then run the following commads on your terminal:
+
+`chmod 777 ./start-bot.sh`
+
+`start-bot.sh`
 
 ### frontend
 

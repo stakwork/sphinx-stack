@@ -2,56 +2,58 @@ version: "3"
 
 services:
   exampleBot:
-    image: node:12-buster-slim 
+    image: node:12-buster-slim
     container_name: example-bot-sphinx
     restart: on-failure
     working_dir: "/example_bot"
     depends_on:
-        - relaysetup
+      - relaysetup
     command:
       - /bin/sh
       - -c
       - |
-              npm install
-              npm install -g nodemon
-              node ./isEnvAvailible.js && nodemon --legacy-watch --watch index.js --exec 'npm run build && npm run start'
+        npm update --save
+        npm install
+        npm install -g nodemon
+        node ./isEnvAvailible.js && nodemon --legacy-watch --watch index.js --exec 'npm run build && npm run start'
     volumes:
-      - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
+      - ./relay/botEnvVars.json:/example_bot/botEnvVars.json
       - ./botSandBox/isEnvAvailible.js:/example_bot/isEnvAvailible.js
       - ./botSandBox/sphinx-example-bot/index.js:/example_bot/index.js
       - ./botSandBox/sphinx-example-bot/package.json:/example_bot/package.json
     environment:
       - IS_SPHINX_STACK=true
       - CHOKIDAR_USEPOLLING=true
-      - SPHINX_INDEX=0 
+      - SPHINX_INDEX=0
     ports:
-      - 3333:3333  
+      - 3333:3333
 
   BetBot:
-    image: node:12-buster-slim 
+    image: node:12-buster-slim
     container_name: bet-bot-sphinx
     restart: on-failure
-    working_dir: "/example_bot"
+    working_dir: "/bet_bot"
     depends_on:
-      - relaysetup 
+      - relaysetup
     command:
       - /bin/sh
       - -c
       - |
-              npm install
-              npm install -g nodemon
-              node ./isEnvAvailible.js && nodemon --legacy-watch --watch "src/**" --ext "ts,json,js" --exec 'npm run build && npm run start'
+        npm install
+        npm install -g nodemon
+        npm install typescript@4.9.5
+        node ./isEnvAvailible.js && nodemon --legacy-watch --watch "src/**" --ext "ts,json,js" --exec 'npm run build && npm run start'
     volumes:
-      - ./relay/botEnvVars.json:/example_bot/botEnvVars.json  
-      - ./botSandBox/isEnvAvailible.js:/example_bot/isEnvAvailible.js
-      - ./botSandBox/sphinx-betting-bot/src:/example_bot/src
-      - ./botSandBox/sphinx-betting-bot/package.json:/example_bot/package.json  
-      - ./botSandBox/sphinx-betting-bot/tsconfig.json:/example_bot/tsconfig.json  
-      - ./botSandBox/sphinx-betting-bot/webpack.config.json:/example_bot/webpack.config.json  
+      - ./relay/botEnvVars.json:/bet_bot/botEnvVars.json
+      - ./botSandBox/isEnvAvailible.js:/bet_bot/isEnvAvailible.js
+      - ./botSandBox/sphinx-betting-bot/src:/bet_bot/src
+      - ./botSandBox/sphinx-betting-bot/package.json:/bet_bot/package.json
+      - ./botSandBox/sphinx-betting-bot/tsconfig.json:/bet_bot/tsconfig.json
+      - ./botSandBox/sphinx-betting-bot/webpack.config.json:/bet_bot/webpack.config.json
     environment:
       - IS_SPHINX_STACK=true
       - CHOKIDAR_USEPOLLING=true
-      - SPHINX_INDEX=1 
+      - SPHINX_INDEX=1
       - REDIS_URL=redis://db.bettingBot:6379
       - FLUSH_ALL=1
     ports:
@@ -62,10 +64,9 @@ services:
     container_name: db.bettingBot
     command: redis-server --appendonly yes
     ports:
-      - 6379:6379  
+      - 6379:6379
     volumes:
-        - ./redisData/data:/data
+      - ./redisData/data:/data
     restart: always
     environment:
       - REDIS_REPLICATION_MODE=master
-
