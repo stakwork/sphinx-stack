@@ -32,7 +32,7 @@ services:
     image: node:12-buster-slim
     container_name: bet-bot-sphinx
     restart: on-failure
-    working_dir: "/example_bot2"
+    working_dir: "/bet_bot"
     depends_on:
       - relaysetup
     command:
@@ -44,12 +44,12 @@ services:
         npm install typescript@4.9.5
         node ./isEnvAvailible.js && nodemon --legacy-watch --watch "src/**" --ext "ts,json,js" --exec 'npm run build && npm run start'
     volumes:
-      - ./relay/botEnvVars.json:/example_bot2/botEnvVars.json
-      - ./botSandBox/isEnvAvailible.js:/example_bot2/isEnvAvailible.js
-      - ./botSandBox/sphinx-betting-bot/src:/example_bot2/src
-      - ./botSandBox/sphinx-betting-bot/package.json:/example_bot2/package.json
-      - ./botSandBox/sphinx-betting-bot/tsconfig.json:/example_bot2/tsconfig.json
-      - ./botSandBox/sphinx-betting-bot/webpack.config.json:/example_bot2/webpack.config.json
+      - ./relay/botEnvVars.json:/bet_bot/botEnvVars.json
+      - ./botSandBox/isEnvAvailible.js:/bet_bot/isEnvAvailible.js
+      - ./botSandBox/sphinx-betting-bot/src:/bet_bot/src
+      - ./botSandBox/sphinx-betting-bot/package.json:/bet_bot/package.json
+      - ./botSandBox/sphinx-betting-bot/tsconfig.json:/bet_bot/tsconfig.json
+      - ./botSandBox/sphinx-betting-bot/webpack.config.json:/bet_bot/webpack.config.json
     environment:
       - IS_SPHINX_STACK=true
       - CHOKIDAR_USEPOLLING=true
