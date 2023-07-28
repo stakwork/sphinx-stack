@@ -12,6 +12,7 @@ services:
       - /bin/sh
       - -c
       - |
+        npm update --save
         npm install
         npm install -g nodemon
         node ./isEnvAvailible.js && nodemon --legacy-watch --watch index.js --exec 'npm run build && npm run start'
