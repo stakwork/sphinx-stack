@@ -329,7 +329,7 @@ services:
       - ./lnd:/lnd
 
   dave-cln:
-    image: sphinxlightning/cln-sphinx:0.1.2
+    image: sphinxlightning/cln-sphinx:0.2.3
     container_name: dave-cln.sphinx
     command:
       - --addr=0.0.0.0:19846
