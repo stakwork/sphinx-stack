@@ -2,7 +2,7 @@ version: "3"
 
 services:
   bitcoind:
-    image: lncm/bitcoind:v0.21.1
+    image: lncm/bitcoind:v25.0
     restart: on-failure
     container_name: bitcoind.sphinx
     volumes:
@@ -329,7 +329,7 @@ services:
       - ./lnd:/lnd
 
   dave-cln:
-    image: sphinxlightning/cln-sphinx:0.1.2
+    image: sphinxlightning/cln-sphinx:latest
     container_name: dave-cln.sphinx
     command:
       - --addr=0.0.0.0:19846
