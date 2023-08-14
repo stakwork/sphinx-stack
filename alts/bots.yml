@@ -70,3 +70,20 @@ services:
     restart: always
     environment:
       - REDIS_REPLICATION_MODE=master
+
+  mlBotServer:
+    image: node:16-buster-slim
+    container_name: ml-bot-sphinx-server
+    working_dir: "/ml_bot"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm install
+        npm run dev
+    volumes:
+      - ./botSandBox/sphinx-ml-bot/package.json:/ml_bot/package.json
+      - ./botSandBox/sphinx-ml-bot/src:/ml_bot/src
+      - ./botSandBox/sphinx-ml-bot/tsconfig.json:/ml_bot/tsconfig.json
+    ports:
+      - 3500:3500
