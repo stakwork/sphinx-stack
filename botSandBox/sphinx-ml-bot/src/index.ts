@@ -30,7 +30,7 @@ app.post("/text", (req: Request, res: Response) => {
       process_id,
       "This is a response from test ml-bot server built in sphinx-stack"
     );
-  }, 30000);
+  }, 7000);
   return res.status(200).json({ body: { process_id } });
 });
 
@@ -42,7 +42,7 @@ app.post("/image", (req: Request, res: Response) => {
       process_id,
       "https://res.cloudinary.com/teebams/image/upload/v1648478325/elite/wiot5aymifdzqwplyu1a.png"
     );
-  }, 30000);
+  }, 7000);
   return res.status(200).json({ body: { process_id } });
 });
 
