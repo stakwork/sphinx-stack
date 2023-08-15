@@ -11,7 +11,8 @@
     "tribes_insecure": true,
     "public_url": "127.0.0.1:3001",
     "transportPrivateKeyLocation": "/relay/configs/aliceTransportPrivateKey.pem",
-    "transportPublicKeyLocation": "/relay/configs/aliceTransportPublicKey.pem"
+    "transportPublicKeyLocation": "/relay/configs/aliceTransportPublicKey.pem",
+    "host_name": "http://alice.sphinx:3001"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -27,6 +28,7 @@
     "connect_ui": true,
     "transportPrivateKeyLocation": "/relay/configs/aliceTransportPrivateKey.pem",
     "transportPublicKeyLocation": "/relay/configs/aliceTransportPublicKey.pem",
-    "sql_log": true
+    "sql_log": true,
+    "host_name": "http://alice.sphinx:3001"
   }
 }
