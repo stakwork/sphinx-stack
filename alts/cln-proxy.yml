@@ -329,7 +329,7 @@ services:
       - ./lnd:/lnd
 
   dave-cln:
-    image: sphinxlightning/cln-sphinx:0.1.2
+    image: sphinxlightning/cln-sphinx:latest
     container_name: dave-cln.sphinx
     command:
       - --addr=0.0.0.0:19846
@@ -341,11 +341,11 @@ services:
       - --log-level=debug
       - --alias=dave-cln
       - --grpc-port=10012
-      - --accept-htlc-tlv-types=133773310
+      - --accept-htlc-tlv-type=133773310
       - --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
     environment:
       - EXPOSE_TCP=true
-      - GREENLIGHT_VERSION=v23.02.2-50-gd15200c
+      - GREENLIGHT_VERSION=v23.08rc3-56-g4475052-modded
       - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
     ports:
       - "0.0.0.0:19846:19846"
