@@ -2,7 +2,7 @@ version: "3"
 
 services:
   bitcoind:
-    image: lncm/bitcoind:v0.21.1
+    image: lncm/bitcoind:v25.0
     restart: on-failure
     container_name: bitcoind.sphinx
     volumes:
