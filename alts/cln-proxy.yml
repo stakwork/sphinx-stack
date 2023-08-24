@@ -345,7 +345,7 @@ services:
       - --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
     environment:
       - EXPOSE_TCP=true
-      - GREENLIGHT_VERSION=v23.08-55-gbd9494c-modded
+      - GREENLIGHT_VERSION=v23.08-56-g0c8094c-modded
       - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
     ports:
       - "0.0.0.0:19846:19846"
