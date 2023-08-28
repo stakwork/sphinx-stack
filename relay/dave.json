@@ -24,7 +24,8 @@
     "logging_level": "debug",
     "proxy_hd_keys": true,
     "allow_swarm_invite": true,
-    "host_name": "localhost:3004"
+    "host_name": "http://dave.sphinx:3004",
+    "media_host": "meme.sphinx:5555"
   },
   "gitactionenv": {
     "hub_api_url": "None",
@@ -51,6 +52,7 @@
     "logging_level": "debug",
     "proxy_hd_keys": true,
     "allow_swarm_invite": true,
-    "host_name": "localhost:3004"
+    "host_name": "http://dave.sphinx:3004",
+    "media_host": "meme.sphinx:5555"
   }
 }
