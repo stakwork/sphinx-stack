@@ -12,7 +12,8 @@
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
     "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
-    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem",
+    "media_host": "meme.sphinx:5555"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -27,6 +28,7 @@
     "public_url": "127.0.0.1:3003",
     "connect_ui": true,
     "transportPrivateKeyLocation": "/relay/configs/carolTransportPrivateKey.pem",
-    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem"
+    "transportPublicKeyLocation": "/relay/configs/carolTransportPublicKey.pem",
+    "media_host": "meme.sphinx:5555"
   }
 }

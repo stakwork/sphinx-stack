@@ -127,7 +127,7 @@ services:
       - STORAGE_MODE=local
       - LOCAL_DIR=app/files
       - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
-      - HOST=localhost:5555
+      - HOST=meme.sphinx:5555
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
     ports:
       - 5555:5555
@@ -153,7 +153,6 @@ services:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3001
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
     ports:
       - 3001:3001
     extra_hosts:
@@ -180,7 +179,6 @@ services:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3002
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
     ports:
       - 3002:3002
     extra_hosts:
@@ -207,7 +205,6 @@ services:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3003
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
     ports:
       - 3003:3003
     extra_hosts:
@@ -236,7 +233,6 @@ services:
       - NODE_ENV=${GITACTION_ENV:-development}
       - PORT=3004
       - TRIBES_HOST=host.docker.internal:13000
-      - MEDIA_HOST=localhost:5555
     ports:
       - 3004:3004
 

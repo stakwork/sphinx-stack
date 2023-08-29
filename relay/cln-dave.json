@@ -26,7 +26,8 @@
     "logging_level": "debug",
     "proxy_hd_keys": true,
     "allow_swarm_invite": true,
-    "host_name": "localhost:3004"
+    "host_name": "localhost:3004",
+    "media_host": "meme.sphinx:5555"
   },
   "gitactionenv": {
     "lightning_provider": "CLN",
@@ -55,6 +56,7 @@
     "logging_level": "debug",
     "proxy_hd_keys": true,
     "allow_swarm_invite": true,
-    "host_name": "localhost:3004"
+    "host_name": "localhost:3004",
+    "media_host": "meme.sphinx:5555"
   }
 }

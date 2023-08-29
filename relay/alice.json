@@ -12,7 +12,8 @@
     "public_url": "127.0.0.1:3001",
     "transportPrivateKeyLocation": "/relay/configs/aliceTransportPrivateKey.pem",
     "transportPublicKeyLocation": "/relay/configs/aliceTransportPublicKey.pem",
-    "host_name": "http://alice.sphinx:3001"
+    "host_name": "http://alice.sphinx:3001",
+    "media_host": "meme.sphinx:5555"
   },
   "gitactionenv": {
     "node_ip": "127.0.0.1",
@@ -29,6 +30,7 @@
     "transportPrivateKeyLocation": "/relay/configs/aliceTransportPrivateKey.pem",
     "transportPublicKeyLocation": "/relay/configs/aliceTransportPublicKey.pem",
     "sql_log": true,
-    "host_name": "http://alice.sphinx:3001"
+    "host_name": "http://alice.sphinx:3001",
+    "media_host": "meme.sphinx:5555"
   }
 }
