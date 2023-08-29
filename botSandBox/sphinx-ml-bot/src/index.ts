@@ -30,7 +30,7 @@ app.post("/text", (req: Request, res: Response) => {
       process_id,
       "This is a response from test ml-bot server built in sphinx-stack"
     );
-  }, 7000);
+  }, 5000);
   return res.status(200).json({ body: { process_id } });
 });
 
