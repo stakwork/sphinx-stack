@@ -358,6 +358,8 @@ services:
     image: node:12-buster-slim
     restart: on-failure
     entrypoint: ["node", "/tribes/setup/index.js"]
+    depends_on:
+      - relaysetup
     volumes:
       - ./tribes:/tribes
       - ./tribes/.env:/tribes/.env
