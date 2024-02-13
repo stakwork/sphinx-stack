@@ -27,7 +27,6 @@ interval = setInterval(() => {
   try {
     const nodes = fs.readFileSync("./relay/NODES.json", "utf-8");
 
-    console.log(nodes);
     if (nodes) {
       const parsedNodes = JSON.parse(nodes);
       if (Array.isArray(parsedNodes)) {
@@ -38,7 +37,6 @@ interval = setInterval(() => {
             setEnvValue("RELAY_AUTH_KEY", node.authToken);
 
             if (interval) {
-              console.log("we got here actually");
               clearInterval(interval);
             }
           }
@@ -46,6 +44,9 @@ interval = setInterval(() => {
       }
     }
   } catch (error) {
-    console.log("There is an error here");
+    console.log(
+      "Error trying to read relay nodes file: ",
+      JSON.stringify(error)
+    );
   }
 }, 10000);
