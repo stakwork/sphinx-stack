@@ -84,6 +84,7 @@ services:
     restart: on-failure
     depends_on:
       - db
+      - tribes-setup
     env_file:
       - ./tribes/.env
     ports:
@@ -353,7 +354,7 @@ services:
       - ./cln/dave-cln/setup_script.sh:/setup_script.sh
       - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
 
-  tribessetup:
+  tribes-setup:
     image: node:12-buster-slim
     restart: on-failure
     entrypoint: ["node", "/tribes/setup/index.js"]
