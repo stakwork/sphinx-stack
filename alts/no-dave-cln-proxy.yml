@@ -79,7 +79,7 @@ services:
       - 5433:5432
 
   tribes:
-    image: sphinxlightning/sphinx-tribes:v0.1.8
+    image: sphinxlightning/sphinx-tribes:latest
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
@@ -87,10 +87,18 @@ services:
     environment:
       - PORT=13000
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+      - LN_SERVER_BASE_URL=http://localhost:13000
+    volumes:
+      - ./tribes/script.sh:/app/script.sh
     ports:
       - 5002:5002
       - 13007:13007
       - 13000:13000
+    entrypoint:
+      - "sh"
+      - "-c"
+      - |
+        chmod +x /app/script.sh && source /app/script.sh && /app/sphinx-tribes
 
   auth:
     image: sphinxlightning/sphinx-auth:0.2.3
@@ -329,3 +337,14 @@ services:
       - ./cln/dave-cln:/root/.lightning
       - ./cln/dave-cln/setup_script.sh:/setup_script.sh
       - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
+
+  tribes-setup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/tribes/setup/index.js"]
+    depends_on:
+      - relaysetup
+    volumes:
+      - ./tribes:/tribes
+      - ./tribes/.env:/tribes/.env
+      - ./relay:/relay
