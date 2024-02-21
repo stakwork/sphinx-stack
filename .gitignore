@@ -28,4 +28,5 @@ cln-notes.md
 alts/bitcoind
 jitsi/config/*
 .vscode
+neo4j
 neo4j/*
