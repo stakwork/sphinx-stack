@@ -40,3 +40,6 @@ rm ./relay/*.pem
 rm -rf ./cln/dave-cln/regtest
 
 rm -rf ./cln/dave-cln/lightningd-regtest.pid
+
+#remove neo4j
+rm -rf ./neo4j

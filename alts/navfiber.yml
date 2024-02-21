@@ -1,0 +1,449 @@
+version: "3"
+
+services:
+  bitcoind:
+    image: lncm/bitcoind:v25.0
+    restart: on-failure
+    container_name: bitcoind.sphinx
+    volumes:
+      - ./bitcoind:/data/.bitcoin
+    ports:
+      - 18443:18443
+      - 8333:8333
+      - 28332:28332
+      - 28333:28333
+
+  alice-lnd:
+    image: lightninglabs/lnd:v0.16.2-beta
+    container_name: alice-lnd.sphinx
+    volumes:
+      - ./lnd/alice/.lnd:/root/.lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9735:9735
+      - 10009:10009
+      - 38881:38881
+    command: --configfile=/lndsetup/alice.conf
+
+  bob-lnd:
+    image: lightninglabs/lnd:v0.16.2-beta
+    container_name: bob-lnd.sphinx
+    volumes:
+      - ./lnd/bob/.lnd:/root/.lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9736:9735
+      - 10010:10010
+      - 38882:38882
+    command: --configfile=/lndsetup/bob.conf
+
+  carol-lnd:
+    image: lightninglabs/lnd:v0.16.2-beta
+    container_name: carol-lnd.sphinx
+    volumes:
+      - ./lnd/carol/.lnd:/root/.lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9737:9735
+      - 10011:10011
+      - 38883:38883
+    command: --configfile=/lndsetup/carol.conf
+
+  lndsetup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice-lnd
+      - bob-lnd
+      - carol-lnd
+      - dave-cln
+    restart: "no"
+    entrypoint: ["node", "/lndsetup/index.js"]
+    volumes:
+      - ./lnd/alice/.lnd:/alice/.lnd
+      - ./lnd/setup:/lndsetup
+      - ./lnd/setup/nodes/proxynodes.js:/lndsetup/nodes.js
+    environment:
+      - CLN_PROXY=true
+
+  db:
+    image: postgres
+    container_name: db.sphinx
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=sphinx
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  tribes:
+    image: sphinxlightning/sphinx-tribes:latest
+    container_name: tribes.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - PORT=13000
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+      - LN_SERVER_BASE_URL=http://localhost:13000
+    volumes:
+      - ./tribes/script.sh:/app/script.sh
+    ports:
+      - 5002:5002
+      - 13007:13007
+      - 13000:13000
+    entrypoint:
+      - "sh"
+      - "-c"
+      - |
+        chmod +x /app/script.sh && source /app/script.sh && /app/sphinx-tribes
+
+  auth:
+    image: sphinxlightning/sphinx-auth:0.2.3
+    container_name: auth.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - JWT_KEY=19e0bb49bhyuibme
+      - HOST=localhost:9090
+    ports:
+      - 9090:9090
+
+  mqtt:
+    image: sphinxlightning/sphinx-mqtt:test-2
+    container_name: mqtt.sphinx
+    restart: on-failure
+    depends_on:
+      - auth
+    ports:
+      - 1883:1883
+
+  meme:
+    image: sphinxlightning/sphinx-meme:0.2.2
+    container_name: meme.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - ./memes:/app/files
+    environment:
+      - PORT=5555
+      - JWT_KEY=19e0bb49bhyuibme
+      - STORAGE_MODE=local
+      - LOCAL_DIR=app/files
+      - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
+      - HOST=meme.sphinx:5555
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+    ports:
+      - 5555:5555
+
+  alice:
+    image: sphinxlightning/sphinx-relay
+    container_name: alice.sphinx
+    user: root
+    restart: on-failure
+    depends_on:
+      - alice-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/alice.json",
+        "--db=/relay/configs/alice-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/alice/.lnd:/relay/alice/.lnd
+    environment:
+      - NODE_ENV=${GITACTION_ENV:-development}
+      - PORT=3001
+      - TRIBES_HOST=host.docker.internal:13000
+    ports:
+      - 3001:3001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bob:
+    image: sphinxlightning/sphinx-relay
+    container_name: bob.sphinx
+    user: root
+    restart: on-failure
+    depends_on:
+      - bob-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/bob.json",
+        "--db=/relay/configs/bob-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/bob/.lnd:/relay/bob/.lnd
+    environment:
+      - NODE_ENV=${GITACTION_ENV:-development}
+      - PORT=3002
+      - TRIBES_HOST=host.docker.internal:13000
+    ports:
+      - 3002:3002
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  carol:
+    image: sphinxlightning/sphinx-relay
+    container_name: carol.sphinx
+    user: root
+    restart: on-failure
+    depends_on:
+      - carol-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/carol.json",
+        "--db=/relay/configs/carol-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/carol/.lnd:/relay/carol/.lnd
+    environment:
+      - NODE_ENV=${GITACTION_ENV:-development}
+      - PORT=3003
+      - TRIBES_HOST=host.docker.internal:13000
+    ports:
+      - 3003:3003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  dave:
+    image: sphinxlightning/sphinx-relay
+    container_name: dave.sphinx
+    user: root
+    restart: on-failure
+    depends_on:
+      - dave-cln
+      - proxy
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/cln-dave.json",
+        "--db=/relay/configs/dave-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./cln/dave-cln/regtest:/relay/dave/regtest
+      - ./proxy:/proxy
+    environment:
+      - NODE_ENV=${GITACTION_ENV:-development}
+      - PORT=3004
+      - TRIBES_HOST=host.docker.internal:13000
+    ports:
+      - 3004:3004
+
+  relaysetup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice
+      - bob
+      - carol
+      - dave
+      - lndsetup
+      - tribes
+    restart: on-failure
+    entrypoint: ["node", "/relay/setup/index.js"]
+    volumes:
+      - ./relay:/relay
+      - ./relay/nodes_partial/cln_proxy_nodes_partial.json:/relay/nodes_partial.json
+    environment:
+      - DAVE_IP=http://host.docker.internal:3004
+
+  proxy:
+    image: sphinxlightning/sphinx-proxy:latest
+    container_name: proxy.sphinx
+    restart: always
+    user: root
+    depends_on:
+      - dave-cln
+    volumes:
+      - ./lnd/dave/.lnd:/lnd/.lnd
+      - ./proxy/cert:/cert
+      - ./proxy/macaroons:/macaroons
+      - ./proxy/badger:/badger
+      - ./cln/dave-cln/regtest:/cln/creds
+      - type: bind
+        source: ./proxy/lnd_proxy.conf
+        target: /lnd_proxy.conf
+    entrypoint:
+      [
+        "/app/sphinx-proxy",
+        "--rpclisten=0.0.0.0:11111",
+        "--tlscertpath=/cert/tls.cert",
+        "--tlskeypath=/cert/tls.key",
+        "--bitcoin.regtest",
+        "--bitcoin.active",
+        "--bitcoin.basefee=0",
+        "--store-key=4967BC847DDEFF47C4BC890038F5A495",
+        "--unlock-pwd=hi123456",
+        "--server-macaroons-dir=/macaroons",
+        "--channels-start=2",
+        "--admin-token=r46bnf8ibrhbb424heba",
+        "--admin-port=5050",
+        "--admin-pubkey=037ec785c6004d512ebaeb0020f81a2bcdb6fccc9539f7b891f704289ebc65a4e3",
+        "--initial-msat=500000",
+        "--mqtt-broker=tcps://mqtt.sphinx:1883",
+        "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
+        "--tlsextradomain=proxy.sphinx",
+        "--use-hd-keys",
+        "--mode=cln",
+        "--cln-ca-cert=/cln/creds/ca.pem",
+        "--cln-client-cert=/cln/creds/client.pem",
+        "--cln-client-key=/cln/creds/client-key.pem",
+        "--cln-ip=dave-cln.sphinx",
+        "--cln-port=10012",
+        "--cln-server-name=cln",
+        "--htlc-interceptor-ip=dave-cln.sphinx",
+        "--htlc-interceptor-port=10212",
+      ]
+    ports:
+      - 11111:11111
+      - 5050:5050
+
+  boltwall:
+    image: sphinxlightning/sphinx-boltwall:latest
+    container_name: boltwall.sphinx
+    restart: on-failure
+    depends_on:
+      - boltwallsetup
+    volumes:
+      - ./boltwall/.env:/usr/src/app/.env
+    ports:
+      - 8444:8444
+
+  boltwallsetup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/boltwall/setup/index.js"]
+    volumes:
+      - ./boltwall:/boltwall
+      - ./boltwall/.env:/boltwall/.env
+      - ./lnd:/lnd
+
+  dave-cln:
+    image: sphinxlightning/cln-sphinx:latest
+    container_name: dave-cln.sphinx
+    command:
+      - --addr=0.0.0.0:19846
+      - --bitcoin-rpcconnect=bitcoind.sphinx
+      - --bitcoin-rpcport=18443
+      - --bitcoin-rpcuser=evan
+      - --bitcoin-rpcpassword=thepass
+      - --network=regtest
+      - --log-level=debug
+      - --alias=dave-cln
+      - --grpc-port=10012
+      - --accept-htlc-tlv-type=133773310
+      - --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
+    environment:
+      - EXPOSE_TCP=true
+      - GREENLIGHT_VERSION=v23.08-56-g0c8094c-modded
+      - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
+    ports:
+      - "0.0.0.0:19846:19846"
+      - 10012:10012
+      - 10212:10212
+    links:
+      - bitcoind
+    volumes:
+      - ./cln/dave-cln:/root/.lightning
+      - ./cln/dave-cln/setup_script.sh:/setup_script.sh
+      - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
+
+  tribes-setup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/tribes/setup/index.js"]
+    depends_on:
+      - relaysetup
+    volumes:
+      - ./tribes:/tribes
+      - ./tribes/.env:/tribes/.env
+      - ./relay:/relay
+  neo4j:
+    image: neo4j:4.4.9
+    container_name: neo4j.sphinx
+    volumes:
+      - ./neo4j/data:/data:rw
+      - ./neo4j/logs:/logs:rw
+      - ./neo4j/plugins:/plugins
+      - ./neo4j/tmp/import:/var/lib/neo4j/import
+      - ./neo4j/conf:/var/lib/neo4j/conf/
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/test
+      - NEO4J_USER=neo4j
+      - NEO4J_PASS=test
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*
+      - NEO4J_dbms_memory_heap_initial__size=64m
+      - NEO4J_dbms_memory_heap_max__size=256m
+      - NEO4J_apoc_uuid_enabled=true
+      - NEO4J_dbms_default__listen__address=0.0.0.0
+      - NEO4J_dbms_connector_bolt_listen__address=0.0.0.0:7687
+      - NEO4J_dbms_allow__upgrade=true
+      - NEO4J_dbms_default__database=neo4j
+      - NEO4JLABS_PLUGINS=["apoc"]
+    healthcheck:
+      test: [ "CMD", "/var/lib/neo4j/bin/cypher-shell", "-u", "${NEO4J_USER}", "-p", "${NEO4J_PASS}", "MATCH (n) RETURN n LIMIT 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      
+  jarvis-backend:
+    image: sphinxlightning/sphinx-jarvis-backend:latest
+    container_name: jarvis-backend.sphinx
+    restart: on-failure
+    volumes:
+      - ./stakwork:/stakwork
+      - ./temp_images:/temp_images
+      - ./.env:/app/.env
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASS=test
+      - STAKWORK_REQUEST_LOG_PATH=./
+      - STAKWORK_ADD_NODE_URL=https://staging.stakwork.com/api/v1/projects
+      - STAKWORK_ADD_NODE_TOKEN=d8e209c96e6088931611088f30d4f4b41234567
+      - STAKWORK_ADD_EPISODE_URL=us-east-1
+      - JARVIS_BACKEND_PORT=5000
+      - PUBLIC_GRAPH_RESULT_LIMIT=10
+      - AWS_ACCESS_KEY_ID=****
+      - AWS_SECRET_ACCESS_KEY=****
+      - AWS_S3_BUCKET_PATH=https://test.com
+      - AWS_S3_REGION_NAME=us-east-1
+      - RADAR_REQUEST_URL=http://test.radar.com
+      - RADAR_RSS_SCHEDULER_TIME_IN_SEC=5090000
+      - RADAR_SCHEDULER_TIME_IN_SEC=100000
+      - RADAR_TWITTER_SCHEDULER_TIME_IN_SEC=tue,21,14
+      - RADAR_YOUTUBE_SCHEDULER_TIME_IN_SEC=20
+      - RADAR_TWEET_WEBHOOK=https://boltwall-jwd.second-brain-sphinx-devs.sphinx.chat/v1/tweet
+      - RADAR_TOPIC_WEBHOOK=https://boltwall-jwd.second-brain-sphinx-devs.sphinx.chat/v1/tweet
+      - RADAR_REQUEST_URL=https://staging.stakwork.com/api/v1/projects
+      - RADAR_REQUEST_TOKEN=#####
+      - RADAR_SCHEDULER_JOB=False
+      - RADAR_YOUTUBE_SCHEDULER_JOB=False
+      - RADAR_TWITTER_SCHEDULER_JOB=False
+      - RADAR_RSS_SCHEDULER_JOB=False
+      - RADAR_SCHEDULER_JOB_HOUR=14
+      - RADAR_SCHEDULER_JOB_MINUTE=38
+      - SECOND_BRAIN_GRAPH_URL=https://knowledge-graph.sphinx.chat/get_named_entities
+    ports:
+      - 5000:5000
+    links:
+      - neo4j
