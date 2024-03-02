@@ -59,6 +59,8 @@ services:
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
+      - ./lnd/bob/.lnd:/bob/.lnd
+      - ./lnd/carol/.lnd:/carol/.lnd
       - ./lnd/setup:/lndsetup
       - ./lnd/setup/nodes/nodes.js:/lndsetup/nodes.js
 
