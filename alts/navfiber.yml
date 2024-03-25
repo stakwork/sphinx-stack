@@ -421,7 +421,6 @@ services:
       - STAKWORK_ADD_NODE_URL=https://staging.stakwork.com/api/v1/projects
       - STAKWORK_ADD_NODE_TOKEN=${STAKWORK_TOKEN}
       - JARVIS_BACKEND_PORT=5000
-      - PUBLIC_GRAPH_RESULT_LIMIT=10
       - AWS_ACCESS_KEY_ID=****
       - AWS_SECRET_ACCESS_KEY=****
       - AWS_S3_BUCKET_PATH=https://test.com
