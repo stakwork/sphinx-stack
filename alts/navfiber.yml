@@ -460,8 +460,9 @@ services:
       - TUTORIAL_GENERATOR_WORKFLOW_ID=2562
       - INSTAGRAPH_GENERATOR_WORKFLOW_ID=2563
       - QUESTION_AND_ANSWER_WORKFLOW_ID=2564
-      - TLDR_WORKFLOW_ID=2565
+      - TLDR_WORKFLOW_ID=8262
       - TWITTER_BEARER=${TWITTER_BEARER}
+      - TLDR_REQUEST_URL=https://staging.stakwork.com/api/v1/projects
     ports:
       - 5000:5000
     links:
