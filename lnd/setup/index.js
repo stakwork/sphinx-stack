@@ -130,8 +130,11 @@ async function unlockAll() {
   await asyncForEach(Object.values(nodes.nodes), async (node) => {
     await createOrUnlockWallet(node);
   });
-  await sleep(5000);
-  await coinsAndChannels(nodes.nodes.alice);
+
+  if (nodes.nodes.alice) {
+    await sleep(5000);
+    await coinsAndChannels(nodes.nodes.alice);
+  }
 }
 
 unlockAll();
