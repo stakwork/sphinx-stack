@@ -55,15 +55,12 @@ services:
       - alice-lnd
       - bob-lnd
       - carol-lnd
-      - dave-cln
     restart: "no"
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
       - ./lnd/setup:/lndsetup
-      - ./lnd/setup/nodes/proxynodes.js:/lndsetup/nodes.js
-    environment:
-      - CLN_PROXY=true
+      - ./lnd/setup/nodes/nodes.js:/lndsetup/nodes.js
 
   db:
     image: postgres
@@ -218,31 +215,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  dave:
-    image: sphinxlightning/sphinx-relay
-    container_name: dave.sphinx
-    user: root
-    restart: on-failure
-    depends_on:
-      - dave-cln
-      - proxy
-    entrypoint:
-      [
-        "node",
-        "/relay/dist/app.js",
-        "--config=/relay/configs/cln-dave.json",
-        "--db=/relay/configs/dave-db.json",
-      ]
-    volumes:
-      - ./relay:/relay/configs
-      - ./cln/dave-cln/regtest:/relay/dave/regtest
-      - ./proxy:/proxy
-    environment:
-      - NODE_ENV=${GITACTION_ENV:-development}
-      - PORT=3004
-      - TRIBES_HOST=host.docker.internal:13000
-    ports:
-      - 3004:3004
 
   relaysetup:
     image: node:12-buster-slim
@@ -250,67 +222,13 @@ services:
       - alice
       - bob
       - carol
-      - dave
       - lndsetup
       - tribes
     restart: on-failure
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
-      - ./relay/nodes_partial/cln_proxy_nodes_partial.json:/relay/nodes_partial.json
-    environment:
-      - DAVE_IP=http://host.docker.internal:3004
-
-  proxy:
-    image: sphinxlightning/sphinx-proxy:latest
-    container_name: proxy.sphinx
-    restart: always
-    user: root
-    depends_on:
-      - dave-cln
-    volumes:
-      - ./lnd/dave/.lnd:/lnd/.lnd
-      - ./proxy/cert:/cert
-      - ./proxy/macaroons:/macaroons
-      - ./proxy/badger:/badger
-      - ./cln/dave-cln/regtest:/cln/creds
-      - type: bind
-        source: ./proxy/lnd_proxy.conf
-        target: /lnd_proxy.conf
-    entrypoint:
-      [
-        "/app/sphinx-proxy",
-        "--rpclisten=0.0.0.0:11111",
-        "--tlscertpath=/cert/tls.cert",
-        "--tlskeypath=/cert/tls.key",
-        "--bitcoin.regtest",
-        "--bitcoin.active",
-        "--bitcoin.basefee=0",
-        "--store-key=4967BC847DDEFF47C4BC890038F5A495",
-        "--unlock-pwd=hi123456",
-        "--server-macaroons-dir=/macaroons",
-        "--channels-start=2",
-        "--admin-token=r46bnf8ibrhbb424heba",
-        "--admin-port=5050",
-        "--admin-pubkey=037ec785c6004d512ebaeb0020f81a2bcdb6fccc9539f7b891f704289ebc65a4e3",
-        "--initial-msat=500000",
-        "--mqtt-broker=tcps://mqtt.sphinx:1883",
-        "--topic-uuid=YLkmJR_jaWBRICt21_IG01sopeqvE_8JUv3NXbBV9egjj2Y9AFf8iTmugbxtlxcnNc-RjYpbdN9E_vMWm4LHXTCbhL4O",
-        "--tlsextradomain=proxy.sphinx",
-        "--use-hd-keys",
-        "--mode=cln",
-        "--cln-ca-cert=/cln/creds/ca.pem",
-        "--cln-client-cert=/cln/creds/client.pem",
-        "--cln-client-key=/cln/creds/client-key.pem",
-        "--cln-ip=dave-cln.sphinx",
-        "--cln-port=10012",
-        "--cln-server-name=cln",
-        "--htlc-interceptor-ip=dave-cln.sphinx",
-        "--htlc-interceptor-port=10212",
-      ]
-    ports:
-      - 11111:11111
-      - 5050:5050
+      - ./relay/nodes_partial/nodes_partial.json:/relay/nodes_partial.json
 
   boltwall:
     image: sphinxlightning/sphinx-boltwall:latest
@@ -323,45 +241,6 @@ services:
     ports:
       - 8444:8444
 
-  boltwallsetup:
-    image: node:12-buster-slim
-    restart: on-failure
-    entrypoint: ["node", "/boltwall/setup/index.js"]
-    volumes:
-      - ./boltwall:/boltwall
-      - ./boltwall/.env:/boltwall/.env
-      - ./lnd:/lnd
-
-  dave-cln:
-    image: sphinxlightning/cln-sphinx:latest
-    container_name: dave-cln.sphinx
-    command:
-      - --addr=0.0.0.0:19846
-      - --bitcoin-rpcconnect=bitcoind.sphinx
-      - --bitcoin-rpcport=18443
-      - --bitcoin-rpcuser=evan
-      - --bitcoin-rpcpassword=thepass
-      - --network=regtest
-      - --log-level=debug
-      - --alias=dave-cln
-      - --grpc-port=10012
-      - --accept-htlc-tlv-type=133773310
-      - --plugin=/usr/local/libexec/c-lightning/plugins/gateway-cln-extension
-    environment:
-      - EXPOSE_TCP=true
-      - GREENLIGHT_VERSION=v23.08-56-g0c8094c-modded
-      - FM_CLN_EXTENSION_LISTEN_ADDRESS=0.0.0.0:10212
-    ports:
-      - "0.0.0.0:19846:19846"
-      - 10012:10012
-      - 10212:10212
-    links:
-      - bitcoind
-    volumes:
-      - ./cln/dave-cln:/root/.lightning
-      - ./cln/dave-cln/setup_script.sh:/setup_script.sh
-      - ./cln/dave-cln/cln_vol/entrypoint.sh:/entrypoint.sh
-
   tribes-setup:
     image: node:12-buster-slim
     restart: on-failure
@@ -372,6 +251,16 @@ services:
       - ./tribes:/tribes
       - ./tribes/.env:/tribes/.env
       - ./relay:/relay
+
+  boltwallsetup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/boltwall/setup/index.js"]
+    volumes:
+      - ./boltwall:/boltwall
+      - ./boltwall/.env:/boltwall/.env
+      - ./lnd:/lnd
+
   neo4j:
     image: neo4j:4.4.9
     container_name: neo4j.sphinx
