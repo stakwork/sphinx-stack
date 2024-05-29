@@ -129,7 +129,7 @@ services:
       [
         "node",
         "/relay/dist/app.js",
-        "--config=/relay/configs/cln-dave.json",
+        "--config=/relay/configs/navfiber-cln-dave.json",
         "--db=/relay/configs/dave-db.json",
       ]
     volumes:
