@@ -153,9 +153,10 @@ services:
     entrypoint: ["node", "/relay/setup/index.js"]
     volumes:
       - ./relay:/relay
-      - ./relay/nodes_partial/cln_proxy_nodes_partial.json:/relay/nodes_partial.json
+      - ./relay/nodes_partial/navfiber-proxy-nodes.partial.json:/relay/nodes_partial.json
     environment:
       - DAVE_IP=http://host.docker.internal:3004
+      - NAV_FIBER=true
 
   proxy:
     image: sphinxlightning/sphinx-proxy:latest
