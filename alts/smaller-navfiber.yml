@@ -51,6 +51,39 @@ services:
     environment:
       - NAV_FIBER=true
 
+  auth:
+    image: sphinxlightning/sphinx-auth:0.2.3
+    container_name: auth.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - JWT_KEY=19e0bb49bhyuibme
+      - HOST=localhost:9090
+    ports:
+      - 9090:9090
+
+  mqtt:
+    image: sphinxlightning/sphinx-mqtt:test-2
+    container_name: mqtt.sphinx
+    restart: on-failure
+    depends_on:
+      - auth
+    ports:
+      - 1883:1883
+  db:
+    image: postgres
+    container_name: db.sphinx
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=sphinx
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
   bob:
     image: sphinxlightning/sphinx-relay
     container_name: bob.sphinx
