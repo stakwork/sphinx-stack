@@ -1,0 +1,16 @@
+[
+  {
+    "alias": "bob",
+    "pubkey": "02a38857848aca6b32ebcc3c85d07ee41354988f4f1e0b4e6ccd255eee6ed75b8d",
+    "ip": "http://bob.sphinx:3002",
+    "external_ip": "http://localhost:3002"
+  },
+  {
+    "alias": "dave",
+    "pubkey": "030841d1519f19c68e80efc5ef5af3460ca4bfa17486fda9baca878b9ef255358f",
+    "ip": "http://dave.sphinx:3004",
+    "external_ip": "http://localhost:3004",
+    "proxy_ip": "http://proxy.sphinx:5050",
+    "admin_token": "r46bnf8ibrhbb424heba"
+  }
+]

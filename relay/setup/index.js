@@ -24,6 +24,20 @@ async function setup() {
       }
     }
   }
+
+  if (process.env.NAV_FIBER) {
+    let change = true;
+    index = 1;
+    while (change) {
+      if (nodes[index]) {
+        nodes[index].ip = process.env.DAVE_IP;
+        index += 1;
+      } else {
+        change = false;
+      }
+    }
+  }
+
   await asyncForEach(nodes, async function (n, i) {
     await pollReady(n, i);
     await sleep(1000);
@@ -36,30 +50,35 @@ async function setup() {
   if we do not have any generated yet
   this comes in handy when a person fresh
   installs the sphinx-stack*/
-  botEnvVars = require(paths.botEnvVars);
-  botConfig = require(paths.botConfig);
+  if (!process.env.NAV_FIBER) {
+    botEnvVars = require(paths.botEnvVars);
+    botConfig = require(paths.botConfig);
 
-  if (botEnvVars.length != botConfig.length) {
-    var finalNodes = require(paths.pathToWrite);
+    if (botEnvVars.length != botConfig.length) {
+      var finalNodes = require(paths.pathToWrite);
 
-    let newBotEnvVars = [];
+      let newBotEnvVars = [];
 
-    await asyncForEach(botConfig, async function (botConfigValues, botIndex) {
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
+      await asyncForEach(botConfig, async function (botConfigValues, botIndex) {
+        function sleep(ms) {
+          return new Promise((resolve) => setTimeout(resolve, ms));
+        }
 
-      await sleep(20000);
-      const nextKeyPortPair = await createBotKey(
-        botConfigValues,
-        botIndex,
-        finalNodes[0]
+        await sleep(20000);
+        const nextKeyPortPair = await createBotKey(
+          botConfigValues,
+          botIndex,
+          finalNodes[0]
+        );
+
+        newBotEnvVars[botIndex] = nextKeyPortPair;
+      });
+
+      fs.writeFileSync(
+        paths.botEnvVars,
+        JSON.stringify(newBotEnvVars, null, 2)
       );
-
-      newBotEnvVars[botIndex] = nextKeyPortPair;
-    });
-
-    fs.writeFileSync(paths.botEnvVars, JSON.stringify(newBotEnvVars, null, 2));
+    }
   }
 
   console.log("======================================");

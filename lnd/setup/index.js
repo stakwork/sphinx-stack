@@ -12,6 +12,11 @@ if (process.env.CLN_PROXY === "true") {
   console.log("test cln proxy nodes!");
   nodes = require("./nodes/clnProxyNodes");
 }
+
+if (process.env.NAV_FIBER === "true") {
+  console.log("test NavFiber proxy nodes!");
+  nodes = require("./nodes/navfiberNodes");
+}
 // if (process.env.DAVE_IP) {
 //   if (nodes.nodes["dave"]) {
 //     nodes.nodes["dave"].hostname = process.env.DAVE_IP;
@@ -54,13 +59,15 @@ async function coins(node) {
   try {
     const balres = await lightning.getBalance(node);
     const confirmed = parseInt(balres.confirmed_balance);
-    console.log("=> ALICE confirmed balance:", confirmed);
+    console.log(
+      `=> ${node.alias.toLocaleUpperCase()} confirmed balance: ${confirmed}`
+    );
     if (!confirmed) {
       const ares = await lightning.newAddress(node);
       const addy = ares.address;
-      console.log("=> ALICE address", addy);
+      console.log(`=> ${node.alias.toLocaleUpperCase()}  address ${addy}`);
       await bitcoind.mine(101, addy);
-      console.log("=> 101 blocks mined to alice!", addy);
+      console.log(`=> 101 blocks mined to ${node.alias}! ${addy}`);
       await sleep(5000);
     }
     return true;
@@ -90,7 +97,7 @@ async function channels(node) {
     console.log("=> 6 blocked mined to Alice!");
     await sleep(20000);
     if (!channels.length) {
-      console.log("=> alice opening channels...");
+      console.log(`=> ${node.alias} opening channels...`);
       // open channels here
       await asyncForEach(peersToMake, async (p) => {
         console.log("open channel with:", p);
@@ -131,7 +138,11 @@ async function unlockAll() {
     await createOrUnlockWallet(node);
   });
   await sleep(5000);
-  await coinsAndChannels(nodes.nodes.alice);
+  if (process.env.NAV_FIBER === "true") {
+    await coinsAndChannels(nodes.nodes.bob);
+  } else {
+    await coinsAndChannels(nodes.nodes.alice);
+  }
 }
 
 unlockAll();
