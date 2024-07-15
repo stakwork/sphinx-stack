@@ -463,7 +463,7 @@ services:
       - TLDR_WORKFLOW_ID=8262
       - TWITTER_BEARER=${TWITTER_BEARER}
       - TLDR_REQUEST_URL=https://staging.stakwork.com/api/v1/projects
-      - FEATURE_FLAG_SCHEMA = True
+      - FEATURE_FLAG_SCHEMA=True
     ports:
       - 5000:5000
     links:
