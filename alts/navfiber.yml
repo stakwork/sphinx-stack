@@ -335,6 +335,7 @@ services:
   dave-cln:
     image: sphinxlightning/cln-sphinx:latest
     container_name: dave-cln.sphinx
+    restart: on-failure
     command:
       - --addr=0.0.0.0:19846
       - --bitcoin-rpcconnect=bitcoind.sphinx
