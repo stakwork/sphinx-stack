@@ -333,7 +333,7 @@ services:
       - ./lnd:/lnd
 
   dave-cln:
-    image: sphinxlightning/cln-sphinx:latest
+    image: sphinxlightning/cln-sphinx:v24-fix-gossip-2
     container_name: dave-cln.sphinx
     restart: on-failure
     command:
