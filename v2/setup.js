@@ -1,4 +1,7 @@
+var fetch = require("./fetch");
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "xyzxyzxyz";
+var fs = require("fs");
+var paths = require("./paths");
 
 async function collect_contact(external_ip) {
   const ip = external_ip.replace("localhost", "host.docker.internal");
@@ -14,7 +17,7 @@ async function collect_contact(external_ip) {
 }
 
 async function setup() {
-  await sleep(7000);
+  await sleep(30000);
 
   const ALICE = "http://localhost:3001";
   const BOB = "http://localhost:3002";
@@ -37,7 +40,7 @@ async function setup() {
 }
 setup();
 
-export async function post(root, path, body) {
+async function post(root, path, body) {
   const headers = {
     "Content-Type": "application/json",
   };
@@ -51,7 +54,7 @@ export async function post(root, path, body) {
   return j;
 }
 
-export async function get(root, path) {
+async function get(root, path) {
   const headers = {};
   headers["x-admin-token"] = ADMIN_TOKEN;
   const r = await fetch(root + "/" + path, {
