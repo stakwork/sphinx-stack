@@ -10,29 +10,25 @@ interval = setInterval(() => {
 
     if (nodes) {
       const parsedNodes = JSON.parse(nodes);
-      if (Array.isArray(parsedNodes)) {
-        for (let i = 0; i < parsedNodes.length; i++) {
-          const node = parsedNodes[i];
-          if (node.alias === "bob" && node.authToken && node.ip) {
-            // Content of the Bash script
-            const bashScriptContent = `
+      if (!Array.isArray(parsedNodes)) return;
+      const node = parsedNodes.find((n) => n.alias === "bob");
+      if (!node) return;
+      if (node.authToken && node.ip) {
+        // Content of the Bash script
+        finish(`
 #!/bin/bash
-
 echo "Hello from the Bash script!"
 export RELAY_URL=${node.ip}
 export RELAY_AUTH_KEY=${node.authToken}
-`;
-
-            // Write to the file
-            fs.writeFileSync(scriptPath, bashScriptContent);
-
-            console.log(`Bash script written to: ${scriptPath}`);
-
-            if (interval) {
-              clearInterval(interval);
-            }
-          }
-        }
+`);
+      }
+      if (node.adminToken && node.ip && node.v2 === true) {
+        finish(`
+#!/bin/bash
+echo "Hello from the Bash script v2!"
+export V2_BOT_URL=${node.ip}
+export V2_BOT_TOKEN=${node.authToken}
+`);
       }
     }
   } catch (error) {
@@ -42,3 +38,12 @@ export RELAY_AUTH_KEY=${node.authToken}
     );
   }
 }, 10000);
+
+function finish(bashScriptContent) {
+  // Write to the file
+  fs.writeFileSync(scriptPath, bashScriptContent);
+  console.log(`Bash script written to: ${scriptPath}`);
+  if (interval) {
+    clearInterval(interval);
+  }
+}
