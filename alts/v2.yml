@@ -1,0 +1,107 @@
+version: "3"
+
+services:
+  broker:
+    image: sphinxlightning/sphinx-broker:latest
+    restart: on-failure
+    container_name: broker.sphinx
+    environment:
+      - SEED=8A048DC1F0020127E0E8DD72ACEFC62B8A048DC1F0020127E0E8DD72ACEFC62B
+      - NETWORK=regtest
+      - BROKER_MQTT_PORT=1883
+    ports:
+      - 1883:1883
+
+  mixer:
+    image: sphinxlightning/sphinx-mixer:latest
+    restart: on-failure
+    container_name: mixer.sphinx
+    environment:
+      - TESTING_ONLY_ADD_TO_SENDER=1
+      - SEED=8A048DC1F0020127E0E8DD72ACEFC62B8A048DC1F0020127E0E8DD72ACEFC62B
+      - NETWORK=regtest
+      - BROKER_URL=broker.sphinx:1883
+      - NO_GATEWAY=true
+      - NO_LIGHTNING=true
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=8888
+      - DB_PATH=/home/data
+      - ADMIN_ROUTES=true
+    ports:
+      - 8888:8888
+
+  db:
+    image: postgres
+    container_name: db.sphinx
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=sphinx
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  tribes:
+    image: sphinxlightning/sphinx-tribes:latest
+    container_name: tribes.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - PORT=13000
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+      - LN_SERVER_BASE_URL=http://localhost:13000
+    volumes:
+      - ./tribes/script.sh:/app/script.sh
+    ports:
+      - 5002:5002
+      - 13007:13007
+      - 13000:13000
+    entrypoint:
+      - "sh"
+      - "-c"
+      - |
+        chmod +x /app/script.sh && source /app/script.sh && /app/sphinx-tribes
+
+  alice:
+    image: sphinxlightning/sphinx-bot:latest
+    restart: on-failure
+    container_name: alice.sphinx
+    environment:
+      - PORT=3001
+      - SEED=8DDDB00FFDE4581983FAA55AED83560486874391FDF93776DBBABBFE1C243C14
+      - NETWORK=regtest
+      - BROKER=http://broker.sphinx:1883
+      - MY_ALIAS=alice
+      - ADMIN_TOKEN=xyzxyzxyz
+      - INITIAL_DELAY=5000
+    ports:
+      - 3001:3001
+
+  bob:
+    image: sphinxlightning/sphinx-bot:latest
+    restart: on-failure
+    container_name: bob.sphinx
+    environment:
+      - PORT=3002
+      - SEED=7A9039255E3776858BDF7E51B840ED795F99FCF0358C201BAAC4AB1FEB45C236
+      - NETWORK=regtest
+      - BROKER=http://broker.sphinx:1883
+      - MY_ALIAS=bob
+      - ADMIN_TOKEN=xyzxyzxyz
+      - INITIAL_DELAY=5000
+    ports:
+      - 3002:3002
+  
+  tribes-setup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/tribes/setup/index.js"]
+    depends_on:
+      - relaysetup
+    volumes:
+      - ./tribes:/tribes
+      - ./tribes/.env:/tribes/.env
+      - ./relay:/relay
