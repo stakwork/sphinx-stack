@@ -95,12 +95,23 @@ services:
     ports:
       - 3002:3002
   
+  v2setup:
+    image: node:12-buster-slim
+    depends_on:
+      - alice
+      - bob
+      - tribes
+    restart: on-failure
+    entrypoint: ["node", "/v2/setup.js"]
+    volumes:
+      - ./relay:/relay
+
   tribes-setup:
     image: node:12-buster-slim
     restart: on-failure
     entrypoint: ["node", "/tribes/setup/index.js"]
     depends_on:
-      - relaysetup
+      - v2setup
     volumes:
       - ./tribes:/tribes
       - ./tribes/.env:/tribes/.env
