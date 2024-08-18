@@ -13,6 +13,8 @@ async function collect_contact(external_ip) {
     alias: ci.alias,
     ip,
     external_ip,
+    adminToken: ADMIN_TOKEN,
+    v2: true,
   };
 }
 
