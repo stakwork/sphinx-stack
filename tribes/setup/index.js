@@ -28,7 +28,7 @@ export RELAY_AUTH_KEY=${node.authToken}
 #!/bin/bash
 echo "Hello from the Bash script v2!"
 export V2_BOT_URL=${node.ip}
-export V2_BOT_TOKEN=${node.authToken}
+export V2_BOT_TOKEN=${node.adminToken}
 `);
       }
     }
