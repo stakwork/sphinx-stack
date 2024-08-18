@@ -27,7 +27,7 @@ async function setup() {
   const alice = await collect_contact(ALICE);
   const bob = await collect_contact(BOB);
 
-  const nodes = { alice, bob };
+  const nodes = [alice, bob];
   const jsonString = JSON.stringify(nodes, null, 2);
   console.log(nodes);
 

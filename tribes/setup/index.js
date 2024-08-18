@@ -9,6 +9,7 @@ interval = setInterval(() => {
     const nodes = fs.readFileSync("./relay/NODES.json", "utf-8");
 
     if (nodes) {
+      console.log("Nodes:", nodes);
       const parsedNodes = JSON.parse(nodes);
       if (!Array.isArray(parsedNodes)) return;
       const node = parsedNodes.find((n) => n.alias === "bob");
