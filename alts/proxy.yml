@@ -82,13 +82,14 @@ services:
     container_name: db.sphinx
     restart: on-failure
     environment:
+      - PGPORT=5433
       - POSTGRES_PASSWORD=sphinx
       - POSTGRES_USER=postgres
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - 5433:5432
+      - 5433:5433
 
   tribes:
     image: sphinxlightning/sphinx-tribes:latest
