@@ -67,7 +67,7 @@ services:
     restart: on-failure
     container_name: alice.sphinx
     environment:
-      - PORT=3001
+      - PORT=3005
       - SEED=8DDDB00FFDE4581983FAA55AED83560486874391FDF93776DBBABBFE1C243C14
       - NETWORK=regtest
       - BROKER=http://broker.sphinx:1883
@@ -75,14 +75,14 @@ services:
       - ADMIN_TOKEN=xyzxyzxyz
       - INITIAL_DELAY=5000
     ports:
-      - 3001:3001
+      - 3005:3005
 
   bob:
     image: sphinxlightning/sphinx-bot:latest
     restart: on-failure
     container_name: bob.sphinx
     environment:
-      - PORT=3002
+      - PORT=3006
       - SEED=7A9039255E3776858BDF7E51B840ED795F99FCF0358C201BAAC4AB1FEB45C236
       - NETWORK=regtest
       - BROKER=http://broker.sphinx:1883
@@ -90,8 +90,8 @@ services:
       - ADMIN_TOKEN=xyzxyzxyz
       - INITIAL_DELAY=5000
     ports:
-      - 3002:3002
-  
+      - 3006:3006
+
   v2setup:
     image: node:12-buster-slim
     depends_on:
