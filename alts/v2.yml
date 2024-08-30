@@ -97,7 +97,7 @@ services:
     depends_on:
       - alice
       - bob
-      - tribes
+      # - tribes
     restart: on-failure
     entrypoint: ["node", "/v2/setup.js"]
     volumes:
