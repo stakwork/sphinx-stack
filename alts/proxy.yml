@@ -98,7 +98,7 @@ services:
       - db
     environment:
       - PORT=13000
-      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5433/postgres?sslmode=disable
       - LN_SERVER_BASE_URL=http://localhost:13000
       - RELAY_AUTH_KEY=test
     volumes:
