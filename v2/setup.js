@@ -21,8 +21,8 @@ async function collect_contact(external_ip) {
 async function setup() {
   await sleep(30000);
 
-  const ALICE = "http://localhost:3001";
-  const BOB = "http://localhost:3002";
+  const ALICE = "http://localhost:3005";
+  const BOB = "http://localhost:3006";
 
   const alice = await collect_contact(ALICE);
   const bob = await collect_contact(BOB);

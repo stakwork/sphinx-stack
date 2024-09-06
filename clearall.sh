@@ -20,6 +20,8 @@ rm -rf ./relay/db/dave.db
 
 rm -rf ./relay/NODES.json
 
+rm -rf ./relay/V2NODES.json
+
 rm -rf ./pgdata
 
 #Redis data is for the sphinx-betting-bot
