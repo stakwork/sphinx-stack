@@ -179,7 +179,7 @@ services:
       - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
       - LN_SERVER_BASE_URL=http://localhost:13000
       - RELAY_AUTH_KEY=test
-      - V2_BOT_URL=http://localhost:3005
+      - V2_BOT_URL=http://alicev2.sphinx:3005
       - V2_BOT_TOKEN=xyzxyzxyz
     volumes:
       - ./tribes/script.sh:/app/script.sh
