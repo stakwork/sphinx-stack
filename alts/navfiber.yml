@@ -407,7 +407,7 @@ services:
       retries: 20
       
   jarvis-backend:
-    image: sphinxlightning/sphinx-jarvis-backend:latest
+    image: sphinxlightning/sphinx-jarvis-backend:master
     container_name: jarvis-backend.sphinx
     restart: on-failure
     volumes:
