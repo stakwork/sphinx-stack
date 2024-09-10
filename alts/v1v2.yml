@@ -168,7 +168,7 @@ services:
       - ./v2:/v2
 
   tribes:
-    image: sphinxlightning/sphinx-tribes:integrate_v2_payments2
+    image: sphinxlightning/sphinx-tribes:integrate_v2_payments3
     container_name: tribes.sphinx
     restart: on-failure
     depends_on:
