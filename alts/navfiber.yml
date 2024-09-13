@@ -435,7 +435,7 @@ services:
       - RADAR_RSS_SCHEDULER_JOB=False
       - RADAR_SCHEDULER_JOB_HOUR=14
       - RADAR_SCHEDULER_JOB_MINUTE=38
-      - SECOND_BRAIN_GRAPH_URL=https://bitcoin.sphinx.chat/
+      - SECOND_BRAIN_GRAPH_URL=https://bitcoin.sphinx.chat/get_named_entities
       - ELASTIC_URI=http://0.0.0.0:9200
       - ELASTIC_PASSWORD=test
       - PUBLIC_GRAPH_RESULT_LIMIT=10
