@@ -386,20 +386,21 @@ services:
       - 7474:7474
       - 7687:7687
     environment:
-      - NEO4J_AUTH=neo4j/testtest
-      - NEO4J_USER=neo4j
-      - NEO4J_PASS=testtest
+      - NEO4J_AUTH=neo4j/test
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*
-      - NEO4J_dbms_memory_heap_initial__size=64m
-      - NEO4J_dbms_memory_heap_max__size=256m
+      - NEO4J_server_memory_heap_initial__size=64m
+      - NEO4J_server_memory_heap_max__size=256m
       - NEO4J_apoc_uuid_enabled=true
-      - NEO4J_dbms_default__listen__address=0.0.0.0
-      - NEO4J_dbms_connector_bolt_listen__address=0.0.0.0:7687
+      - NEO4J_server_default__listen__address=0.0.0.0
+      - NEO4J_server_bolt_listen__address=0.0.0.0:7687
       - NEO4J_dbms_allow__upgrade=true
-      - NEO4J_dbms_default__database=neo4j
+      - NEO4J_initial_dbms_default__database=neo4j
       - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_server_memory_pagecache_size=512M
+      - NEO4J_apoc_import_file_use_neo4j_config=true
+      - NEO4J_dbms_security_auth__minimum__password__length=4
     healthcheck:
       test: [ "CMD", "/var/lib/neo4j/bin/cypher-shell", "-u", "${NEO4J_USER}", "-p", "${NEO4J_PASS}", "MATCH (n) RETURN n LIMIT 1" ]
       interval: 10s
@@ -414,9 +415,9 @@ services:
       - ./stakwork:/stakwork
       - ./temp_images:/temp_images
     environment:
-      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_URI=neo4j://neo4j:7687
       - NEO4J_USER=neo4j
-      - NEO4J_PASS=testtest
+      - NEO4J_PASS=test
       - STAKWORK_REQUEST_LOG_PATH=./
       - STAKWORK_ADD_NODE_URL=https://staging.stakwork.com/api/v1/projects
       - STAKWORK_ADD_NODE_TOKEN=${STAKWORK_TOKEN}
