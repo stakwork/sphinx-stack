@@ -374,7 +374,7 @@ services:
       - ./tribes/.env:/tribes/.env
       - ./relay:/relay
   neo4j:
-    image: neo4j:5.19.0
+    image: neo4j:4.4.9
     container_name: neo4j.sphinx
     volumes:
       - ./neo4j/data:/data:rw
