@@ -387,8 +387,6 @@ services:
       - 7687:7687
     environment:
       - NEO4J_AUTH=neo4j/testtest
-      - NEO4J_USER=neo4j
-      - NEO4J_PASS=testtest
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*
