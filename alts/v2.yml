@@ -13,7 +13,7 @@ services:
       - 1883:1883
 
   mixer:
-    image: sphinxlightning/sphinx-mixer:latest
+    image: sphinxlightning/sphinx-mixer:0.4.69
     restart: on-failure
     container_name: mixer.sphinx
     environment:
