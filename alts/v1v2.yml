@@ -126,7 +126,7 @@ services:
       - 8888:8888
 
   alicev2:
-    image: sphinxlightning/sphinx-bot:latest
+    image: sphinxlightning/sphinx-bot:0.0.28
     restart: on-failure
     container_name: alicev2.sphinx
     environment:
@@ -141,7 +141,7 @@ services:
       - 3005:3005
 
   bobv2:
-    image: sphinxlightning/sphinx-bot:latest
+    image: sphinxlightning/sphinx-bot:0.0.28
     restart: on-failure
     container_name: bobv2.sphinx
     environment:
