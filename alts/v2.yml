@@ -63,7 +63,7 @@ services:
       - 13000:13000
 
   alice:
-    image: sphinxlightning/sphinx-bot:latest
+    image: sphinxlightning/sphinx-bot:0.0.28
     restart: on-failure
     container_name: alice.sphinx
     environment:
@@ -78,7 +78,7 @@ services:
       - 3005:3005
 
   bob:
-    image: sphinxlightning/sphinx-bot:latest
+    image: sphinxlightning/sphinx-bot:0.0.28
     restart: on-failure
     container_name: bob.sphinx
     environment:
