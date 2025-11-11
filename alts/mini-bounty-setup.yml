@@ -1,0 +1,161 @@
+version: "3"
+
+services:
+  bitcoind:
+    image: lncm/bitcoind:v0.21.1
+    restart: on-failure
+    container_name: bitcoind.sphinx
+    volumes:
+      - ./bitcoind:/data/.bitcoin
+    ports:
+      - 18443:18443
+      - 8333:8333
+      - 28332:28332
+      - 28333:28333
+
+  bob-lnd:
+    image: lightninglabs/lnd:v0.16.2-beta
+    container_name: bob-lnd.sphinx
+    volumes:
+      - ./lnd/bob/.lnd:/root/.lnd
+      - ./lnd/setup:/lndsetup
+    ports:
+      - 9736:9735
+      - 10010:10010
+      - 38882:38882
+    command: --configfile=/lndsetup/bob.conf
+
+  lndsetup:
+    image: node:12-buster-slim
+    depends_on:
+      - bob-lnd
+    restart: "no"
+    entrypoint: ["node", "/lndsetup/index.js"]
+    volumes:
+      - ./lnd/setup:/lndsetup
+      - ./lnd/setup/nodes/miniBountyNodes.js:/lndsetup/nodes.js
+
+  db:
+    image: postgres
+    container_name: db.sphinx
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=sphinx
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  tribes:
+    image: sphinxlightning/sphinx-tribes:latest
+    container_name: tribes.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - PORT=13000
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+      - LN_SERVER_BASE_URL=http://localhost:13000
+    volumes:
+      - ./tribes/script.sh:/app/script.sh
+    ports:
+      - 5002:5002
+      - 13007:13007
+      - 13000:13000
+    entrypoint:
+      - "sh"
+      - "-c"
+      - |
+        chmod +x /app/script.sh && source /app/script.sh && /app/sphinx-tribes
+
+  auth:
+    image: sphinxlightning/sphinx-auth:0.2.3
+    container_name: auth.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      - JWT_KEY=19e0bb49bhyuibme
+      - HOST=localhost:9090
+    ports:
+      - 9090:9090
+
+  mqtt:
+    image: sphinxlightning/sphinx-mqtt:test-2
+    container_name: mqtt.sphinx
+    restart: on-failure
+    depends_on:
+      - auth
+    ports:
+      - 1883:1883
+
+  meme:
+    image: sphinxlightning/sphinx-meme:0.2.2
+    container_name: meme.sphinx
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - ./memes:/app/files
+    environment:
+      - PORT=5555
+      - JWT_KEY=19e0bb49bhyuibme
+      - STORAGE_MODE=local
+      - LOCAL_DIR=app/files
+      - LOCAL_ENCRYPTION_KEY=88303a55f5829d9e35936364204bcb007fe330db649902fa1085a7bce3732347
+      - HOST=localhost:5555
+      - DATABASE_URL=postgres://postgres:sphinx@db.sphinx:5432/postgres?sslmode=disable
+    ports:
+      - 5555:5555
+
+  bob:
+    image: sphinxlightning/sphinx-relay
+    container_name: bob.sphinx
+    user: root
+    restart: on-failure
+    depends_on:
+      - bob-lnd
+    entrypoint:
+      [
+        "node",
+        "/relay/dist/app.js",
+        "--config=/relay/configs/bob.json",
+        "--db=/relay/configs/bob-db.json",
+      ]
+    volumes:
+      - ./relay:/relay/configs
+      - ./lnd/bob/.lnd:/relay/bob/.lnd
+    environment:
+      - NODE_ENV=${GITACTION_ENV:-development}
+      - PORT=3002
+      - TRIBES_HOST=host.docker.internal:13000
+    ports:
+      - 3002:3002
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  relaysetup:
+    image: node:12-buster-slim
+    depends_on:
+      - bob
+      - tribes
+    restart: on-failure
+    entrypoint: ["node", "/relay/setup/index.js"]
+    volumes:
+      - ./relay:/relay
+      - ./relay/nodes_partial/mini_bounty_nodes_partial.json:/relay/nodes_partial.json
+
+
+  tribes-setup:
+    image: node:12-buster-slim
+    restart: on-failure
+    entrypoint: ["node", "/tribes/setup/index.js"]
+    depends_on:
+      - relaysetup
+    volumes:
+      - ./tribes:/tribes
+      - ./tribes/.env:/tribes/.env
+      - ./relay:/relay
