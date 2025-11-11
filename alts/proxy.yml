@@ -72,6 +72,9 @@ services:
     entrypoint: ["node", "/lndsetup/index.js"]
     volumes:
       - ./lnd/alice/.lnd:/alice/.lnd
+      - ./lnd/bob/.lnd:/bob/.lnd
+      - ./lnd/carol/.lnd:/carol/.lnd
+      - ./lnd/dave/.lnd:/dave/.lnd
       - ./lnd/setup:/lndsetup
       - ./lnd/setup/nodes/proxynodes.js:/lndsetup/nodes.js
     environment:
